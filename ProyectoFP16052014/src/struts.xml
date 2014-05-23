@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE struts PUBLIC
+"-//Apache Software Foundation//DTD Struts Configuration 2.0//EN"
+"http://struts.apache.org/dtds/struts-2.0.dtd">
+<struts>
+	<constant name="struts.enable.DynamicMethodInvocation" value="true" />
+	<constant name="struts.devMode" value="true" />
+	<constant name="struts.custom.i18n.resources" value="textos" />
+	<constant name="struts.action.excludePattern" value="(/ajedrez|/grupo)"/>
+	
+	
+	<package name="default" namespace="/" extends="struts-default">
+		<interceptors>	
+			<interceptor name="comprobarSession" class="proyectoFP.interceptores.ComprobarSessionInterceptor"></interceptor>
+ 			<interceptor-stack name="senecesitaSession">
+ 				<interceptor-ref name="comprobarSession"/>
+	     		<interceptor-ref name="defaultStack" />
+	     	</interceptor-stack>
+		</interceptors>
+		 
+		 <global-results>
+		 	<result name="errorLogin">WEB-INF/jsp/index.jsp</result>
+		 </global-results>
+		 
+		<!--  Para redirigir a una página que no se encuentre -->
+		<action name="*">
+			<result>WEB-INF/jsp/index.jsp</result>
+		</action>
+		<!-- Enlaces básicos -->
+		<action name="registro">
+			<result>WEB-INF/jsp/registro.jsp</result>
+		</action>
+		<action name="inicio">
+			<result>WEB-INF/jsp/index.jsp</result>
+		</action>
+		<action name="principal">
+			<interceptor-ref name="senecesitaSession"/>
+			<result>WEB-INF/jsp/principal.jsp</result>
+		</action>
+		<action name="jugarAjedrez">
+			<interceptor-ref name="senecesitaSession"/>
+			<result>WEB-INF/jsp/chess.jsp</result>
+		</action>
+		<action name="aprender">
+			<interceptor-ref name="senecesitaSession"/>
+			<result>WEB-INF/jsp/learn.jsp</result>
+		</action>
+		<!-- Actions -->
+		<action name="completarRegistro" class="proyectoFP.actions.RegistroAction">
+			<result>WEB-INF/jsp/registro.jsp</result>
+		</action>
+		<action name="login" class="proyectoFP.actions.LoginAction">
+			<result>WEB-INF/jsp/principal.jsp</result>
+		</action>
+		<action name="deslogearse" class="proyectoFP.actions.DeslogearseAction">
+			<result>WEB-INF/jsp/index.jsp</result>
+		</action>
+	</package>
+		
+</struts>
