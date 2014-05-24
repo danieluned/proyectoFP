@@ -109,6 +109,7 @@ function arreglar(){
 	  columnWidth: 50,
 	  itemSelector: '.item'
 	});
+	
 }
 function ajusteVertical(){
 	var w = parseInt($(window).width());
@@ -126,10 +127,10 @@ function ajusteVertical(){
 		chatVisible();
 	}
 	
-	$("#chat").css("height", parseInt(h/2));
-	$("#chat div").css("height", parseInt(h/2)-70);
+	$("#chat").css("height", parseInt(h/3));
+	$("#chat div").css("height", parseInt(h/3)-70);
 	
-	$("#lista").css("height",parseInt(h/3)-90);
+	$("#listaPartidas").css("height",parseInt(h/3)-100);
 	
 	
 }

@@ -40,19 +40,25 @@
 	width:350px;
 	background:red;
 	position:absolute;
-	outline:red 4px solid;
 	
+	padding:0;
 }
+
 .item{
 	overflow:hidden;
-	background:white;
-	outline:white 1px solid;
+	background:black;
+	outline:black 1px solid;
 }
 #controlesPartida{
 	cursor: move;
+	background:black;
 }
-#lista{
+#tablaPartidas{
 	height:100%;
 	width:100%;
 	overflow:scroll;
+}
+#tablaPartidas table{
+	background:black;
+	width:100%;
 }

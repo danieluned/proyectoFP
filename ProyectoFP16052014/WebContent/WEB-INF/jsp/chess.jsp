@@ -22,8 +22,9 @@
 		<script src="js/jquery-ui-1.10.4.custom.js"></script>
 		<script src="js/bootstrap.js"></script>
 		<script src="js/bootbox.min.js"></script>
-		<script src="js/design.js"></script>
 		<script src="js/juego2.js"></script>
+		<script src="js/design.js"></script>
+		
 		<script src="js/arrange.js"></script>
 		
 	</head>
@@ -168,20 +169,22 @@
 					</div>	
 				
 					<div id="partidas" class="item">
-					<div id="controlesPartida">mover</div>
-						<button id="crearPartida" class="botoncico">Crear Partida</button>
-						<table>
-							<thead>
-								<tr>
-									<th>Blancas</th>
-									<th>Negras</th>
-									<th>Estado</th>
-									<th>Accion</th>
-								</tr>
-							</thead>
-							<tbody id="listaPartidas">
-							</tbody>
-						</table>
+						<div id="controlesPartida">mover</div>
+						<button id="crearPartida" class="btn-sm">Crear Partida</button>
+						<div id="tablaPartidas">
+							<table >
+								<thead>
+									<tr>
+										<th>Blancas</th>
+										<th>Negras</th>
+										<th>Estado</th>
+										<th>Accion</th>
+									</tr>
+								</thead>
+								<tbody id="listaPartidas">
+								</tbody>
+							</table>
+						</div>
 					</div>
 				</div>
 			</div>
