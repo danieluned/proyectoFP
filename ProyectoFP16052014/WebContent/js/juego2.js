@@ -207,19 +207,19 @@ $(function(){
 	function crearPestania(identificador){
 		var buscar = "#p-"+identificador;
 		if( $(buscar).length == 0){
-			var li = "<li><a href='#p-"+identificador+"'><span>"+identificador+"</span></a><button b='p-"+identificador+"' onclick='borrarPestania(this);'>X</button></li>";
+			var li = "<li><a href='#p-"+identificador+"'><span>"+identificador+"</span></a><button class='cerrarPestania' b='p-"+identificador+"'>X</button></li>";
 			$("#chat ul").append(li);
 			var di = "<div id='p-"+identificador+"'></div>";
 			$("#chat").append(di);
 			$("#chat").tabs("refresh");
-			
+			$(".cerrarPestania").click(cerrarPestania);
+			ajusteVertical();
 		}
 	}
-	function borrarPestania(boton){
-		var id = $(boton).attr("b");
-		$("div#"+id+" , a[href='#"+id+"']").remove();
-		$("#chat").tabs("refresh");
-		
+	function cerrarPestania(){
+		var id= $(this).attr("b");
+		$(this).parent().remove();
+		$("div#"+id).remove();
 	}
 	/** Convertir mensaje del INput en JSON string */
 	function deTextoAJson (mensaje){
@@ -407,8 +407,8 @@ $(function(){
 	function ajustar(div){
 			//var w = parseInt($(window).width()*.9);
 			//var h = parseInt($(window).height()*.9);
-			var h2 = parseInt($(window).height()*.9);
-			var w = parseInt($(div).parent().width()*.9);
+			var h2 = parseInt($(window).height()-95);
+			var w = parseInt($(div).parent().width());
 			//var h = w;
 			//console.log("H:"+h+" W:"+w);
 			
@@ -417,9 +417,10 @@ $(function(){
 				$(div).css("width",""+h2+"px");
 				$(div).css("height",""+h2+"px");
 			}else{
-				$(div).css("width",""+w+"px");
-				$(div).css("height",""+w+"px");
+				$(div).css("width",""+(w-60)+"px");
+				$(div).css("height",""+(w-60)+"px");
 			}
+			
 	}
 	
 	function dibujarTablero(lugar){

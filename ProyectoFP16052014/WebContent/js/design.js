@@ -65,22 +65,73 @@
 })();
 
 $(function(){
-	
+	arreglar();
 	ajusteVertical();
 	cambiarCabecera();
+	
 	$(window).resize(ajusteVertical);
+	
+	
 	
 	if (fullScreenApi.supportsFullScreen) {
 	    document.getElementById("fullscreen").addEventListener('click', function() {
 	        fullScreenApi.requestFullScreen(document.getElementsByTagName("html")[0]);
 	    }, true);
 	}
+	var mostrado = false;
+	/*
+	$("#cambiarChat").click(function(){
+			if (mostrado){
+				chatOculto();
+				mostrado = false;
+			}else{
+				chatVisible();
+				mostrado = true;
+			}
+	});
+	*/
+	$("#cambiarChat").click(arreglar);
+	$("#envolver").draggable({
+		containment: $("#contenido"),
+		handle: "#mover"
+	    });
+	$("#partidas").draggable({
+		containment: $("#contenido"),
+		handle: "#controlesPartida"
+	    });
+	$( "#tablero" ).draggable({ containment: $("#contenido") });
 	
 });
+function arreglar(){
+	var container = $('#contenido');
+	// initialize
+	container.masonry({
+	  columnWidth: 50,
+	  itemSelector: '.item'
+	});
+}
 function ajusteVertical(){
+	var w = parseInt($(window).width());
+	var h = parseInt($(window).height());
+	$("#contenido").css("height",h-90);
 	//Para cambiar la cabecera
 	cambiarCabecera();
 	centradoVertical(".alineadoVertical");
+	
+	//Ajustes en el ancho
+	
+	if (w<768){
+		chatOculto();
+	}else{
+		chatVisible();
+	}
+	
+	$("#chat").css("height", parseInt(h/2));
+	$("#chat div").css("height", parseInt(h/2)-70);
+	
+	$("#lista").css("height",parseInt(h/3)-90);
+	
+	
 }
 function cambiarCabecera(){
 		var max = 580;
@@ -93,6 +144,14 @@ function cambiarCabecera(){
 			$("header .im").hide();
 		}
 		$("input").val(w);
+}
+function chatOculto(){
+	//$("#envolver").hide();
+	//$("#partidas").hide();
+}
+function chatVisible(){
+	//$("#envolver").show();
+	//$("#partidas").show();
 }
 function centradoVertical(div){
 	var h = parseInt($(window).height());

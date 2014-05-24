@@ -1,6 +1,58 @@
-
+#envolver {
+	position:absolute;
+	
+}
 #chat div {
-	height:100%;
-	height:300px;
+	width:100%;
+	
 	overflow-y:scroll;
+	
+}
+
+#mover { 
+	cursor: move;
+	height: 20px;
+	background: rgba(0,0,0,.6);
+ }
+#contenido{
+	height:100%;
+	/*background-color:red;*/
+}
+#chat ul{
+	overflow-y:scroll;
+	overflow-x:hidden;
+	height:40px;
+	width:100%;
+	display:inline-block;
+}
+#chat ul li{
+	float:left;
+}
+#chat {
+	margin:auto;
+	outline:red 4px solid;
+}
+#chat p{
+	color:black;
+}
+
+#partidas{
+	width:350px;
+	background:red;
+	position:absolute;
+	outline:red 4px solid;
+	
+}
+.item{
+	overflow:hidden;
+	background:white;
+	outline:white 1px solid;
+}
+#controlesPartida{
+	cursor: move;
+}
+#lista{
+	height:100%;
+	width:100%;
+	overflow:scroll;
 }
