@@ -202,6 +202,38 @@ top: 0px;
 right: 20px;
 	
 }
+#cambiarTablero{
+	height:20px;
+	width:30px;
+	overflow:hidden;
+	position: absolute;
+top: 0px;
+left: 12px;
+}
+#cambiarChat2{
+	height:20px;
+	width:30px;
+	overflow:hidden;
+	position: absolute;
+top: 0px;
+left: 44px;
+}
+#cambiarPartidas{
+	height:20px;
+	width:30px;
+	overflow:hidden;
+	position: absolute;
+top: 0px;
+left: 76px;
+}
+#cambiarControles{
+	height:20px;
+	width:30px;
+	overflow:hidden;
+	position: absolute;
+top: 0px;
+left: 108px;
+}
 #cambiarChat{
 position: absolute;
 top: 0px;

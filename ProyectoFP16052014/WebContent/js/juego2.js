@@ -32,7 +32,7 @@ $(function(){
 	/** indicarle al chat que tiene pestañas */
 	$("#chat").tabs();
 	
-	
+	ajustarPaneles();
 	/*** Eventos ***/
 	$(window).resize(ajuste);
 	//Evento para recoger coordenadas 
@@ -225,6 +225,7 @@ $(function(){
 			$("#chat").tabs("refresh");
 			$(".cerrarPestania").click(cerrarPestania);
 			ajusteVertical();
+			ajustarPaneles();
 		}
 	}
 	function cerrarPestania(){
@@ -331,8 +332,9 @@ $(function(){
 				refrescarEscucharUnirse();
 				break;
 			case "tiempo":
-				$("#tiempoBlancas").html(json.tiempoBlancas);
-				$("#tiempoNegras").html(json.tiempoNegras);
+				
+				$("#tiempoBlancas").html(tiempoAhumano(json.tiempoBlancas));
+				$("#tiempoNegras").html(tiempoAhumano(json.tiempoNegras));
 				
 			break;
 			case "rotarTablero":
@@ -431,7 +433,20 @@ $(function(){
 		dibujarTablero(divd);
 	}
 	
-	
+	function tiempoAhumano(segundos){
+		
+		var minutos = parseInt(parseInt(segundos)/60);
+		var segundos = parseInt(parseInt(segundos)%60);
+		segundos+="";
+		minutos+="";
+		while(segundos.length<2){
+			segundos ="0"+segundos;
+		}
+		while(minutos.length<2){
+			minutos ="0"+minutos;
+		}
+		return minutos+":"+segundos;
+	}
 	function ajustar(div){
 			
 			var w = parseInt($(div).parent().width());

@@ -1,5 +1,7 @@
 #envolver {
 	position:absolute;
+	height: 250px;
+	width: 300px;
 	
 }
 #chat div {
@@ -8,8 +10,12 @@
 	overflow-y:scroll;
 	
 }
-
- 
+#tiempos p {
+	color:yellow;
+}
+#tiempo{
+	background-color:rgba(240,100,100,0.5);
+}
 
 #chat ul{
 	overflow-y:scroll;
@@ -28,9 +34,18 @@
 #chat p{
 	color:black;
 }
-
+.ui-icon{
+	width:30px;
+	height:30px;
+	background-color:red;
+	
+}
+#wrapTablero .ui-icon{
+	bottom: -50px;
+	
+}
 #partidas{
-	width:350px;
+	width:400px;
 	background: none repeat scroll 0% 0% rgba(130, 120, 214, 0.8);
 	position:absolute;
 	
@@ -45,7 +60,10 @@
 
 #controlesPartida , #mover, #tiempos, #moverTablero{
 	cursor: move;
-	background-color:rgba(252,234,187,0.6);
+	color: yellow;
+	text-align:center;
+	background-color:rgba(0,0,0,0.6);
+	font-weight:bolder;
 }
 #tablaPartidas{
 	

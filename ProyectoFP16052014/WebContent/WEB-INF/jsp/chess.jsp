@@ -47,7 +47,11 @@
 					<a id="es" href="?request_locale=es">ES</a>
 					<a id="en" href="?request_locale=en">EN</a>
 					<s:a action="deslogearse" cssClass="btn-sm btn-danger glyphicon glyphicon-off" id="salir"></s:a>
-					<button id="cambiarChat" class="btn-sm">CHAT</button>
+					<button id="cambiarChat" class="btn-sm">Layout</button>
+					<button id="cambiarTablero" class="btn-xs">Tablero</button>
+					<button id="cambiarChat2" class="btn-xs">Chat</button>
+					<button id="cambiarPartidas" class="btn-xs">Partidas</button>
+					<button id="cambiarControles" class="btn-xs">Controles</button>
 				</div>
 			</header>
 			<div class="row" id="contenido">
@@ -56,9 +60,9 @@
 						
 						
 						<div id="wrapTablero" class="item">
-						
-						<div id="tablero">
 						<div id="moverTablero">Tablero</div>
+						<div id="tablero">
+						
 						<table>
 								
 								

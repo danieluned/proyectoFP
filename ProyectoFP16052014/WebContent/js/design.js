@@ -190,6 +190,10 @@ $(function(){
 	});
 	*/
 	$("#cambiarChat").click(arreglar);
+	$("#cambiarTablero").click(mostrarOcultarTablero);
+	$("#cambiarChat2").click(mostrarOcultarChat);
+	$("#cambiarControles").click(mostrarOcultarControles);
+	$("#cambiarPartidas").click(mostrarOcultarPartidas);
 	$("#tiempos").draggable({
 		containment: $("#wrap")
 		});
@@ -202,17 +206,28 @@ $(function(){
 		handle: "#controlesPartida"
 	    });
 	$( "#wrapTablero" ).draggable({ containment: $("#wrap"),
-		handle: "#moverTablero"});
-	$( "#envolver, #partidas" ).resizable({
+		handle: "#moverTablero",
+		});
+	$( "#envolver").resizable({
+	      minHeight: 250,
+	      minWidth: 300,
+	      handles: 'se'
+	    });
+	$("#partidas" ).resizable({
 	      minHeight: 130,
-	      minWidth: 200
+	      minWidth: 400,
+	      handles: 'se'
 	    });
 	
 	$("#wrapTablero").resizable({
-      aspectRatio: true
+      aspectRatio: true,
+      minHeight: 250,
+      minWidth: 250,
+      handles: 'se'
     });
 	$("#envolver").resize(ajustarChat);
 	$("#partidas").resize(ajustarPartidas);
+	
 });
 function ajustarPartidas(){
 	$("#tablaPartidas").css("height",parseInt($(this).height()-65));
@@ -221,7 +236,13 @@ function ajustarChat(){
 	var h = parseInt($(this).height());
 	console.log(h);
 	$("#chat").css("height",h-50);
-	$("#chat div").css("height",h-140);
+	$("#chat div").css("height",h-100);
+}
+function ajustarPaneles(){
+	var h = parseInt($("#envolver").height());
+	console.log(h);
+	$("#chat").css("height",h-50);
+	$("#chat div").css("height",h-100);
 }
 function arreglar(){
 	var container = $('#contenido');
@@ -231,6 +252,18 @@ function arreglar(){
 	  itemSelector: '.item'
 	});
 	
+}
+function mostrarOcultarTablero(){
+	$("#wrapTablero").toggle();
+}
+function mostrarOcultarControles(){
+	$("#tiempos").toggle();
+}
+function mostrarOcultarChat(){
+	$("#envolver").toggle();
+}
+function mostrarOcultarPartidas(){
+	$("#partidas").toggle();
 }
 function ajusteVertical(){
 	var w = parseInt($(window).width());
