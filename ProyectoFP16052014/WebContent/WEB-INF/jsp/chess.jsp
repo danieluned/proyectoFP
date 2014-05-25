@@ -58,6 +58,7 @@
 						<div id="wrapTablero" class="item">
 						
 						<div id="tablero">
+						<div id="moverTablero">Tablero</div>
 						<table>
 								
 								
