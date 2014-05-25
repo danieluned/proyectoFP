@@ -91,17 +91,38 @@ $(function(){
 	});
 	*/
 	$("#cambiarChat").click(arreglar);
+	$("#tiempos").draggable({
+		containment: $("#wrap")
+		});
 	$("#envolver").draggable({
-		containment: $("#contenido"),
+		containment: $("#wrap"),
 		handle: "#mover"
 	    });
 	$("#partidas").draggable({
-		containment: $("#contenido"),
+		containment: $("#wrap"),
 		handle: "#controlesPartida"
 	    });
-	$( "#tablero" ).draggable({ containment: $("#contenido") });
+	$( "#wrapTablero" ).draggable({ containment: $("#wrap") });
+	$( "#envolver, #partidas" ).resizable({
+	      minHeight: 130,
+	      minWidth: 200
+	    });
 	
+	$("#wrapTablero").resizable({
+      aspectRatio: true
+    });
+	$("#envolver").resize(ajustarChat);
+	$("#partidas").resize(ajustarPartidas);
 });
+function ajustarPartidas(){
+	$("#tablaPartidas").css("height",parseInt($(this).height()-65));
+}
+function ajustarChat(){
+	var h = parseInt($(this).height());
+	console.log(h);
+	$("#chat").css("height",h-50);
+	$("#chat div").css("height",h-140);
+}
 function arreglar(){
 	var container = $('#contenido');
 	// initialize
@@ -114,7 +135,7 @@ function arreglar(){
 function ajusteVertical(){
 	var w = parseInt($(window).width());
 	var h = parseInt($(window).height());
-	$("#contenido").css("height",h-90);
+	//$("#contenido").height(h-90);
 	//Para cambiar la cabecera
 	cambiarCabecera();
 	centradoVertical(".alineadoVertical");
@@ -127,11 +148,15 @@ function ajusteVertical(){
 		chatVisible();
 	}
 	
-	$("#chat").css("height", parseInt(h/3));
-	$("#chat div").css("height", parseInt(h/3)-70);
-	
-	$("#listaPartidas").css("height",parseInt(h/3)-100);
-	
+	/*
+	 * No funciona como se esperaba este código
+	$("#partidas").css("height",parseInt((h/2)-100));
+	$("#envolver").css("height",parseInt((h/2)-100));
+	$("#tiempos").css("height",parseInt((h/2)-100));
+	$("#partidas").trigger("resize");
+	$("#envolver").trigger("resize");
+	$("#tiempos").trigger("resize");
+	*/
 	
 }
 function cambiarCabecera(){

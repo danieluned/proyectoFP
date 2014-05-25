@@ -241,7 +241,7 @@ left: 50px;
 	
 }
 #tiempos{
-	display:none;
+	cursor:move;
 }
 @-webkit-keyframes animatedBackground {
 	10% { background-position: 0 0; }
@@ -261,9 +261,15 @@ body{
 }
 #tablero {
 	margin:auto;
+	background: black;
 }
 #contenido{
 	margin-left:20px;
+	
+}
+#wrapTablero{
+	height:500px;
+	width:500px;
 }
 #tablero table{
 	border-spacing:0;

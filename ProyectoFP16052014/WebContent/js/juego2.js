@@ -17,7 +17,11 @@ $(function(){
 	var idBotonEnviar ="#enviar";
 	var idInputMensaje = "#mensaje";
 	var timePing = null;
-	
+	var inicial = true;
+	var ho ;
+	var wo; 
+	var width2;
+	var height2;
 	/*** Conf inicial ***/
 	ajustar(divd);
 	dibujarTablero(divd);
@@ -202,6 +206,7 @@ $(function(){
 		$("#nombre").hide();
 	}
 	function asignarEscuchadorBoton(){
+		//alert("creando");
 		crearPestania($(this).text());
 	}
 	function crearPestania(identificador){
@@ -293,14 +298,30 @@ $(function(){
 			case "partidasDisponibles":
 				var str="";
 				for (var int = 0; int < json.partidas.length; int++) {
-					str += "<tr><td>"+json.partidas[int].blancas+"</td><td>"+json.partidas[int].negras+"</td><td>"+json.partidas[int].estado+"</td><td>"+json.partidas[int].fase+"</td>";
+					//alert(json.partidas[int].estado);
+					var strB="";
+					var strN="";
+					if (json.partidas[int].blancas !=""){
+						strB += "<button title='"+json.partidas[int].blancas+"'>"+json.partidas[int].blancas+"</button>";
+					}
+					if (json.partidas[int].negras !=""){
+						strN += "<button title='"+json.partidas[int].negras+"'>"+json.partidas[int].negras+"</button>";
+					}
 					if (json.partidas[int].estado == "EsperandoOtroJugador"){
+						
+						str += "<tr><td>"+strB+"</td><td>"+strN+"</td><td>Esperando/Waiting</td><td></td>";
+					
 						str += "<td><button class='unirse' b='"+json.partidas[int].blancas+"' n='"+json.partidas[int].negras+"'>Unirse</button></td></tr>";
-					}else{
+					}
+					if (json.partidas[int].estado == "Jugando"){
+						str += "<tr><td>"+strB+"</td><td>"+strN+"</td><td>Jugando/Playing</td><td></td>";
 						str += "<td></td></tr>";
 					}
+					
 				}
+				
 				$("#listaPartidas").html(str);
+				$("#listaPartidas button[title]").unbind().click(asignarEscuchadorBoton);
 				refrescarEscucharUnirse();
 				break;
 			case "tiempo":
@@ -404,22 +425,76 @@ $(function(){
 		dibujarTablero(divd);
 	}
 	
+	
 	function ajustar(div){
-			//var w = parseInt($(window).width()*.9);
-			//var h = parseInt($(window).height()*.9);
-			var h2 = parseInt($(window).height()-95);
-			var w = parseInt($(div).parent().width());
-			//var h = w;
-			//console.log("H:"+h+" W:"+w);
 			
+			var w = parseInt($(div).parent().width());
+			var h2 = parseInt($(div).parent().height());
+			ho = parseInt($(window).height()-100);
+			$("#contenido").css("height",""+ho+"px");
+		if (inicial){
+			width2 = parseInt($(window).width() *0.9);
+			height2 = parseInt($(window).height()*0.9)-100;
+			
+			w = width2;
+			h2 = height2;
+			console.log("inicial "+ho +"-"+wo);
+			if (height2<width2){
+				$("#wrapTablero").css("width",""+height2+"px");
+				$("#wrapTablero").css("height",""+height2+"px");
+				
+			}else{
+				$("#wrapTablero").css("width",""+width2+"px");
+				$("#wrapTablero").css("height",""+width2+"px");
+				
+			}
+			inicial = false;
+		}
+			//var h = w;
+		var width3 = parseInt($(window).width()*0.9);
+		var height3 = parseInt($(window).height()*0.9)-100;
+		var wmin;
+		var hmin;
+		var entro= false;
+		if (width3 != width2 || height3 != height2){
+			entro = true;
+			if (width3 < width2 ){
+				wmin = width3;
+			}else{
+				wmin = width2;
+			}
+			if (height3 < height2){
+				hmin = height3;
+			}else{
+				hmin = height2;
+			}
+			w = wmin;
+			h2 = hmin; 
+			
+			height2 = height3;
+			width2 = width3;
+		}
+		
+		console.log("inicial:"+inicial+" Hi: "+h2+" Wi:"+w);
 			if (w>h2){
 			//if(w>h){
 				$(div).css("width",""+h2+"px");
 				$(div).css("height",""+h2+"px");
+				if (entro){
+					$("#wrapTablero").width(h2);
+					$("#wrapTablero").height(h2);
+				}
 			}else{
-				$(div).css("width",""+(w-60)+"px");
-				$(div).css("height",""+(w-60)+"px");
+				$(div).css("width",""+(w)+"px");
+				$(div).css("height",""+(w)+"px");
+				if (entro){
+					$("#wrapTablero").width(w);
+					$("#wrapTablero").height(w);
+				}
 			}
+		
+			
+			
 			
 	}
 	

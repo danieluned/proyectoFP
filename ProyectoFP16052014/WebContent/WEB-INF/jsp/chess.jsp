@@ -53,19 +53,11 @@
 			<div class="row" id="contenido">
 				<div class="col-xs-12">
 					<div class="row">
-						<div id="tiempos" class="item">
-							<p>
-								Tiempo blancas:<span id="tiempoBlancas"></span>
-							</p>
-							<p>
-								Tiempo negras:<span id="tiempoNegras"></span>
-							</p>
-							<button id="rotar" class="btn-sm">Rotar Tablero</button>
-							
-								
-						</div>
 						
-						<div id="tablero" class="item">
+						
+						<div id="wrapTablero" class="item">
+						
+						<div id="tablero">
 						<table>
 								
 								
@@ -150,13 +142,14 @@
 									<td id="h1"></td>
 								</tr>
 							</table>
+							</div>
 						</div>
 					</div>
 				</div>
 				<div class="col-xs-0">
 					
 					<div id="envolver" class="item">
-						<div id="mover">mover</div>
+						<div id="mover">Chat</div>
 						<div id="chat">
 							 <ul>
 								<li><a href="#p-00"><span><s:text name="general"/></span></a></li>
@@ -167,10 +160,16 @@
 				        </div>
 				        <input type="text" id="mensaje"/><button id="enviar"><s:text name="enviarMensaje"/></button>
 					</div>	
-				
+						<div id="tiempos" class="item">
+							<p>Tiempo blancas:<span id="tiempoBlancas"></span></p>
+							<p>Tiempo negras:<span id="tiempoNegras"></span></p>
+							<button id="rotar" class="btn-xs">Rotar Tablero</button>
+						</div>
 					<div id="partidas" class="item">
-						<div id="controlesPartida">mover</div>
+						<div id="controlesPartida">Partidas</div>
 						<button id="crearPartida" class="btn-sm">Crear Partida</button>
+						<button id="crearPartida" class="btn-sm">Ofrecer Tablas</button>
+						<button id="crearPartida" class="btn-sm btn-danger">Abandonar</button>
 						<div id="tablaPartidas">
 							<table >
 								<thead>
@@ -178,6 +177,7 @@
 										<th>Blancas</th>
 										<th>Negras</th>
 										<th>Estado</th>
+										<th>Turno</th>
 										<th>Accion</th>
 									</tr>
 								</thead>

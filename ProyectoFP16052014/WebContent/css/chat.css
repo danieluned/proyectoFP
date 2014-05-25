@@ -14,10 +14,7 @@
 	height: 20px;
 	background: rgba(0,0,0,.6);
  }
-#contenido{
-	height:100%;
-	/*background-color:red;*/
-}
+
 #chat ul{
 	overflow-y:scroll;
 	overflow-x:hidden;
@@ -30,7 +27,7 @@
 }
 #chat {
 	margin:auto;
-	outline:red 4px solid;
+	/*outline:red 4px solid;*/
 }
 #chat p{
 	color:black;
@@ -38,7 +35,7 @@
 
 #partidas{
 	width:350px;
-	background:red;
+	
 	position:absolute;
 	
 	padding:0;
@@ -47,18 +44,35 @@
 .item{
 	overflow:hidden;
 	background:black;
-	outline:black 1px solid;
+	
 }
 #controlesPartida{
 	cursor: move;
 	background:black;
 }
 #tablaPartidas{
-	height:100%;
-	width:100%;
+	
+	
 	overflow:scroll;
+}
+.item{
+	overflow:visible;
 }
 #tablaPartidas table{
 	background:black;
-	width:100%;
+	width:400px !important;
+	/*height:100%;*/
+}
+#tablaPartidas td{
+	
+}
+#listaPartidas tr:nth-child(odd) {
+    background-color: grey;
+    color:white;
+    font-weight:bolder;
+}
+#listaPartidas tr:nth-child(even) {
+     background-color: black;
+    color:white;
+    font-weight:bolder;
 }
