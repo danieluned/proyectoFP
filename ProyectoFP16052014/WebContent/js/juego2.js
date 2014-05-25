@@ -145,7 +145,13 @@ $(function(){
 		// Comprobamos que hay un nombre escrito
 		
 		//Nos conectamos al servidor
-		var URL = 'ws://' + location.host  + '/ProyectoFP16052014/ajedrez';
+		var parth = location.pathname.split("/");
+		if (parth.length >2){
+			var URL = 'ws://' + location.host  + '/ProyectoFP16052014/ajedrez';
+		}else{
+			var URL = 'ws://' + location.host  + '/ajedrez';
+		}
+		
 		//var URL = 'ws://192.168.56.1:8080/websocket/simple?nombre='+nombre;
 		//var URL = 'ws://localhost:8080/websocket/simple?nombre='+nombre;
 		var timePing;
