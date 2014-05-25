@@ -240,9 +240,7 @@ left: 50px;
 	font-family: 'Fontdiner Swanky', cursive;
 	
 }
-#tiempos{
-	cursor:move;
-}
+
 @-webkit-keyframes animatedBackground {
 	10% { background-position: 0 0; }
 	50% { background-position: -100px 0; }

@@ -9,11 +9,7 @@
 	
 }
 
-#mover { 
-	cursor: move;
-	height: 20px;
-	background: rgba(0,0,0,.6);
- }
+ 
 
 #chat ul{
 	overflow-y:scroll;
@@ -35,7 +31,7 @@
 
 #partidas{
 	width:350px;
-	
+	background: none repeat scroll 0% 0% rgba(130, 120, 214, 0.8);
 	position:absolute;
 	
 	padding:0;
@@ -46,9 +42,10 @@
 	background:black;
 	
 }
-#controlesPartida{
+
+#controlesPartida , #mover, #tiempos, #moverTablero{
 	cursor: move;
-	background:black;
+	background-color:rgba(252,234,187,0.6);
 }
 #tablaPartidas{
 	
