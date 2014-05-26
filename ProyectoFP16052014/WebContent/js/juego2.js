@@ -179,12 +179,26 @@ $(function(){
 		    ws.onclose = function (event) {
 		       alert("No se ha podido conectar a Websockets.");
 		       // $(idChat).append("Cerrado");
-		       window.location.replace('http://' + location.host  + '/ProyectoFP16052014/principal');
+		       var parth = location.pathname.split("/");
+				if (parth.length >2){
+					var srtf = 'http://' + location.host  + '/ProyectoFP16052014/principal';
+				}else{
+					var srtf = 'http://' + location.host  + '/principal';
+				}
+		       window.location.replace(srtf);
 		    };
 		    ws.onerror = function (event) {
 		       //$(idChat).append("Error");
 		        alert("Error en Websockets.");
-		        window.location.replace('http://' + location.host  + '/ProyectoFP16052014/principal');
+		       
+			       // $(idChat).append("Cerrado");
+			       var parth = location.pathname.split("/");
+					if (parth.length >2){
+						var srtf = 'http://' + location.host  + '/ProyectoFP16052014/principal';
+					}else{
+						var srtf = 'http://' + location.host  + '/principal';
+					}
+			       window.location.replace(srtf);
 		    };
 		   
 		   
@@ -431,6 +445,29 @@ $(function(){
 	function ajuste(ev){
 		ajustar(divd);
 		dibujarTablero(divd);
+		
+		var w = $(window).width();
+		//console.log("con-> " + w);
+		var wcontrolesPartida = $("controlesPartida").width();
+		if (w<wcontrolesPartida){
+			$("controlesPartida").css("width",w);
+			console.log("controlesPartida");
+		}
+		var wmover= $("mover").width();
+		if (w<wmover){
+			$("mover").css("width",w);
+			console.log("controlesPartida2");
+		}
+		var wtiempos= $("tiempos").width();
+		if (w<wtiempos){
+			$("tiempos").css("width",w);
+			console.log("controlesPartida3");
+		}
+		var wmoverTablero = $("moverTablero").width();
+		if (w<wmoverTablero){
+			$("moverTablero").css("width",w);
+			console.log("controlesPartida4");
+		}
 	}
 	
 	function tiempoAhumano(segundos){
@@ -459,7 +496,7 @@ $(function(){
 			
 			w = width2;
 			h2 = height2;
-			console.log("inicial "+ho +"-"+wo);
+			//console.log("inicial "+ho +"-"+wo);
 			if (height2<width2){
 				$("#wrapTablero").css("width",""+height2+"px");
 				$("#wrapTablero").css("height",""+height2+"px");
@@ -496,7 +533,7 @@ $(function(){
 			width2 = width3;
 		}
 		
-		console.log("inicial:"+inicial+" Hi: "+h2+" Wi:"+w);
+		//console.log("inicial:"+inicial+" Hi: "+h2+" Wi:"+w);
 			if (w>h2){
 			//if(w>h){
 				$(div).css("width",""+h2+"px");

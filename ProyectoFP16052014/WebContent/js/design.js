@@ -281,15 +281,10 @@ function ajusteVertical(){
 		chatVisible();
 	}
 	
-	/*
-	 * No funciona como se esperaba este código
-	$("#partidas").css("height",parseInt((h/2)-100));
-	$("#envolver").css("height",parseInt((h/2)-100));
-	$("#tiempos").css("height",parseInt((h/2)-100));
-	$("#partidas").trigger("resize");
-	$("#envolver").trigger("resize");
-	$("#tiempos").trigger("resize");
-	*/
+
+	
+	
+	
 	
 }
 function cambiarCabecera(){

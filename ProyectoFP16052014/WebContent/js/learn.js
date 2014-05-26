@@ -18,6 +18,11 @@ $(function(){
 	var idBotonEnviar ="#enviar";
 	var idInputMensaje = "#mensaje";
 	var timePing = null;
+	var inicial = true;
+	var ho ;
+	var wo; 
+	var width2;
+	var height2;
 	
 	/*** Conf inicial ***/
 	ajustar(divd);
@@ -29,7 +34,7 @@ $(function(){
 	
 	/** indicarle al chat que tiene pestañas */
 	$("#chat").tabs();
-	
+	ajustarPaneles();
 	
 	/*** Eventos ***/
 	$(window).resize(ajuste);
@@ -179,7 +184,12 @@ $(function(){
 		// Comprobamos que hay un nombre escrito
 		
 		//Nos conectamos al servidor
-		var URL = 'ws://' + location.host  + '/ProyectoFP16052014/grupo';
+		var parth = location.pathname.split("/");
+		if (parth.length >2){
+			var URL = 'ws://' + location.host  + '/ProyectoFP16052014/grupo';
+		}else{
+			var URL = 'ws://' + location.host  + '/grupo';
+		}
 		//var URL = 'ws://192.168.56.1:8080/websocket/simple?nombre='+nombre;
 		//var URL = 'ws://localhost:8080/websocket/simple?nombre='+nombre;
 		var timePing;
@@ -205,12 +215,26 @@ $(function(){
 		     
 		    };
 		    ws.onclose = function (event) {
-		       
-		        $(idChat).append("Cerrado");
-		       // window.location.replace('http://' + location.host  + '/ProyectoFP/principal');
+		    	 alert("No se ha podido conectar a Websockets.");
+			       // $(idChat).append("Cerrado");
+			       var parth = location.pathname.split("/");
+					if (parth.length >2){
+						var srtf = 'http://' + location.host  + '/ProyectoFP16052014/principal';
+					}else{
+						var srtf = 'http://' + location.host  + '/principal';
+					}
+			       window.location.replace(srtf);
 		    };
 		    ws.onerror = function (event) {
-		       $(idChat).append("Error");
+		    	 alert("Error en Websockets.");
+			       // $(idChat).append("Cerrado");
+			       var parth = location.pathname.split("/");
+					if (parth.length >2){
+						var srtf = 'http://' + location.host  + '/ProyectoFP16052014/principal';
+					}else{
+						var srtf = 'http://' + location.host  + '/principal';
+					}
+			       window.location.replace(srtf);
 		    };
 		   
 		   
@@ -248,8 +272,15 @@ $(function(){
 			var di = "<div id='p-"+identificador+"'></div>";
 			$("#chat").append(di);
 			$("#chat").tabs("refresh");
-			
+			$(".cerrarPestania").click(cerrarPestania);
+			ajusteVertical();
+			ajustarPaneles();
 		}
+	}
+	function cerrarPestania(){
+		var id= $(this).attr("b");
+		$(this).parent().remove();
+		$("div#"+id).remove();
 	}
 	/** Convertir mensaje del INput en JSON string */
 	function deTextoAJson (mensaje){
@@ -291,7 +322,7 @@ $(function(){
 		//console.log(json);
 		switch (json.tipo) {
 			case "mensajeGeneral": //Se recibe un mensaje para el chat general
-				var claseBotonGeneral = "botoncico";
+				var claseBotonGeneral = "";
 				 $(idChat).append("<p><button class='"+claseBotonGeneral+"' title='"+json.de+"'>"+json.de+"</button>: "+json.contenido+"</p>");
 				 $(idChat).scrollTop($(idChat)[0].scrollHeight);
 				 $("button[title='"+json.de+"']").click(asignarEscuchadorBoton);
@@ -323,14 +354,30 @@ $(function(){
 			case "partidasDisponibles":
 				var str="";
 				for (var int = 0; int < json.partidas.length; int++) {
-					str += "<tr><td>"+json.partidas[int].blancas+"</td><td>"+json.partidas[int].negras+"</td><td>"+json.partidas[int].estado+"</td>";
+					//alert(json.partidas[int].estado);
+					var strB="";
+					var strN="";
+					if (json.partidas[int].blancas !=""){
+						strB += "<button title='"+json.partidas[int].blancas+"'>"+json.partidas[int].blancas+"</button>";
+					}
+					if (json.partidas[int].negras !=""){
+						strN += "<button title='"+json.partidas[int].negras+"'>"+json.partidas[int].negras+"</button>";
+					}
 					if (json.partidas[int].estado == "EsperandoOtroJugador"){
+						
+						str += "<tr><td>"+strB+"</td><td>"+strN+"</td><td>Esperando/Waiting</td><td></td>";
+					
 						str += "<td><button class='unirse' b='"+json.partidas[int].blancas+"' n='"+json.partidas[int].negras+"'>Unirse</button></td></tr>";
-					}else{
+					}
+					if (json.partidas[int].estado == "Jugando"){
+						str += "<tr><td>"+strB+"</td><td>"+strN+"</td><td>Jugando/Playing</td><td></td>";
 						str += "<td></td></tr>";
 					}
+					
 				}
+				
 				$("#listaPartidas").html(str);
+				$("#listaPartidas button[title]").unbind().click(asignarEscuchadorBoton);
 				refrescarEscucharUnirse();
 				break;
 			case "tiempo":
@@ -432,24 +479,115 @@ $(function(){
 	function ajuste(ev){
 		ajustar(divd);
 		dibujarTablero(divd);
+		
+		var w = $(window).width();
+		//console.log("con-> " + w);
+		var wcontrolesPartida = $("controlesPartida").width();
+		if (w<wcontrolesPartida){
+			$("controlesPartida").css("width",w);
+			console.log("controlesPartida");
+		}
+		var wmover= $("mover").width();
+		if (w<wmover){
+			$("mover").css("width",w);
+			console.log("controlesPartida2");
+		}
+		var wtiempos= $("tiempos").width();
+		if (w<wtiempos){
+			$("tiempos").css("width",w);
+			console.log("controlesPartida3");
+		}
+		var wmoverTablero = $("moverTablero").width();
+		if (w<wmoverTablero){
+			$("moverTablero").css("width",w);
+			console.log("controlesPartida4");
+		}
+	}
+	function tiempoAhumano(segundos){
+		
+		var minutos = parseInt(parseInt(segundos)/60);
+		var segundos = parseInt(parseInt(segundos)%60);
+		segundos+="";
+		minutos+="";
+		while(segundos.length<2){
+			segundos ="0"+segundos;
+		}
+		while(minutos.length<2){
+			minutos ="0"+minutos;
+		}
+		return minutos+":"+segundos;
+	}
+	function ajustar(div){
+
+		var w = parseInt($(div).parent().width());
+		var h2 = parseInt($(div).parent().height());
+		ho = parseInt($(window).height()-100);
+		$("#contenido").css("height",""+ho+"px");
+	if (inicial){
+		width2 = parseInt($(window).width() *0.9);
+		height2 = parseInt($(window).height()*0.9)-100;
+		
+		w = width2;
+		h2 = height2;
+		//console.log("inicial "+ho +"-"+wo);
+		if (height2<width2){
+			$("#wrapTablero").css("width",""+height2+"px");
+			$("#wrapTablero").css("height",""+height2+"px");
+			
+		}else{
+			$("#wrapTablero").css("width",""+width2+"px");
+			$("#wrapTablero").css("height",""+width2+"px");
+			
+		}
+		inicial = false;
+	}
+		//var h = w;
+	var width3 = parseInt($(window).width()*0.9);
+	var height3 = parseInt($(window).height()*0.9)-100;
+	var wmin;
+	var hmin;
+	var entro= false;
+	if (width3 != width2 || height3 != height2){
+		entro = true;
+		if (width3 < width2 ){
+			wmin = width3;
+		}else{
+			wmin = width2;
+		}
+		if (height3 < height2){
+			hmin = height3;
+		}else{
+			hmin = height2;
+		}
+		w = wmin;
+		h2 = hmin; 
+		
+		height2 = height3;
+		width2 = width3;
 	}
 	
-	function ajustar(div){
-			//var w = parseInt($(window).width()*.9);
-			//var h = parseInt($(window).height()*.9);
-			var h2 = parseInt($(window).height()*.9);
-			var w = parseInt($(div).parent().width()*.9);
-			//var h = w;
-			//console.log("H:"+h+" W:"+w);
-			
-			if (w>h2){
-			//if(w>h){
-				$(div).css("width",""+h2+"px");
-				$(div).css("height",""+h2+"px");
-			}else{
-				$(div).css("width",""+w+"px");
-				$(div).css("height",""+w+"px");
+	//console.log("inicial:"+inicial+" Hi: "+h2+" Wi:"+w);
+		if (w>h2){
+		//if(w>h){
+			$(div).css("width",""+h2+"px");
+			$(div).css("height",""+h2+"px");
+			if (entro){
+				$("#wrapTablero").width(h2);
+				$("#wrapTablero").height(h2);
 			}
+		}else{
+			$(div).css("width",""+(w)+"px");
+			$(div).css("height",""+(w)+"px");
+			if (entro){
+				$("#wrapTablero").width(w);
+				$("#wrapTablero").height(w);
+			}
+		}
+	
+		
+		
+		
+
 	}
 	
 	function dibujarTablero(lugar){
@@ -589,6 +727,7 @@ $(function(){
 
 	
 	/******Video Streaming*******/
+	$("#webcam").hide();
 	$("#activarMedia").click(activarMedia);
 	$("#pararMedia").click(pararMedia);
 	 var video = $("#live").get()[0];
@@ -675,8 +814,9 @@ $(function(){
       
      var streamm ;
  	function success(e){
- 		console.log("estoy en el success");
- 		conCamara = true;
+ 		//console.log("estoy en el success");
+ 		//conCamara = true;
+ 		$("#webcam").show();
  		streamm = e;
  	    // creates the audio context
  	    audioContext = window.AudioContext || window.webkitAudioContext;

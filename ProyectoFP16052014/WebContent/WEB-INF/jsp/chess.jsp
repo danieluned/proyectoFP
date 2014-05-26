@@ -24,9 +24,7 @@
 		<script src="js/bootbox.min.js"></script>
 		<script src="js/juego2.js"></script>
 		<script src="js/design.js"></script>
-		
 		<script src="js/arrange.js"></script>
-		
 	</head>
 	 <body id="body">
         <!--[if lt IE 7]>
@@ -38,7 +36,6 @@
 				            col-sm-12 col-sm-offset-0
 				            col-md-12 col-md-offset-0
 				            col-lg-12 col-lg-offset-0">
-					
 					<s:a action="principal">
 						<img class="im" src="img/Logotipo.png"/>
 						<h1 class="titulo"><s:text name="tituloJuego"/></h1>

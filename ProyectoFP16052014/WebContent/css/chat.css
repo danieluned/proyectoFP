@@ -2,7 +2,7 @@
 	position:absolute;
 	height: 250px;
 	width: 300px;
-	
+	margin-right:20px;
 }
 #chat div {
 	width:100%;
@@ -65,9 +65,10 @@
 	background-color:rgba(0,0,0,0.6);
 	font-weight:bolder;
 }
+#wrapTablero,#envolver,#tiempos,#partidas{
+	margin-bottom:50px;
+}
 #tablaPartidas{
-	
-	
 	overflow:scroll;
 }
 .item{

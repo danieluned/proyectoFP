@@ -22,10 +22,9 @@
 		<script src="js/jquery-ui-1.10.4.custom.js"></script>
 		<script src="js/bootstrap.js"></script>
 		<script src="js/bootbox.min.js"></script>
-		<script src="js/arrange.js"></script>
-		<script src="js/design.js"></script>
 		<script src="js/learn.js"></script>
-		
+		<script src="js/design.js"></script>
+		<script src="js/arrange.js"></script>
 	</head>
 	 <body id="body">
         <!--[if lt IE 7]>
@@ -45,15 +44,25 @@
 					<a id="es" href="?request_locale=es">ES</a>
 					<a id="en" href="?request_locale=en">EN</a>
 					<s:a action="deslogearse" cssClass="btn-sm btn-danger glyphicon glyphicon-off" id="salir"></s:a>
+					<button id="cambiarChat" class="btn-sm">Layout</button>
+					<button id="cambiarTablero" class="btn-xs">Tablero</button>
+					<button id="cambiarChat2" class="btn-xs">Chat</button>
+					<button id="cambiarPartidas" class="btn-xs">Partidas</button>
+					<button id="cambiarControles" class="btn-xs">Controles</button>
 				</div>
 			</header>
-			<div class="row">
-				<div class="col-xs-12 col-sm-8 ">
+			<div class="row" id="contenido">
+				<div class="col-xs-12">
 					<div class="row">
-						<p>Tiempo blancas:<span id="tiempoBlancas"></span></p>
-						<p>Tiempo negras:<span id="tiempoNegras"></span></p>
+						
+						
+						<div id="wrapTablero" class="item">
+						<div id="moverTablero">Tablero</div>
 						<div id="tablero">
-							<table>
+						
+						<table>
+								
+								
 								<tr>
 									<td id="a8"></td>
 									<td id="b8"></td>
@@ -135,71 +144,75 @@
 									<td id="h1"></td>
 								</tr>
 							</table>
-						</div>
-						<button id="rotar" class="botoncico">Rotar Tablero</button>
-					</div>
-					<!-- 
-					<div class="row">
-						<button id="resetearPartida"><s:text name="colocarFichas"/></button>
-					</div>
-					 -->
-				</div>
-				<div class="col-xs-12 col-sm-4">
-					<button id="conectar"><s:text name="conectar"/></button>
-			        <input type="text" id="nombre"/>
-					<button id="enviar" class="botoncico"><s:text name="enviarMensaje"/></button>
-			        <input type="text" id="mensaje"/>
-					<div id="chat">
-						 <ul>
-							<li><a href="#p-00"><span><s:text name="general"/></span></a></li>
-						</ul>
-						<div id="p-00">
+							</div>
 						</div>
 					</div>
 				</div>
-				<div class="col-xs-12 col-sm-4">
-					<button id="crearPartida" class="botoncico">Crear Partida</button>
-					<table>
-						<thead>
-							<tr>
-								<th>Blancas</th>
-								<th>Negras</th>
-								<th>Estado</th>
-								<th>Accion</th>
-							</tr>
-						</thead>
-						<tbody id="listaPartidas">
-						</tbody>
-					</table>
+				<div class="col-xs-0">
+					
+					<div id="envolver" class="item">
+						<div id="mover">Chat</div>
+						<div id="chat">
+							 <ul>
+								<li><a href="#p-00"><span><s:text name="general"/></span></a></li>
+							</ul>
+							<div id="p-00">
+							</div>
+							
+				        </div>
+				        <input type="text" id="mensaje"/><button id="enviar"><s:text name="enviarMensaje"/></button>
+					</div>	
+						<div id="tiempos" class="item">
+							<p>Tiempo blancas:<span id="tiempoBlancas"></span></p>
+							<p>Tiempo negras:<span id="tiempoNegras"></span></p>
+							<button id="rotar" class="btn-xs">Rotar Tablero</button>
+						</div>
+					<div id="partidas" class="item">
+						<div id="controlesPartida">Partidas</div>
+						<button id="crearPartida" class="btn-sm">Crear Partida</button>
+						<button id="crearPartida" class="btn-sm">Ofrecer Tablas</button>
+						<button id="crearPartida" class="btn-sm btn-danger">Abandonar</button>
+						<div id="tablaPartidas">
+							<table >
+								<thead>
+									<tr>
+										<th>Blancas</th>
+										<th>Negras</th>
+										<th>Estado</th>
+										<th>Turno</th>
+										<th>Accion</th>
+									</tr>
+								</thead>
+								<tbody id="listaPartidas">
+								</tbody>
+							</table>
+						</div>
+					</div>
 				</div>
-			</div>
-		
-		
-			 <div>
-	              <video id="live" width="213" height="160" autoplay="autoplay"
-	                     style="display: inline;"></video>
-	              <canvas id="canvas" width="213" height="160" style="display: inline;"></canvas>
-       		 </div>
-				
-	
-	       <div>
-	              <img id="target" width="213" height="160" style="display: inline;" />
-	       </div>
-	       <audio id="sonido" controls>
-	       		
-	       </audio>
-	       <video id="algo2">
-	       </video>
-	       	<button id="pararMedia">Parar Media</button>
-	       	<button id="activarMedia">Activar Media</button>
-			<button id="enviarSonido">Enviar Sonido</button>
-			<button id="webcam">Enviar Video</button>
-			<div id="output"></div>
-			<audio controls autoplay id="sonido"></audio>
-			<input onclick="startRecording()" type="button" value="start recording" />
-			<input onclick="stopRecording()" type="button" value="stop recording and play" />
+				<div class="col-xs-0">
+					<div>
+			              <video id="live" width="213" height="160" autoplay="autoplay"
+			                     style="display: inline;"></video>
+			              <canvas id="canvas" width="213" height="160" style="display: none;"></canvas>
+		       		 </div>
+						
 			
-			<!-- <audio controls src="ws://localhost:8080/ProyectoFP/radio"></audio>-->
+			       <div>
+			              <img id="target" width="213" height="160" style="display: inline;" />
+			       </div>
+			       <audio id="sonido" controls>
+			       </audio>
+			       <video id="algo2">
+			       </video>
+			       	<button id="pararMedia">Parar Media</button>
+			       	<button id="activarMedia">Activar Media</button>
+					<button id="enviarSonido">Enviar Sonido</button>
+					<button id="webcam">Enviar Video</button>
+					<div id="output"></div>
+					
+				</div>
+			 
+			</div>
 			<!-- Sonidos -->
 			<audio id="newgame">
 				<source src="sounds/NEWGAME.mp3" type="audio/mp3" />
@@ -211,15 +224,19 @@
 				<source src="sounds/Tick.mp3" type="audio/mp3" />
 			</audio>
 			<div id="push">
-			
 			</div>
 		</div>
 		<footer id="footer">
 			<div class="container">
 				<div class="row center-block">
-					Proyecto Ajedrez Multijugador CPIFP Bajo Aragón 2014
+					<s:text name="footer"/>
 				</div>
 			</div>
 		</footer>
 	</body>
 </html>
+
+		
+		
+	
+			
