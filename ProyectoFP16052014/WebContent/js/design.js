@@ -227,8 +227,18 @@ $(function(){
     });
 	$("#envolver").resize(ajustarChat);
 	$("#partidas").resize(ajustarPartidas);
-	
+	$("#click").click(animacion1);
 });
+
+function animacion1(){
+	$("#animacion1").animate({left:'0px'},"slow");
+	$("#animacion1").animate({left:'40px'},"slow");
+	$("#animacion1").animate({left:'40px',top:'500px'},"slow");
+	$("#animacion1").animate({left:'140px',top:'300px'},"slow");
+	$("#animacion1").animate({rigth:'440px',width:'200px',height:'100px'},"slow");
+	$("#animacion1").animate({top:'400px',width:'100px',height:'100px',background:'red'},"slow");
+	//$("#animacion1").fade();
+}
 function ajustarPartidas(){
 	$("#tablaPartidas").css("height",parseInt($(this).height()-65));
 }

@@ -245,6 +245,11 @@ top: 20px;
 right: 20px;
 	
 }
+#click{
+		position: absolute;
+top: 20px;
+left: 60px;
+}
 #es{
 	position: absolute;
 top: 20px;

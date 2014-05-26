@@ -7,6 +7,16 @@
 button{
 color: black;	
 }
+#animacion1{
+	display: block;
+	width:100px;
+background: none repeat scroll 0% 0% #00F;
+z-index: 4000;
+border: 1px solid blue;
+top: 240px;
+position: absolute;
+right:0px;
+}
 #chat div {
 	width:100%;
 	

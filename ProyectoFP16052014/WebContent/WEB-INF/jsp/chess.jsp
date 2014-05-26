@@ -49,6 +49,7 @@
 					<button id="cambiarChat2" class="btn-xs">Chat</button>
 					<button id="cambiarPartidas" class="btn-xs">Partidas</button>
 					<button id="cambiarControles" class="btn-xs">Controles</button>
+					<!--<button id="click">Animacion</button>-->
 				</div>
 			</header>
 			<div class="row" id="contenido">
@@ -202,6 +203,11 @@
 			</audio>
 			<div id="push">
 			</div>
+			<!-- -Animaciones 
+			<div id="animacion1">
+				<span>Victoria</span>
+			</div>
+			-->
 		</div>
 		<footer id="footer">
 			<div class="container">
