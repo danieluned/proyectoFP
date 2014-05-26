@@ -193,9 +193,35 @@ public class AjedrezServlet extends WebSocketServlet{
         case "movimiento":
         	if (!(this.partida.equals(""))) {
         		if (AjedrezServlet.partidas.get(this.partida)!=null){
+        			 String estado = AjedrezServlet.partidas.get(this.partida).getEstadoActual();
         			 AjedrezServlet.partidas.get(this.partida).movimiento(this.nombre, datos);
-                     
-                     AjedrezServlet.this.actualizarPartidas();
+        			 AjedrezServlet.this.actualizarPartidas();
+        			 String estadoNuevo = AjedrezServlet.partidas.get(this.partida).getEstadoActual();
+                     System.out.println("Estdos: "+estado+" -> "+estadoNuevo);
+                     if (estado.equals("Jugando") && estadoNuevo!=estado){
+                    	 
+                    	 if (estadoNuevo.equals("Ganan blancas")){
+                    		 System.out.println("Enviando ganan blancas");
+                    		 AjedrezServlet.partidas.get(this.partida).getConexBlancas()
+                    		 .getWsOutbound().writeTextMessage(CharBuffer.wrap("{\"tipo\":\"finPartida\",\"blancas\":\"" +  AjedrezServlet.partidas.get(this.partida).getJugadorBlancas() + "\", \"negras\":\"" +  AjedrezServlet.partidas.get(this.partida).getJugadorNegras() + "\" , \"accion\":\"ganas\" }"));
+                    		 AjedrezServlet.partidas.get(this.partida).getConexNegras()
+                    		 .getWsOutbound().writeTextMessage(CharBuffer.wrap("{\"tipo\":\"finPartida\",\"blancas\":\"" +  AjedrezServlet.partidas.get(this.partida).getJugadorBlancas() + "\", \"negras\":\"" +  AjedrezServlet.partidas.get(this.partida).getJugadorNegras() + "\" , \"accion\":\"pierdes\" }"));
+                    	}
+                    	if (estadoNuevo.equals("Ganan negras")){
+                    		 System.out.println("Enviando ganan negras");
+                    		 AjedrezServlet.partidas.get(this.partida).getConexBlancas()
+                    		 .getWsOutbound().writeTextMessage(CharBuffer.wrap("{\"tipo\":\"finPartida\",\"blancas\":\"" +  AjedrezServlet.partidas.get(this.partida).getJugadorBlancas() + "\", \"negras\":\"" +  AjedrezServlet.partidas.get(this.partida).getJugadorNegras() + "\" , \"accion\":\"pierdes\" }"));
+                    		 AjedrezServlet.partidas.get(this.partida).getConexNegras()
+                    		 .getWsOutbound().writeTextMessage(CharBuffer.wrap("{\"tipo\":\"finPartida\",\"blancas\":\"" +  AjedrezServlet.partidas.get(this.partida).getJugadorBlancas() + "\", \"negras\":\"" +  AjedrezServlet.partidas.get(this.partida).getJugadorNegras() + "\" , \"accion\":\"ganas\" }"));
+                    	}
+                    	if (estadoNuevo.equals("Tablas")){
+                    		 System.out.println("Enviando tablas");
+	                   		 AjedrezServlet.partidas.get(this.partida).getConexBlancas()
+	                   		 .getWsOutbound().writeTextMessage(CharBuffer.wrap("{\"tipo\":\"finPartida\",\"blancas\":\"" +  AjedrezServlet.partidas.get(this.partida).getJugadorBlancas() + "\", \"negras\":\"" +  AjedrezServlet.partidas.get(this.partida).getJugadorNegras() + "\" , \"accion\":\"tablas\" }"));
+	                   		 AjedrezServlet.partidas.get(this.partida).getConexNegras()
+	                   		 .getWsOutbound().writeTextMessage(CharBuffer.wrap("{\"tipo\":\"finPartida\",\"blancas\":\"" +  AjedrezServlet.partidas.get(this.partida).getJugadorBlancas() + "\", \"negras\":\"" +  AjedrezServlet.partidas.get(this.partida).getJugadorNegras() + "\" , \"accion\":\"tablas\" }"));
+                    	}	
+                     }
         		}
             }
           break;

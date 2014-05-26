@@ -22,6 +22,7 @@ $(function(){
 	var wo; 
 	var width2;
 	var height2;
+	var estado="";
 	/*** Conf inicial ***/
 	ajustar(divd);
 	dibujarTablero(divd);
@@ -315,6 +316,7 @@ $(function(){
 					pintarCasillas(divd);
 					colocarFichas(divd);
 					soundNewGame();
+					estado="jugando";
 				break;
 			case "partidasDisponibles":
 				var str="";
@@ -413,6 +415,11 @@ $(function(){
 	            
 	            target.src = url;
 				break;
+			case "finPartida":
+					if (estado =="jugando"){
+						ejecutar(json.accion);
+					}
+				break;
 			default:
 				
 				break;
@@ -440,6 +447,19 @@ $(function(){
 			
 			
            
+		}
+	}
+	function ejecutar(accion){
+		alert(accion);
+		switch(accion){
+		case "tablas":
+			
+			break;
+		case "ganas":
+			break;
+		case "pierdes":
+			break;
+			
 		}
 	}
 	function ajuste(ev){
