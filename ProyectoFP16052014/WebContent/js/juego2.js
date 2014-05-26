@@ -689,11 +689,18 @@ $(function(){
 		//moverFicha(coordenadaInicial,coordenadaFinal);
 	}
 	function moverFicha(inicio, fin){
+		
+		
 		//alert(inicio+"-"+fin);
 		var ficha = obtenerFicha(inicio);
 		$("#"+inicio).toggleClass(ficha);
+		
 		$("#"+fin).toggleClass(obtenerFicha(fin));
 		$("#"+fin).toggleClass(ficha);
+		
+		$("#tablero td").removeClass("rojo");
+		$("#"+inicio).addClass("rojo");
+		$("#"+fin).addClass("rojo");
 		
 	}
 	function obtenerFicha(posicion){

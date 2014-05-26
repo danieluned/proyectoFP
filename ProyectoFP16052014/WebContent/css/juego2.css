@@ -352,5 +352,8 @@ body{
 	background-image: url('../img/piezas/nd.svg');
 }
 .azul{
-	outline: 0.3em solid blue;
+	outline: 0.3em solid blue !important;
+}
+.rojo{
+	outline: 0.3em solid red;
 }

@@ -151,15 +151,34 @@ public class AjedrezServlet extends WebSocketServlet implements Runnable{
       System.out.println("Conexión cerrada a" + this.nombre);
       boolean esNuevaLista = false;
       for (Partida p : AjedrezServlet.partidas.values()){
-    	  if (p.getJugadorBlancas().equals(this.nombre)){
-    		  p.setEstadoActual("Ganan negras");
-    		  p.setJugadorBlancas("");
-    		  esNuevaLista = true;
-    	  }else if(p.getJugadorNegras().equals(this.nombre)){
-    		  p.setEstadoActual("Ganan blancas");
-    		  p.setJugadorNegras("");
-    		  esNuevaLista = true;
+    	  if (p.getEstadoActual().equals("Jugando")){
+    		  if (p.getJugadorBlancas().equals(this.nombre)){
+        		  p.setEstadoActual("Ganan negras");
+        		  
+        		  esNuevaLista = true;
+        		  
+         		 try {
+    				p.getConexNegras()
+    				 .getWsOutbound().writeTextMessage(CharBuffer.wrap("{\"tipo\":\"finPartida\",\"blancas\":\"" +  p.getJugadorBlancas() + "\", \"negras\":\"" +  p.getJugadorNegras() + "\" , \"accion\":\"ganas\" }"));
+    			} catch (IOException e) {
+    				// TODO Auto-generated catch block
+    				e.printStackTrace();
+    			}
+        	  }else if(p.getJugadorNegras().equals(this.nombre)){
+        		  p.setEstadoActual("Ganan blancas");
+        		 
+        		  esNuevaLista = true;
+        		  try {
+    				p.getConexBlancas()
+    					 .getWsOutbound().writeTextMessage(CharBuffer.wrap("{\"tipo\":\"finPartida\",\"blancas\":\"" +  p.getJugadorBlancas() + "\", \"negras\":\"" +  p.getJugadorNegras() + "\" , \"accion\":\"ganas\" }"));
+    			} catch (IOException e) {
+    				// TODO Auto-generated catch block
+    				e.printStackTrace();
+    			}
+    			
+        	  }
     	  }
+    	  
     		
       }
       AjedrezServlet.this.conexiones.remove(this.connectionId);
@@ -266,13 +285,21 @@ public class AjedrezServlet extends WebSocketServlet implements Runnable{
         	//Doy por abandonada la partida si la tubiese en la que estaba por cliquear unirse a otra.
         	if (!(this.partida.equals(""))) {
                if(AjedrezServlet.partidas.get(this.partida)!=null){
-            	   if (AjedrezServlet.partidas.get(this.partida).getEstadoActual().equals("jugando")){
+            	   if (AjedrezServlet.partidas.get(this.partida).getEstadoActual().equals("Jugando")){
             		   if (AjedrezServlet.partidas.get(this.partida).getJugadorBlancas().equals(this.nombre)){
             			   AjedrezServlet.partidas.get(this.partida).setEstadoActual("Ganan negras");
+            			   AjedrezServlet.partidas.get(this.partida).getConexBlancas()
+                  		 .getWsOutbound().writeTextMessage(CharBuffer.wrap("{\"tipo\":\"finPartida\",\"blancas\":\"" +  AjedrezServlet.partidas.get(this.partida).getJugadorBlancas() + "\", \"negras\":\"" +  AjedrezServlet.partidas.get(this.partida).getJugadorNegras() + "\" , \"accion\":\"pierdes\" }"));
+                  		 AjedrezServlet.partidas.get(this.partida).getConexNegras()
+                  		 .getWsOutbound().writeTextMessage(CharBuffer.wrap("{\"tipo\":\"finPartida\",\"blancas\":\"" +  AjedrezServlet.partidas.get(this.partida).getJugadorBlancas() + "\", \"negras\":\"" +  AjedrezServlet.partidas.get(this.partida).getJugadorNegras() + "\" , \"accion\":\"ganas\" }"));
             		   }else{
             			   AjedrezServlet.partidas.get(this.partida).setEstadoActual("Ganan blancas");
+            			   AjedrezServlet.partidas.get(this.partida).getConexBlancas()
+                  		 .getWsOutbound().writeTextMessage(CharBuffer.wrap("{\"tipo\":\"finPartida\",\"blancas\":\"" +  AjedrezServlet.partidas.get(this.partida).getJugadorBlancas() + "\", \"negras\":\"" +  AjedrezServlet.partidas.get(this.partida).getJugadorNegras() + "\" , \"accion\":\"ganas\" }"));
+                  		 AjedrezServlet.partidas.get(this.partida).getConexNegras()
+                  		 .getWsOutbound().writeTextMessage(CharBuffer.wrap("{\"tipo\":\"finPartida\",\"blancas\":\"" +  AjedrezServlet.partidas.get(this.partida).getJugadorBlancas() + "\", \"negras\":\"" +  AjedrezServlet.partidas.get(this.partida).getJugadorNegras() + "\" , \"accion\":\"pierdes\" }"));
             			 }
-            		   AjedrezServlet.this.actualizarPartidas();
+            		   //AjedrezServlet.this.actualizarPartidas();
             	   }
             	   AjedrezServlet.partidas.get(this.partida).setEstadoActual("finalizada");
             	  partidas.remove(this.partida);
@@ -330,11 +357,17 @@ public class AjedrezServlet extends WebSocketServlet implements Runnable{
         	if (!(this.partida.equals(""))) {
                if(AjedrezServlet.partidas.get(this.partida)!=null){
             	   
-            	   if (AjedrezServlet.partidas.get(this.partida).getEstadoActual().equals("jugando")){
+            	   if (AjedrezServlet.partidas.get(this.partida).getEstadoActual().equals("Jugando")){
             		   if (AjedrezServlet.partidas.get(this.partida).getJugadorBlancas().equals(this.nombre)){
-            			   AjedrezServlet.partidas.get(this.partida).setEstadoActual("Ganan negras");
+            			   AjedrezServlet.partidas.get(this.partida).getConexBlancas()
+                  		 .getWsOutbound().writeTextMessage(CharBuffer.wrap("{\"tipo\":\"finPartida\",\"blancas\":\"" +  AjedrezServlet.partidas.get(this.partida).getJugadorBlancas() + "\", \"negras\":\"" +  AjedrezServlet.partidas.get(this.partida).getJugadorNegras() + "\" , \"accion\":\"pierdes\" }"));
+                  		 AjedrezServlet.partidas.get(this.partida).getConexNegras()
+                  		 .getWsOutbound().writeTextMessage(CharBuffer.wrap("{\"tipo\":\"finPartida\",\"blancas\":\"" +  AjedrezServlet.partidas.get(this.partida).getJugadorBlancas() + "\", \"negras\":\"" +  AjedrezServlet.partidas.get(this.partida).getJugadorNegras() + "\" , \"accion\":\"ganas\" }"));
             		   }else{
-            			   AjedrezServlet.partidas.get(this.partida).setEstadoActual("Ganan blancas");
+            			   AjedrezServlet.partidas.get(this.partida).getConexBlancas()
+                  		 .getWsOutbound().writeTextMessage(CharBuffer.wrap("{\"tipo\":\"finPartida\",\"blancas\":\"" +  AjedrezServlet.partidas.get(this.partida).getJugadorBlancas() + "\", \"negras\":\"" +  AjedrezServlet.partidas.get(this.partida).getJugadorNegras() + "\" , \"accion\":\"ganas\" }"));
+                  		 AjedrezServlet.partidas.get(this.partida).getConexNegras()
+                  		 .getWsOutbound().writeTextMessage(CharBuffer.wrap("{\"tipo\":\"finPartida\",\"blancas\":\"" +  AjedrezServlet.partidas.get(this.partida).getJugadorBlancas() + "\", \"negras\":\"" +  AjedrezServlet.partidas.get(this.partida).getJugadorNegras() + "\" , \"accion\":\"pierdes\" }"));
             			 }
             		 
             		  
@@ -365,6 +398,9 @@ public class AjedrezServlet extends WebSocketServlet implements Runnable{
       throws IOException
     {
      
+    }
+    public void comprobarFinal(){
+    	
     }
   }
 
