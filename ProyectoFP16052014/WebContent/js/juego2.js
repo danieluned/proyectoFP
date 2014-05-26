@@ -83,8 +83,17 @@ $(function(){
 	$("#rotar").click(rotarTablero);
 		
 		
-	
-	
+	var ping;
+	function hacerPing(){
+		if (ping==null){
+			ping = setInterval(function(){
+				ws.send("ping");
+			},10000);
+		}
+	}
+	function pararPing(){
+		clearInterval(ping);
+	}
 	function decode_base64(s) {
 	    var e={},i,k,v=[],r='',w=String.fromCharCode;
 	    var n=[[65,91],[97,123],[48,58],[43,44],[47,48]];
@@ -170,7 +179,7 @@ $(function(){
 		       // toggleElementosWebsocket();
 		        //ocultarConectarse();
 		       
-		        //enviarPings();
+		        hacerPing();
 		    };
 		    ws.onmessage = function (event) {
 		       procesarMensaje(event.data);
@@ -187,6 +196,7 @@ $(function(){
 					var srtf = 'http://' + location.host  + '/principal';
 				}
 		       window.location.replace(srtf);
+		       pararPing();
 		    };
 		    ws.onerror = function (event) {
 		       //$(idChat).append("Error");

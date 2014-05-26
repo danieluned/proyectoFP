@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.CharBuffer;
 import java.util.HashMap;
+import java.util.Iterator;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -23,10 +24,10 @@ import org.json.simple.parser.ParseException;
 import ajedrez.Partida;
 
 @WebServlet(urlPatterns={"/ajedrez"})
-public class AjedrezServlet extends WebSocketServlet{
+public class AjedrezServlet extends WebSocketServlet implements Runnable{
 
   private static final long serialVersionUID = 1L;
-  
+  Thread tx = new Thread();
   public static HashMap<String, Partida> partidas = new HashMap<String,Partida>();
 
   public HashMap<String, WebSocketConnection> conexiones = new HashMap<String,WebSocketConnection>();
@@ -42,12 +43,14 @@ public class AjedrezServlet extends WebSocketServlet{
   public void init() throws ServletException
   {
     System.out.println("Servlet Ajedrez iniciado");
+    tx.start();
   }
 
   public void destroy()
   {
     super.destroy();
     System.out.println("Servlet Ajedrez destruido");
+    tx.stop();
   }
 
   protected void doGet(HttpServletRequest req, HttpServletResponse resp)
@@ -364,4 +367,27 @@ public class AjedrezServlet extends WebSocketServlet{
      
     }
   }
+
+@Override
+	public void run() {
+		// TODO Auto-generated method stub
+		while (true){
+			//Para mantener las conexiones abiertas por si acaso
+			//Hago pings a todos las conexiones
+			for (WebSocketConnection conexion : conexiones.values()) {
+				try {
+					conexion.getWsOutbound().writeTextMessage(CharBuffer.wrap("ping"));
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+			try {
+				wait(10000);
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+	}
 }
