@@ -99,7 +99,7 @@ $(function(){
             		ws.send(blob);
             		vaciarSonido();
             		//alert("hola");
-                },200);
+                },1000);
 		
 	});
 	$("#webcam").click(function(){
@@ -120,7 +120,7 @@ $(function(){
            	// $("#algo2").attr("src",data);
               // procesarMensaje("{'tipo': 'media', 'video' : '"+newblob+"' }");
               //vaciarSonido();
-                },90);
+                },290);
 	});
 	
 	function decode_base64(s) {

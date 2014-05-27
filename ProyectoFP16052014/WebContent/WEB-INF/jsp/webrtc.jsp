@@ -1,3 +1,4 @@
+
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <%@ taglib uri="/struts-tags" prefix="s"%>
@@ -10,8 +11,8 @@
 		<meta charset="UTF-8">
 		<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
 		<meta name="viewport" content="width=device-width, initial-scale=1">
-		<meta name="description" content="Pantalla principal">
-		<title><s:text name="principal"/></title>
+		<meta name="description" content="Pantalla de logeo">
+		<title><s:text name="inicio"/></title>
 		<link rel="stylesheet" href="css/normalize.min.css">
         <link rel="stylesheet" href="css/black-tie/jquery-ui-1.10.4.custom.css" >
 		<link rel="stylesheet" href="css/bootstrap.css"/>
@@ -27,7 +28,7 @@
 		
 		<!--<script src="js/juego2.js"></script>-->
 	</head>
-	<body id="body">
+	<body id="body" onload="init()">
 		<div class="container-fluid negroTransparente" id="wrap">
 			<header class="row">
 				<div class="col-xs-12 col-xs-offset-0
@@ -41,24 +42,36 @@
 					<button class="btn-sm btn-info glyphicon glyphicon-fullscreen" id="fullscreen"></button>
 					<a id="es" href="?request_locale=es">ES</a>
 					<a id="en" href="?request_locale=en">EN</a>
-					<s:a action="deslogearse" cssClass="btn-sm btn-danger glyphicon glyphicon-off" id="salir"></s:a>
 					
 				</div>
 			</header>
+			
+			
 			<div class="row alineadoVertical">
-				<h4 class="h1 centrado"><s:text name="menuPrincipal"/></h4>
-				<div class="col-xs-2 col-xs-offset-2
+				<h4 class="h1 centrado"><s:text name="login"/></h4>
+				<div class="col-xs-8 col-xs-offset-2
 				            col-sm-3 col-sm-offset-4
 				            col-md-3 col-md-offset-5
-				            col-lg-2 col-lg-offset-5 ">
-				    <ul class="sinEstilo">
-						<li class="h4"><s:a action="jugarAjedrez" cssClass="btn-lg btn-success" ><s:text name="unoContraUno"/></s:a></li>
-						<li class="h4"><s:a action="aprender" cssClass="btn-lg btn-success" ><s:text name="aprender"/></s:a></li>
-						<li class="h4"><s:a action="webrtc" cssClass="btn-lg btn-success" ><s:text name="webrtc"/></s:a></li>
-					</ul>
+				            col-lg-2 col-lg-offset-5">
+					<div class="row">
+						<div id="videos">
+					      <video id="you" class="flip" autoplay></video>
+					    </div>
+					    <div id="chatbox">
+					      <button id="fullscreen">Enter Full Screen</button>
+					      <button id="newRoom">Create A New Room</button>
+					      <div id="messages">
+					      </div>
+					      <br>
+					      <input id="chatinput" type="text"/>
+					    </div>
+					    
+					</div>
+					
 				</div>
 			</div>
-			<div id="push"></div>
+			<div id="push">
+			</div>
 		</div>
 		<footer id="footer">
 			<div class="container">
@@ -67,5 +80,7 @@
 				</div>
 			</div>
 		</footer>
+		<script src="js/webrtc.io.js"></script>
+		<script src="js/client.js"></script>
 	</body>
 </html>
