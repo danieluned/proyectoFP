@@ -13,11 +13,13 @@
 		<meta name="viewport" content="width=device-width, initial-scale=1">
 		<meta name="description" content="Pantalla de logeo">
 		<title><s:text name="inicio"/></title>
+		<!-- 
 		<link rel="stylesheet" href="css/normalize.min.css">
         <link rel="stylesheet" href="css/black-tie/jquery-ui-1.10.4.custom.css" >
 		<link rel="stylesheet" href="css/bootstrap.css"/>
 		<link rel="stylesheet" href="css/juego2.css"/>
 		<link rel="stylesheet" href="css/chat.css"/>
+		 -->
 		<script src="js/modernizr-2.6.2-respond-1.1.0.min.js"></script>
 		<script src="js/jquery-1.10.2.js"></script>
 		<script src="js/jquery-ui-1.10.4.custom.js"></script>
@@ -25,10 +27,10 @@
 		<script src="js/bootbox.min.js"></script>
 		<script src="js/arrange.js"></script>
 		<script src="js/design.js"></script>
-		
+		<script src="js/adapter.js"></script>
 		<!--<script src="js/juego2.js"></script>-->
 	</head>
-	<body id="body" onload="init()">
+	<body id="body">
 		<div class="container-fluid negroTransparente" id="wrap">
 			<header class="row">
 				<div class="col-xs-12 col-xs-offset-0
@@ -65,7 +67,7 @@
 					      <br>
 					      <input id="chatinput" type="text"/>
 					    </div>
-					    
+					    <label>identificador<input type="text" id="conectarWebRTC"><button id="cambiarWebRTC">Cambiar</button></label>
 					</div>
 					
 				</div>
@@ -80,7 +82,8 @@
 				</div>
 			</div>
 		</footer>
-		<script src="js/webrtc.io.js"></script>1        
+		<script src="js/webrtc.io.js"></script>    
 		<script src="js/client.js"></script>
+	
 	</body>
 </html>

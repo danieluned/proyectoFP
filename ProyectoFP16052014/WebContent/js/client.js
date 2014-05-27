@@ -1,6 +1,40 @@
 var videos = [];
 var PeerConnection = window.PeerConnection || window.webkitPeerConnection00 || window.webkitRTCPeerConnection || window.mozRTCPeerConnection;
 
+$(function(){
+	$("#cambiarWebRTC").click(function(){
+		init2($("#conectarWebRTC").val());
+	});
+});
+
+
+function init2(dir) {
+	alert(dir);
+  if(PeerConnection){
+    rtc.createStream({"video": true, "audio": true}, function(stream) {
+      document.getElementById('you').src = URL.createObjectURL(stream);
+      videos.push(document.getElementById('you'));
+     
+     
+    });
+  }else {
+    alert('Your browser is not supported or you have to turn on flags. In chrome you go to chrome://flags and turn on Enable PeerConnection remember to restart chrome');
+  }
+
+  rtc.connect("ws://proyectofpwebrtc.danieluned.cloudbees.net", dir);
+  rtc.on('add remote stream', function(stream, socketId) {
+    console.log("ADDING REMOTE STREAM...");
+    var clone = cloneVideo('you', socketId);
+    document.getElementById(clone.id).setAttribute("class", "");
+    rtc.attachStream(stream, clone.id);
+   
+  });
+  rtc.on('disconnect stream', function(data) {
+      console.log('remove ' + data);
+      removeVideo(data);
+  });
+  
+}
 function getNumPerRow() {
   var len = videos.length;
   var biggest;
@@ -124,40 +158,7 @@ var dataChannelChat = {
 };
 
 function initChat() {
-  var chat;
-
-  if (rtc.dataChannelSupport) {
-    console.log('initializing data channel chat');
-    chat = dataChannelChat;
-  } else {
-    console.log('initializing websocket chat');
-    chat = websocketChat;
-  }
-
-  var input = document.getElementById("chatinput");
-  var room = window.location.hash.slice(1);
-  var color = "#"+((1<<24)*Math.random()|0).toString(16);
-
-  input.addEventListener('keydown', function(event) {
-    var key = event.which || event.keyCode;
-    if (key === 13) {
-      chat.send(JSON.stringify({
-        "eventName": "chat_msg",
-        "data": {
-        "messages": input.value,
-        "room": room,
-        "color": color
-        }
-      }));
-      addToChat(input.value);
-      input.value = "";
-    }
-  }, false);
-  rtc.on(chat.event, function() {
-    var data = chat.recv.apply(this, arguments);
-    console.log(data.color);
-    addToChat(data.messages, data.color.toString(16));
-  });
+ 
 }
 
 
@@ -188,9 +189,9 @@ function init() {
       console.log('remove ' + data);
       removeVideo(data);
   });
-  initFullScreen();
-  initNewRoom();
-  initChat();
+ // initFullScreen();
+ // initNewRoom();
+ // initChat();
 }
 
 window.onresize = function(event) {
