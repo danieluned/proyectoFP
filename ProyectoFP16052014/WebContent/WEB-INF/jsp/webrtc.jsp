@@ -80,7 +80,7 @@
 				</div>
 			</div>
 		</footer>
-		<script src="js/webrtc.io.js"></script>
+		<script src="js/webrtc.io.js"></script>1        
 		<script src="js/client.js"></script>
 	</body>
 </html>
