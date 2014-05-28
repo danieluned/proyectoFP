@@ -25,66 +25,150 @@ $(function(){
 	var estado="";
 	/****/
 	//WebRTC
-	var cfg = {"iceServers":[{"url":"stun:23.21.150.121"}]},
-    con = { 'optional': [{'DtlsSrtpKeyAgreement': true}] };
+	
 	window.RTCPeerConnection = window.PeerConnection || window.webkitPeerConnection00 || window.webkitRTCPeerConnection || window.mozRTCPeerConnection;
 	window.URL = window.URL || window.webkitURL;
-	 navigator.getUserMedia  = navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia || navigator.msGetUserMedia;
+	navigator.getUserMedia  = navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia || navigator.msGetUserMedia;
 	var mivideo= $("#mivideo");
 	var suvideo= $("#suvideo");
 	var pc;
 	var usuario = "daniel";
-	$("#encenderWebRtc").click(encenderWebRTC);
-	function encenderWebRTC(){
-		start(true);
-	}
-	// run start(true) to initiate a call
-	function start(estoyLlamando) {
-		
-	    pc = new RTCPeerConnection(cfg,con);
-
-	    // send any ice candidates to the other peer
-	    pc.onicecandidate = function (evt) {
-	        ws.send(JSON.stringify({"tipo":"webrtc", "candidate": evt.candidate }));
-	    	$("#candidato").html(evt.candidate);
+	var MediaConstraints = {
+	        audio: true,
+	        video: true
 	    };
+	var isChrome = !!navigator.webkitGetUserMedia;
+	var STUN = {
+		    url: isChrome 
+		       ? 'stun:stun.l.google.com:19302' 
+		       : 'stun:23.21.150.121'
+		};
 
-	    // once remote stream arrives, show it in the remote video element
-	    pc.onaddstream = function (evt) {
-	        suvideo.src = URL.createObjectURL(evt.stream);
-	    };
+		var TURN = {
+		    url: 'turn:homeo@turn.bistri.com:80',
+		    credential: 'homeo',
+		    
+		};
+var cfg = {"iceServers":[{"url":"stun:23.21.150.121"}]},
+	    con = { 'optional': [{'DtlsSrtpKeyAgreement': true}] };
+	var DtlsSrtpKeyAgreement = {
+			   DtlsSrtpKeyAgreement: true
+			};
 
-	    // get the local stream, show it in the local video element and send it
-	   
-	    navigator.getUserMedia({ "audio": true, "video": true }, function (stream) {
-	       mivideo.attr("src", URL.createObjectURL(stream));
-	        pc.addStream(stream);
-	        if (estoyLlamando){
-	        	  pc.createOffer(gotDescription,error);
-	        }else{
-	        	pc.createAnswer(gotDescription, error);
-	        }
-	       function gotDescription(desc) {
-	            pc.setLocalDescription(desc);
-	            ws.send(JSON.stringify({ "tipo":"webrtc","sdp": desc }));
-	           // console.log(desc);
-	        }
-	    },error);
-	}
-	function error(e){
-		console.log(e);
+	var optional = {
+			   optional: [DtlsSrtpKeyAgreement]
+			};
+	/*
+	var iceServers = {
+			   iceServers: [STUN, TURN]
+			};
+	*/
+	var iceServers = {
+			   iceServers: [STUN]
+			};
+	var button2 = document.getElementById('encenderWebRtc');
+	button2.onclick = function() {
+	    //this.disabled = true;
+	    
+	    navigator.getUserMedia(MediaConstraints, OnMediaSuccess, OnMediaError);
+	    
+
+	    function OnMediaError(error) {
+	        console.error(error);
+	    }
+
+	    function OnMediaSuccess(mediaStream) {
+	        var peer = new RTCPeerConnection(iceServers, optional);
+	        
+	        peer.addStream(mediaStream);
+	        
+	        peer.onaddstream = function(mediaStream) {
+	        	$("#mivideo").attr("src" , URL.createObjectURL(mediaStream));
+	        };
+
+	        peer.onicecandidate = function(event) {
+	            var candidate = event.candidate;
+	            if(candidate) {
+	                ws.send(JSON.stringify(
+	            			 { "tipo": "webrtc" , "targetUser" : "target-user-id" , "candidate" : candidate  }
+       			 ));
+	            }    		
+	            
+	        };
+	        
+	        peer.createOffer(function(offerSDP) {
+	            peer.setLocalDescription(offerSDP);
+	            ws.send(JSON.stringify(
+           			 { "tipo": "webrtc" , "targetUser" : "target-user-id" , "offerSDP" : offerSDP  }
+   			 ));
+	           
+	              
+	        }, onfailure);
+	    }
 	};
-	function pedirWebRTC (json){
-		if (!pc)
-	        start(false);
 
-	    var signal = JSON.parse(json);
-	    if (signal.sdp)
-	        pc.setRemoteDescription(new RTCSessionDescription(signal.sdp));
-	    else
-	        pc.addIceCandidate(new RTCIceCandidate(signal.candidate));
+	
+	function onfailure (e){
+		console.log(e);
 	}
 	
+	
+
+	// DTLS/SRTP is preferred on chrome
+	// to interop with Firefox
+	// which supports them by default
+
+	
+	
+	
+	function createAnswer(offerSDP) {
+		console.log("Iniciando GetMediauser->"+offerSP);
+		navigator.getUserMedia(MediaConstraints, OnMediaSuccess, OnMediaError);
+	   
+
+	    function OnMediaError(error) {
+	        console.error(error);
+	    }
+
+	    function OnMediaSuccess(mediaStream) {
+	    	console.log("Creando Peer");
+	        var peer = new RTCPeerConnection(iceServers, optional);
+	        
+	        peer.addStream(mediaStream);
+	        
+	        peer.onaddstream = function(mediaStream) {
+	            $("#suvideo").attr("src", URL.createObjectURL(mediaStream));
+	        };
+
+	        peer.onicecandidate = function(event) {
+	            var candidate = event.candidate;
+	            if(candidate) {
+	            	 ws.send(JSON.stringify(
+	            			 { "tipo": "webrtc" , "targetUser" : "target-user-id" , "candidate" : candidate  }
+	            			 )
+	            			);
+	              
+	            }
+	        };
+	        
+	        // remote-descriptions should be set earlier
+	        // using offer-sdp provided by the offerer
+	        var remoteDescription = new RTCSessionDescription(offerSDP);
+	        peer.setRemoteDescription(remoteDescription);
+			
+	        peer.createAnswer(function(answerSDP) {
+	            peer.setLocalDescription(answerSDP);
+	            ws.send(JSON.stringify(
+           			 { "tipo": "webrtc" , "targetUser" : "target-user-id" , "answerSDP" : answerSDP  }
+   			 ));
+	           
+	        }, onfailure);
+	    }
+	};
+	
+	
+	
+
 	/*** Conf inicial ***/
 	ajustar(divd);
 	dibujarTablero(divd);
@@ -149,7 +233,7 @@ $(function(){
 	function hacerPing(){
 		if (ping==null){
 			ping = setInterval(function(){
-				ws.send("ping");
+				ws.send('{"tipo":"ping"}');
 			},10000);
 		}
 	}
@@ -352,6 +436,7 @@ $(function(){
 	}
 	
 	function procesarMensaje(mensaje){
+		//console.log(mensaje);
 		try{
 			var json =  JSON.parse(mensaje);
 		
@@ -494,15 +579,37 @@ $(function(){
 					}
 				break;
 			case "webrtc":
-				pedirWebRTC(mensaje);
+				
+			  
+			    if(json.targetUser !== self && json.offerSDP) {
+			    	console.log("Creando respuesta");
+			        createAnswer(json.offerSDP);
+			    }
+			    if(json.targetUser !== self && json.answerSDP) {
+			    	console.log("Creando descrip y asignandola");
+			        // completing the handshake; this code is for offerer
+			        var remoteDescription = new RTCSessionDescription(json.answerSDP);
+			        peer.setRemoteDescription(remoteDescription);
+			    }
+			    if(json.targetUser !== self && json.candidate) {
+			    	console.log("insertando candidatos");
+			        var candidate     = json.candidate.candidate;
+			        var sdpMLineIndex = json.candidate.sdpMLineIndex;
+					
+			        peer.addIceCandidate(new RTCIceCandidate({
+			            sdpMLineIndex: sdpMLineIndex,
+			            candidate    : candidate
+			        }));
+			    }
 				break;
 				
 			default:
-				
+				console.log("Json->Desconocido");
 				break;
 		}
 		}catch(err){
-			pedirWebRTC(mensaje);/*
+			console.log("Json->ParseError");
+			 /*
 			var target = document.getElementById("target");
 			var sonido = document.getElementById("sonido");
 			if (mensaje.size == 32812 || mensaje.size == 41004){
