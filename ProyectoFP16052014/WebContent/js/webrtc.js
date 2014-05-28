@@ -27,30 +27,19 @@ $(function(){
 	//WebRTC
 	
 	window.RTCPeerConnection = window.PeerConnection || window.webkitPeerConnection00 || window.webkitRTCPeerConnection || window.mozRTCPeerConnection;
+	window.RTCSessionDescription = window.RTCSessionDescription || window.webkitRTCSessionDescription || window.mozRTCSessionDescription;
+	window.RTCIceCandidate = window.RTCIceCandidate || window.webkitRTCIceCandidate || window.mozRTCIceCandidate; 
 	window.URL = window.URL || window.webkitURL;
 	navigator.getUserMedia  = navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia || navigator.msGetUserMedia;
-	var mivideo= $("#mivideo");
-	var suvideo= $("#suvideo");
-	var pc;
-	var usuario = "daniel";
+	
+	
+	
 	var MediaConstraints = {
 	        audio: true,
 	        video: true
 	    };
-	var isChrome = !!navigator.webkitGetUserMedia;
-	var STUN = {
-		    url: isChrome 
-		       ? 'stun:stun.l.google.com:19302' 
-		       : 'stun:23.21.150.121'
-		};
+	
 
-		var TURN = {
-		    url: 'turn:homeo@turn.bistri.com:80',
-		    credential: 'homeo',
-		    
-		};
-var cfg = {"iceServers":[{"url":"stun:23.21.150.121"}]},
-	    con = { 'optional': [{'DtlsSrtpKeyAgreement': true}] };
 	var DtlsSrtpKeyAgreement = {
 			   DtlsSrtpKeyAgreement: true
 			};
@@ -64,54 +53,111 @@ var cfg = {"iceServers":[{"url":"stun:23.21.150.121"}]},
 			};
 	*/
 	var iceServers = {
-			   iceServers: [STUN]
+			   iceServers: [{url:'stun:stun01.sipphone.com'},
+			                {url:'stun:stun.ekiga.net'},
+			                {url:'stun:stun.fwdnet.net'},
+			                {url:'stun:stun.ideasip.com'},
+			                {url:'stun:stun.iptel.org'},
+			                {url:'stun:stun.rixtelecom.se'},
+			                {url:'stun:stun.schlund.de'},
+			                {url:'stun:stun.l.google.com:19302'},
+			                {url:'stun:stun1.l.google.com:19302'},
+			                {url:'stun:stun2.l.google.com:19302'},
+			                {url:'stun:stun3.l.google.com:19302'},
+			                {url:'stun:stun4.l.google.com:19302'},
+			                {url:'stun:stunserver.org'},
+			                {url:'stun:stun.softjoys.com'},
+			                {url:'stun:stun.voiparound.com'},
+			                {url:'stun:stun.voipbuster.com'},
+			                {url:'stun:stun.voipstunt.com'},
+			                {url:'stun:stun.voxgratia.org'},
+			                {url:'stun:stun.xten.com'},
+			                {
+			                    url: 'turn:numb.viagenie.ca',
+			                    credential: 'muazkh',
+			                    username: 'webrtc@live.com'
+			                },
+			                {
+			                    url: 'turn:192.158.29.39:3478?transport=udp',
+			                    credential: 'JZEOEt2V3Qb0y27GRntt2u2PAYA=',
+			                    username: '28224511:1379330808'
+			                },
+			                {
+			                    url: 'turn:192.158.29.39:3478?transport=tcp',
+			                    credential: 'JZEOEt2V3Qb0y27GRntt2u2PAYA=',
+			                    username: '28224511:1379330808'
+			                }]
 			};
 	var button2 = document.getElementById('encenderWebRtc');
-	button2.onclick = function() {
+	var peer;
+	button2.onclick = iniciar;
+	function iniciar(){
+		start(true);
+	}
+	function start (llamando) {
 	    //this.disabled = true;
+	     peer = new RTCPeerConnection(iceServers, optional);
 	    
-	    navigator.getUserMedia(MediaConstraints, OnMediaSuccess, OnMediaError);
 	    
+        ///
+        peer.onicecandidate =  function(e) {
+            var candidate = e.candidate;
+            // typeof candidate == 'undefined'
+            // !candidate -or- !!candidate == false
+        	
+            if(typeof candidate == 'undefined') {
+                send_SDP();
+            }
+        };
 
+        peer.ongatheringchange =  function(e) {
+            if (e.currentTarget &&
+                e.currentTarget.iceGatheringState === 'complete') {
+                send_SDP();
+            }
+        };
+
+       
+        ///
+        peer.onaddstream = function(mediaStream) {
+        	$("#suvideo").attr("src" , URL.createObjectURL(mediaStream));
+        };
+        navigator.getUserMedia({"audio":true,"video":true},
+        		function (stream){
+        	$("#mivideo").attr("src" , URL.createObjectURL(stream));
+        	 peer.addStream(stream);
+        	 if (llamando){
+        		 peer.createOffer(function(offerSDP) {
+     	            peer.setLocalDescription(offerSDP);
+     	            ws.send(
+     	            		JSON.stringify(
+                			 { "tipo": "webrtc" , "sdp" : offerSDP  }
+        			)
+        			);
+        		 },OnMediaError);
+        	 }else{
+        		 peer.createAnswer(function(answerSDP) {
+     	            peer.setLocalDescription(answerSDP);
+     	            ws.send(
+     	            		JSON.stringify(
+                			 { "tipo": "webrtc" , "sdp" : answerSDP  }
+        			 )
+        			 );
+        		 },OnMediaError);
+        	 }
+        }, OnMediaError);
+	    
 	    function OnMediaError(error) {
 	        console.error(error);
 	    }
+}
 
-	    function OnMediaSuccess(mediaStream) {
-	        var peer = new RTCPeerConnection(iceServers, optional);
-	        
-	        peer.addStream(mediaStream);
-	        
-	        peer.onaddstream = function(mediaStream) {
-	        	$("#mivideo").attr("src" , URL.createObjectURL(mediaStream));
-	        };
-
-	        peer.onicecandidate = function(event) {
-	            var candidate = event.candidate;
-	            if(candidate) {
-	                ws.send(JSON.stringify(
-	            			 { "tipo": "webrtc" , "targetUser" : "target-user-id" , "candidate" : candidate  }
-       			 ));
-	            }    		
-	            
-	        };
-	        
-	        peer.createOffer(function(offerSDP) {
-	            peer.setLocalDescription(offerSDP);
-	            ws.send(JSON.stringify(
-           			 { "tipo": "webrtc" , "targetUser" : "target-user-id" , "offerSDP" : offerSDP  }
-   			 ));
-	           
-	              
-	        }, onfailure);
-	    }
-	};
-
-	
-	function onfailure (e){
-		console.log(e);
-	}
-	
+	 function send_SDP() {
+         ws.send({
+             tipo: 'webrtc',
+             sdp       :  peer.localDescription
+         });
+     }
 	
 
 	// DTLS/SRTP is preferred on chrome
@@ -119,52 +165,6 @@ var cfg = {"iceServers":[{"url":"stun:23.21.150.121"}]},
 	// which supports them by default
 
 	
-	
-	
-	function createAnswer(offerSDP) {
-		console.log("Iniciando GetMediauser->"+offerSP);
-		navigator.getUserMedia(MediaConstraints, OnMediaSuccess, OnMediaError);
-	   
-
-	    function OnMediaError(error) {
-	        console.error(error);
-	    }
-
-	    function OnMediaSuccess(mediaStream) {
-	    	console.log("Creando Peer");
-	        var peer = new RTCPeerConnection(iceServers, optional);
-	        
-	        peer.addStream(mediaStream);
-	        
-	        peer.onaddstream = function(mediaStream) {
-	            $("#suvideo").attr("src", URL.createObjectURL(mediaStream));
-	        };
-
-	        peer.onicecandidate = function(event) {
-	            var candidate = event.candidate;
-	            if(candidate) {
-	            	 ws.send(JSON.stringify(
-	            			 { "tipo": "webrtc" , "targetUser" : "target-user-id" , "candidate" : candidate  }
-	            			 )
-	            			);
-	              
-	            }
-	        };
-	        
-	        // remote-descriptions should be set earlier
-	        // using offer-sdp provided by the offerer
-	        var remoteDescription = new RTCSessionDescription(offerSDP);
-	        peer.setRemoteDescription(remoteDescription);
-			
-	        peer.createAnswer(function(answerSDP) {
-	            peer.setLocalDescription(answerSDP);
-	            ws.send(JSON.stringify(
-           			 { "tipo": "webrtc" , "targetUser" : "target-user-id" , "answerSDP" : answerSDP  }
-   			 ));
-	           
-	        }, onfailure);
-	    }
-	};
 	
 	
 	
@@ -579,36 +579,46 @@ var cfg = {"iceServers":[{"url":"stun:23.21.150.121"}]},
 					}
 				break;
 			case "webrtc":
-				
-			  
-			    if(json.targetUser !== self && json.offerSDP) {
-			    	console.log("Creando respuesta");
-			        createAnswer(json.offerSDP);
-			    }
-			    if(json.targetUser !== self && json.answerSDP) {
-			    	console.log("Creando descrip y asignandola");
-			        // completing the handshake; this code is for offerer
-			        var remoteDescription = new RTCSessionDescription(json.answerSDP);
-			        peer.setRemoteDescription(remoteDescription);
-			    }
-			    if(json.targetUser !== self && json.candidate) {
-			    	console.log("insertando candidatos");
-			        var candidate     = json.candidate.candidate;
-			        var sdpMLineIndex = json.candidate.sdpMLineIndex;
-					
-			        peer.addIceCandidate(new RTCIceCandidate({
-			            sdpMLineIndex: sdpMLineIndex,
-			            candidate    : candidate
-			        }));
-			    }
+					if (!peer){
+						start(false);
+						
+					}
+					if(json.sdp){
+						peer.setRemoteDescription(new RTCSessionDescription(json.sdp));
+						
+					}
+					else{
+						 var candidate     = json.candidate.candidate;
+					        var sdpMLineIndex = json.candidate.sdpMLineIndex;
+							
+					        peer.addIceCandidate(new RTCIceCandidate({
+					            sdpMLineIndex: sdpMLineIndex,
+					            candidate    : candidate
+					        }));
+						//peer.addIceCandidate(new RTCIceCandidate(json.candidate));
+					}
 				break;
 				
 			default:
-				console.log("Json->Desconocido");
+				console.log("Json->Desconocido->"+mensaje);
 				break;
 		}
 		}catch(err){
-			console.log("Json->ParseError");
+			console.log("ERROR-> "+mensaje);
+					/*
+					
+				var myObject = eval('(' + mensaje + ')');
+				if (!peer){
+					start(false);
+					
+				}
+				if(myObject.sdp){
+					peer.setRemoteDescription(new RTCSessionDescription(myObject.sdp));
+					
+				}
+				else{
+					peer.addIceCandidate(new RTCIceCandidate(myObject.candidate));
+				}*/
 			 /*
 			var target = document.getElementById("target");
 			var sonido = document.getElementById("sonido");
