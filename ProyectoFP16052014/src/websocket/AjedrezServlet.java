@@ -346,6 +346,22 @@ public class AjedrezServlet extends WebSocketServlet implements Runnable{
 
              
           break;
+        case "webrtc":
+        	if (!(this.partida.equals(""))) {
+        		 if(AjedrezServlet.partidas.get(this.partida)!=null){
+        			 if (AjedrezServlet.partidas.get(this.partida).getJugadorBlancas().equals(this.nombre)){
+        				 AjedrezServlet.partidas.get(this.partida).getConexNegras()
+                  		 .getWsOutbound().writeTextMessage(charBuffer);
+            		   
+        			 }else{
+        				 AjedrezServlet.partidas.get(this.partida).getConexBlancas()
+                  		 .getWsOutbound().writeTextMessage(charBuffer);
+                  		
+        			 }
+        			
+        		 }
+        	}
+        	break;
         case "actualizarPartidas":
         	 
         	break;

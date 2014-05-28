@@ -208,6 +208,20 @@ $(function(){
 	$( "#wrapTablero" ).draggable({ containment: $("#wrap"),
 		handle: "#moverTablero",
 		});
+	$( "#wrapmivideo" ).draggable({ containment: $("#wrap"),
+		handle: "#arrastrarmivideo",
+		});
+	$( "#wrapsuvideo" ).draggable({ containment: $("#wrap"),
+		handle: "#arrastrarsuvideo",
+		});
+	$("#wrapmivideo").resizable({
+		
+	      handles: 'se'
+	    });
+	$("#wrapsuvideo").resizable({
+		 
+	      handles: 'se'
+	    });
 	$( "#envolver").resizable({
 	      minHeight: 250,
 	      minWidth: 300,
@@ -228,8 +242,14 @@ $(function(){
 	$("#envolver").resize(ajustarChat);
 	$("#partidas").resize(ajustarPartidas);
 	$("#click").click(animacion1);
+	$("#wrapsuvideo").resize(ajustarvideo);
+	$( "#wrapmivideo").resize(ajustarvideo);
 });
-
+function ajustarvideo(){
+	//console.log($(this).width()+" - "+$(this).height());
+	$(this).find("video").width($(this).width());
+	$(this).find("video").height($(this).height());
+}
 function animacion1(){
 	$("#animacion1").animate({left:'0px'},"slow");
 	$("#animacion1").animate({left:'40px'},"slow");

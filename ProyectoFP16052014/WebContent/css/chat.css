@@ -4,6 +4,10 @@
 	width: 300px;
 	margin-right:20px;
 }
+#wrapmivideo,#wrapsuvideo{
+	position:absolute;
+}
+
 button{
 color: black;	
 }
@@ -71,7 +75,7 @@ right:0px;
 	
 }
 
-#controlesPartida , #mover, #tiempos, #moverTablero{
+#controlesPartida , #mover, #tiempos, #moverTablero, #arrastrarmivideo,#arrastrarsuvideo{
 	cursor: move;
 	color: yellow;
 	text-align:center;
