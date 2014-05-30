@@ -15,6 +15,7 @@
 		<link rel="stylesheet" href="css/normalize.min.css">
         <link rel="stylesheet" href="css/black-tie/jquery-ui-1.10.4.custom.css" >
 		<link rel="stylesheet" href="css/bootstrap.css"/>
+		<link rel="stylesheet" href="css/main.css"/>
 		<link rel="stylesheet" href="css/juego2.css"/>
 		<link rel="stylesheet" href="css/chat.css"/>
 		<script src="js/modernizr-2.6.2-respond-1.1.0.min.js"></script>

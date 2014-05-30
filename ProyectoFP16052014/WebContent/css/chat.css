@@ -7,7 +7,9 @@
 #wrapmivideo,#wrapsuvideo{
 	position:absolute;
 }
-
+#wrapmivideo .ui-icon,#wrapsuvideo .ui-icon{
+	bottom: -10px;
+}
 button{
 color: black;	
 }
@@ -71,8 +73,8 @@ right:0px;
 
 .item{
 	overflow:hidden;
-	background:black;
 	
+	background: rgba(0,0,0,.4);
 }
 
 #controlesPartida , #mover, #tiempos, #moverTablero, #arrastrarmivideo,#arrastrarsuvideo{

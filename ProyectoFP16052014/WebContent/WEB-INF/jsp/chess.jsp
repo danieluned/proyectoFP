@@ -14,9 +14,11 @@
 		<title><s:text name="error"/></title>
 		<link rel="stylesheet" href="css/normalize.min.css">
         <link rel="stylesheet" href="css/black-tie/jquery-ui-1.10.4.custom.css" >
-		<link rel="stylesheet" href="css/bootstrap.css"/>
-		<link rel="stylesheet" href="css/juego2.css"/>
-		<link rel="stylesheet" href="css/chat.css"/>
+		<link rel="stylesheet" href="css/bootstrap.css">
+		<link rel="stylesheet" href="css/juego2.css" type="text/css"  media="screen">
+		<link rel="stylesheet" href="css/chat.css" type="text/css"  media="screen">
+		<link rel="stylesheet" href="css/juego2.mob.css" type="text/css"  media="handheld">
+		<link rel="stylesheet" href="css/chat.mob.css" type="text/css"  media="handheld">
 		<script src="js/modernizr-2.6.2-respond-1.1.0.min.js"></script>
 		<script src="js/jquery-1.10.2.js"></script>
 		<script src="js/jquery-ui-1.10.4.custom.js"></script>
@@ -25,6 +27,7 @@
 		<script src="js/juego2.js"></script>
 		<script src="js/design.js"></script>
 		<script src="js/arrange.js"></script>
+		
 	</head>
 	 <body id="body">
         <!--[if lt IE 7]>
@@ -189,6 +192,21 @@
 							</table>
 						</div>
 					</div>
+				</div>
+				<div class="col-xs-0">
+					<div class="item" id="wrapmivideo" >
+						<div id="arrastrarmivideo" >mi video</div>
+						<video id="videoLocal" controls autoplay>
+						</video>
+						<button id="btnActivarMedia">activar media</button>
+						<button id="crearAnswer">Soy quien contesta</button>
+						<button id="crearOffer">Soy Quien LLama</button>
+					</div>
+				     <div class="item" id="wrapsuvideo" >
+				     	<div id="arrastrarsuvideo">su video</div>
+				     	<video id="videoRemoto" controls autoplay>
+						</video>
+				     </div>         
 				</div>
 			</div>
 			<!-- Sonidos -->

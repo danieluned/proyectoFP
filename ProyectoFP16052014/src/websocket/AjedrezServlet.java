@@ -204,12 +204,34 @@ public class AjedrezServlet extends WebSocketServlet implements Runnable{
 
     public void onTextMessage(CharBuffer charBuffer) throws IOException {
       String datos = charBuffer.toString();
+      System.out.println(datos);
       try
       {
         JSONObject json = (JSONObject)new JSONParser().parse(datos);
+        //Webrtc
+        //System.out.println(datos);
+        if(json.get("sdp")!=null){
+	  		  	
+	  	    	if (!(this.partida.equals(""))) {
+	  	    		 if(AjedrezServlet.partidas.get(this.partida)!=null){
+	  	    			 if (AjedrezServlet.partidas.get(this.partida).getJugadorBlancas().equals(this.nombre)){
+	  	    				 AjedrezServlet.partidas.get(this.partida).getConexNegras()
+	  	              		 .getWsOutbound().writeTextMessage(charBuffer);
+	  	        		   
+	  	    			 }else{
+	  	    				 AjedrezServlet.partidas.get(this.partida).getConexBlancas()
+	  	              		 .getWsOutbound().writeTextMessage(charBuffer);
+	  	              		
+	  	    			 }
+	  	    			
+	  	    		 }
+	  	    	}
+	  	    	
+	  	  }
+        //
         String tipo = (String)json.get("tipo");
-       // System.out.println(tipo);
-        
+        //System.out.println(tipo);
+        if (tipo!=null)
         switch (tipo)
         {
         case "movimiento":
@@ -412,27 +434,8 @@ public class AjedrezServlet extends WebSocketServlet implements Runnable{
       catch (ParseException e)
       {
         //System.out.println("Fallo la conversión del JSON-> "+charBuffer);
-        //System.out.println(datos);
-    	  if (datos.contains("webrtc")){
-    		  	
-    	    	if (!(this.partida.equals(""))) {
-    	    		 if(AjedrezServlet.partidas.get(this.partida)!=null){
-    	    			 if (AjedrezServlet.partidas.get(this.partida).getJugadorBlancas().equals(this.nombre)){
-    	    				 AjedrezServlet.partidas.get(this.partida).getConexNegras()
-    	              		 .getWsOutbound().writeTextMessage(charBuffer);
-    	        		   
-    	    			 }else{
-    	    				 AjedrezServlet.partidas.get(this.partida).getConexBlancas()
-    	              		 .getWsOutbound().writeTextMessage(charBuffer);
-    	              		
-    	    			 }
-    	    			
-    	    		 }
-    	    	}
-    	    	System.out.println("ErrorPArseJSON.webrtc->"+charBuffer);
-    	  }else{
-    		  System.out.println("ErrorPArseJSON.nosesabe->"+charBuffer);
-    	  }
+    	  System.out.println("ErrorPArseJSON.nosesabe->"+charBuffer);
+    
     	
       }
     }

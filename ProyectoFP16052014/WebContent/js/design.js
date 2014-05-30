@@ -215,11 +215,11 @@ $(function(){
 		handle: "#arrastrarsuvideo",
 		});
 	$("#wrapmivideo").resizable({
-		
+		 
 	      handles: 'se'
 	    });
 	$("#wrapsuvideo").resizable({
-		 
+		
 	      handles: 'se'
 	    });
 	$( "#envolver").resizable({
@@ -296,26 +296,13 @@ function mostrarOcultarPartidas(){
 	$("#partidas").toggle();
 }
 function ajusteVertical(){
-	var w = parseInt($(window).width());
-	var h = parseInt($(window).height());
 	//$("#contenido").height(h-90);
 	//Para cambiar la cabecera
 	cambiarCabecera();
 	centradoVertical(".alineadoVertical");
-	
-	//Ajustes en el ancho
-	
-	if (w<768){
-		chatOculto();
-	}else{
-		chatVisible();
-	}
-	
-
-	
-	
-	
-	
+	var h = $(document).height();
+	$("#wrap").css("height",h);
+	console.log("altura:"+h);
 }
 function cambiarCabecera(){
 		var max = 580;
@@ -329,14 +316,7 @@ function cambiarCabecera(){
 		}
 		$("input").val(w);
 }
-function chatOculto(){
-	//$("#envolver").hide();
-	//$("#partidas").hide();
-}
-function chatVisible(){
-	//$("#envolver").show();
-	//$("#partidas").show();
-}
+
 function centradoVertical(div){
 	var h = parseInt($(window).height());
 	var h2 = parseInt($(div).height());

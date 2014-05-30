@@ -33,9 +33,6 @@
 		<action name="inicio">
 			<result>WEB-INF/jsp/index.jsp</result>
 		</action>
-		<action name="webrtc">
-			<result>WEB-INF/jsp/webrtc.jsp</result>
-		</action>
 		<action name="principal">
 			<interceptor-ref name="senecesitaSession"/>
 			<result>WEB-INF/jsp/principal.jsp</result>

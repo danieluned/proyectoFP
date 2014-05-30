@@ -16,10 +16,8 @@ $(function(){
 	/** Enviar mensaje texto */
 	var idBotonEnviar ="#enviar";
 	var idInputMensaje = "#mensaje";
-	var timePing = null;
 	var inicial = true;
 	var ho ;
-	var wo; 
 	var width2;
 	var height2;
 	var estado="";
@@ -30,7 +28,7 @@ $(function(){
 	colocarFichas(divd);
 	conectar();
 	
-	/** indicarle al chat que tiene pestaÃ±as */
+	/** indicarle al chat que tiene pestañas */
 	$("#chat").tabs();
 	
 	ajustarPaneles();
@@ -81,8 +79,87 @@ $(function(){
 	});
 	
 	$("#rotar").click(rotarTablero);
-		
-		
+	//
+	
+	//Vendor prefixes
+	navigator.getUserMedia =  
+	navigator.getUserMedia ||
+	navigator.webkitGetUserMedia ||
+	navigator.mozGetUserMedia ;
+				
+	window.RTCPeerConnection = 	
+	window.RTCPeerConnection ||
+	window.mozRTCPeerConnection ||
+	window.webkitRTCPeerConnection ;
+
+	window.URL =
+	window.mozURL ||
+	window.URL ||
+	window.webkitURL ;
+
+	window.RTCSessionDescription =
+	window.RTCSessionDescription ||
+	window.mozRTCSessionDescription ||
+	window.webkitRTCSessionDescription ;
+
+	        //Opciones iniciales
+	var DtlsSrtpKeyAgreement = { DtlsSrtpKeyAgreement: true };
+	var optional = { optional: [DtlsSrtpKeyAgreement]};
+	var iceServers = {
+		   iceServers: [{url:'stun:stun01.sipphone.com'},
+		                {url:'stun:stun.ekiga.net'},
+		                {url:'stun:stun.fwdnet.net'},
+		                {url:'stun:stun.ideasip.com'},
+		                {url:'stun:stun.iptel.org'},
+		                {url:'stun:stun.rixtelecom.se'},
+		                {url:'stun:stun.schlund.de'},
+		                {url:'stun:stun.l.google.com:19302'},
+		                {url:'stun:stun1.l.google.com:19302'},
+		                {url:'stun:stun2.l.google.com:19302'},
+		                {url:'stun:stun3.l.google.com:19302'},
+		                {url:'stun:stun4.l.google.com:19302'},
+		                {url:'stun:stunserver.org'},
+		                {url:'stun:stun.softjoys.com'},
+		                {url:'stun:stun.voiparound.com'},
+		                {url:'stun:stun.voipbuster.com'},
+		                {url:'stun:stun.voipstunt.com'},
+		                {url:'stun:stun.voxgratia.org'},
+		                {url:'stun:stun.xten.com'},
+		                {
+		                    url: 'turn:numb.viagenie.ca',
+		                    credential: 'muazkh',
+		                    username: 'webrtc@live.com'
+		                },
+		                {
+		                    url: 'turn:192.158.29.39:3478?transport=udp',
+		                    credential: 'JZEOEt2V3Qb0y27GRntt2u2PAYA=',
+		                    username: '28224511:1379330808'
+		                },
+		                {
+		                    url: 'turn:192.158.29.39:3478?transport=tcp',
+		                    credential: 'JZEOEt2V3Qb0y27GRntt2u2PAYA=',
+		                    username: '28224511:1379330808'
+		                }]
+		         };
+
+	//WEBRTC variables y eventos  
+	//Variables
+	var peer;
+	var streamLocal;
+	var streamToAttach;
+	var videoLocal = document.getElementById("videoLocal");
+	var videoRemoto = document.getElementById("videoRemoto");
+	//Eventos           
+
+	$("#crearOffer").click(crearOffer);
+	$("#crearAnswer").click(crearAnswer);
+
+	$("#handling").click(handling);
+	$("#btnActivarMedia").click(activarMedia);
+	//FIN WEBRTC var. y eventos
+	
+	//FUNCTIONES
+		//Functiones generales
 	var ping;
 	function hacerPing(){
 		if (ping==null){
@@ -292,178 +369,150 @@ $(function(){
 	function procesarMensaje(mensaje){
 		try{
 			var json =  JSON.parse(mensaje);
-		
-		
-		
-		//console.log(json);
-		switch (json.tipo) {
-			case "mensajeGeneral": //Se recibe un mensaje para el chat general
-				var claseBotonGeneral = "";
-				 $(idChat).append("<p><button class='"+claseBotonGeneral+"' title='"+json.de+"'>"+json.de+"</button>: "+json.contenido+"</p>");
-				 $(idChat).scrollTop($(idChat)[0].scrollHeight);
-				 $("button[title='"+json.de+"']").click(asignarEscuchadorBoton);
-				 $(idChat).scrollTop($(idChat).prop('scrollHeight'));
-				 break;
-			case "mensajeCorrectoChat": //Mensaje a un usuario en concreto.
-				 $(idChat).append("<p><span style='color:blue;'>'"+json.contenido+"'</span></p>");
-				 $(idChat).scrollTop($(idChat).prop('scrollHeight'));
-				break;
-			case "mensajeUsuario":
-				crearPestania(json.de);
-				$("#p-"+json.de).append("<p>"+json.de+": "+json.contenido+"</span></p>");
-				$("#p-"+json.de).scrollTop($("#p-"+json.de).prop('scrollHeight'));
-				break;
-			case "mensajeReplica":
-				crearPestania(json.a);
-				 $("#p-"+json.a).append("<p>"+json.de+": "+json.contenido+"</span></p>");
-				 $("#p-"+json.a).scrollTop($("#p-"+json.a).prop('scrollHeight'));
-				break;
-			case "movimiento":
-				moverFicha(json.inicio,json.fin);
-				soundMove();	
-				break;
-			case "resetearPartida":
-					pintarCasillas(divd);
-					colocarFichas(divd);
-					soundNewGame();
-					estado="jugando";
-				break;
-			case "partidasDisponibles":
-				var str="";
-				for (var int = 0; int < json.partidas.length; int++) {
-					//alert(json.partidas[int].estado);
-					var strB="";
-					var strN="";
-					if (json.partidas[int].blancas !=""){
-						strB += "<button title='"+json.partidas[int].blancas+"'>"+json.partidas[int].blancas+"</button>";
-					}
-					if (json.partidas[int].negras !=""){
-						strN += "<button title='"+json.partidas[int].negras+"'>"+json.partidas[int].negras+"</button>";
-					}
-					if (json.partidas[int].estado == "EsperandoOtroJugador"){
+			console.log(json);
+			if (json.tipo)
+			switch (json.tipo) {
+				case "mensajeGeneral": //Se recibe un mensaje para el chat general
+					var claseBotonGeneral = "";
+					 $(idChat).append("<p><button class='"+claseBotonGeneral+"' title='"+json.de+"'>"+json.de+"</button>: "+json.contenido+"</p>");
+					 $(idChat).scrollTop($(idChat)[0].scrollHeight);
+					 $("button[title='"+json.de+"']").click(asignarEscuchadorBoton);
+					 $(idChat).scrollTop($(idChat).prop('scrollHeight'));
+					 break;
+				case "mensajeCorrectoChat": //Mensaje a un usuario en concreto.
+					 $(idChat).append("<p><span style='color:blue;'>'"+json.contenido+"'</span></p>");
+					 $(idChat).scrollTop($(idChat).prop('scrollHeight'));
+					break;
+				case "mensajeUsuario":
+					crearPestania(json.de);
+					$("#p-"+json.de).append("<p>"+json.de+": "+json.contenido+"</span></p>");
+					$("#p-"+json.de).scrollTop($("#p-"+json.de).prop('scrollHeight'));
+					break;
+				case "mensajeReplica":
+					crearPestania(json.a);
+					 $("#p-"+json.a).append("<p>"+json.de+": "+json.contenido+"</span></p>");
+					 $("#p-"+json.a).scrollTop($("#p-"+json.a).prop('scrollHeight'));
+					break;
+				case "movimiento":
+					moverFicha(json.inicio,json.fin);
+					soundMove();	
+					break;
+				case "resetearPartida":
+						pintarCasillas(divd);
+						colocarFichas(divd);
+						soundNewGame();
+						estado="jugando";
+					break;
+				case "partidasDisponibles":
+					var str="";
+					for (var int = 0; int < json.partidas.length; int++) {
+						//alert(json.partidas[int].estado);
+						var strB="";
+						var strN="";
+						if (json.partidas[int].blancas !=""){
+							strB += "<button title='"+json.partidas[int].blancas+"'>"+json.partidas[int].blancas+"</button>";
+						}
+						if (json.partidas[int].negras !=""){
+							strN += "<button title='"+json.partidas[int].negras+"'>"+json.partidas[int].negras+"</button>";
+						}
+						if (json.partidas[int].estado == "EsperandoOtroJugador"){
+							
+							str += "<tr><td>"+strB+"</td><td>"+strN+"</td><td>Esperando/Waiting</td><td></td>";
 						
-						str += "<tr><td>"+strB+"</td><td>"+strN+"</td><td>Esperando/Waiting</td><td></td>";
-					
-						str += "<td><button class='unirse' b='"+json.partidas[int].blancas+"' n='"+json.partidas[int].negras+"'>Unirse</button></td></tr>";
+							str += "<td><button class='unirse' b='"+json.partidas[int].blancas+"' n='"+json.partidas[int].negras+"'>Unirse</button></td></tr>";
+						}
+						if (json.partidas[int].estado == "Jugando"){
+							str += "<tr><td>"+strB+"</td><td>"+strN+"</td><td>Jugando/Playing</td><td></td>";
+							str += "<td></td></tr>";
+						}
+						
 					}
-					if (json.partidas[int].estado == "Jugando"){
-						str += "<tr><td>"+strB+"</td><td>"+strN+"</td><td>Jugando/Playing</td><td></td>";
-						str += "<td></td></tr>";
-					}
 					
-				}
-				
-				$("#listaPartidas").html(str);
-				$("#listaPartidas button[title]").unbind().click(asignarEscuchadorBoton);
-				refrescarEscucharUnirse();
+					$("#listaPartidas").html(str);
+					$("#listaPartidas button[title]").unbind().click(asignarEscuchadorBoton);
+					refrescarEscucharUnirse();
+					break;
+				case "tiempo":
+					
+					$("#tiempoBlancas").html(tiempoAhumano(json.tiempoBlancas));
+					$("#tiempoNegras").html(tiempoAhumano(json.tiempoNegras));
+					
 				break;
-			case "tiempo":
-				
-				$("#tiempoBlancas").html(tiempoAhumano(json.tiempoBlancas));
-				$("#tiempoNegras").html(tiempoAhumano(json.tiempoNegras));
-				
-			break;
-			case "rotarTablero":
-				rotarTablero();
-				
-			break;
-			case "elegirFicha":
-				//BoxJquery
-				
-				bootbox.dialog({
-					message: "Elige la ficha que mas te interese:",
-					title: "Tu peón ha coronado",
-					buttons: {
-						success2: {
-							label: "<img src='img/piezas/bt.svg' />!",
-							className: "btn-success",
-							callback: function() {
-								ws.send('{ "tipo": "movimiento","inicio":"a1", "fin":"a1" , "ficha":"torre"}');
-								
-							}
-						},
-						success: {
-							label: "<img src='img/piezas/bc.svg' />!",
-							className: "btn-success",
-							callback: function() {
-								ws.send('{ "tipo": "movimiento","inicio":"a1", "fin":"a1" , "ficha":"caballo"}');
-							}
-						},
-						danger: {
-							label: "<img src='img/piezas/ba.svg' />!",
-							className: "btn-success",
-							callback: function() {
-								ws.send('{ "tipo": "movimiento","inicio":"a1", "fin":"a1" , "ficha":"alfil"}');
-							}
-						},
-						main: {
-							label: "<img src='img/piezas/bd.svg' />!",
-							className: "btn-success",
-							callback: function() {
-								ws.send('{ "tipo": "movimiento","inicio":"a1", "fin":"a1" , "ficha":"dama"}');
+				case "rotarTablero":
+					rotarTablero();
+					
+				break;
+				case "elegirFicha":
+					//BoxJquery
+					
+					bootbox.dialog({
+						message: "Elige la ficha que mas te interese:",
+						title: "Tu peón ha coronado",
+						buttons: {
+							success2: {
+								label: "<img src='img/piezas/bt.svg' />!",
+								className: "btn-success",
+								callback: function() {
+									ws.send('{ "tipo": "movimiento","inicio":"a1", "fin":"a1" , "ficha":"torre"}');
+									
+								}
+							},
+							success: {
+								label: "<img src='img/piezas/bc.svg' />!",
+								className: "btn-success",
+								callback: function() {
+									ws.send('{ "tipo": "movimiento","inicio":"a1", "fin":"a1" , "ficha":"caballo"}');
+								}
+							},
+							danger: {
+								label: "<img src='img/piezas/ba.svg' />!",
+								className: "btn-success",
+								callback: function() {
+									ws.send('{ "tipo": "movimiento","inicio":"a1", "fin":"a1" , "ficha":"alfil"}');
+								}
+							},
+							main: {
+								label: "<img src='img/piezas/bd.svg' />!",
+								className: "btn-success",
+								callback: function() {
+									ws.send('{ "tipo": "movimiento","inicio":"a1", "fin":"a1" , "ficha":"dama"}');
+								}
 							}
 						}
-					}
-					});
-				;
-			break;
-			case "crearFicha":
-					var posicion = json.posicion;
-					var color = json.color;
-					var ficha = json.ficha;
-					crearFicha(ficha,color,posicion);
+						});
+					;
 				break;
-			case "media":
-				var target = document.getElementById("algo2");
-				
-					url = window.URL.createObjectURL(json.video);
-					target.onload = function() {
-	            		 window.URL.revokeObjectURL(url);
-		            };
-				
-				
-	            
-	            target.src = url;
-				break;
-			case "finPartida":
-					if (estado =="jugando"){
-						ejecutar(json.accion);
-					}
-				break;
-			default:
-				
-				break;
-		}
+				case "crearFicha":
+						var posicion = json.posicion;
+						var color = json.color;
+						var ficha = json.ficha;
+						crearFicha(ficha,color,posicion);
+					break;
+				case "finPartida":
+						if (estado =="jugando"){
+							ejecutar(json.accion);
+						}
+					break;
+				default:
+					
+					break;
+			}
+			if (json.type && json.type == "offer"){
+				//alert("Entro json.offer");;
+				crearAnswer(json);
+			}
+			if (json.type && json.type == "answer"){
+				handling(json);
+			}
+			
 		}catch(err){
-			var target = document.getElementById("target");
-			var sonido = document.getElementById("sonido");
-			if (mensaje.size == 32812 || mensaje.size == 41004){
-	        	 url = window.URL.createObjectURL(mensaje);
-	        	sonido.onload= function() {
-	        		window.URL.revokeObjectURL(url);
-	            };
-	        	sonido.src = url;
-	        	sonido.play();
-	        }else{
-	        	 url = window.URL.createObjectURL(mensaje);
-		        	target.onload = function() {
-		        		 window.URL.revokeObjectURL(url);
-		            };
-		            target.src = url;
-	        }
-	        
-	      
-	       
-			
-			
-           
+			console.log(err);
 		}
 	}
 	function ejecutar(accion){
 		alert(accion);
 		switch(accion){
 		case "tablas":
-			
 			break;
 		case "ganas":
 			break;
@@ -727,4 +776,135 @@ $(function(){
 		$("#"+posicion).toggleClass(obtenerFicha(posicion));
 		$("#"+posicion).toggleClass(str);
 	}
+
+
+
+	    
+	       //WEBRTC Funciones
+	function activarMedia(){
+	navigator.getUserMedia({"audio":true,"video":true},
+		function (stream){
+			if (navigator.webkitGetUserMedia){
+				videoLocal.src = webkitURL.createObjectURL(stream);
+				streamToAttach = stream;
+			}
+			if (navigator.mozGetUserMedia){
+				videoLocal.mozSrcObject = stream;
+				videoLocal.play();
+				streamToAttach = stream;
+			}
+		}
+		,error
+	);
+	}
+	function crearOffer(){
+	peer = null;
+	peer = new RTCPeerConnection(iceServers,optional);
+	peer.onicecandidate = onicecandidate;
+	peer.onaddstream = onaddstream;
+	peer.addStream (streamToAttach);
+	peer.createOffer(
+		function(sessionDescription) {
+			peer.setLocalDescription(sessionDescription);
+			//$("#miDescripcion").html(JSON.stringify(sessionDescription));
+			//Se ejecuta tan rapido que no da tiempo a crear el objeto
+			setTimeout(function(){
+				ws.send(JSON.stringify(sessionDescription)); 
+			},1000);
+			
+		}
+		, 
+		error
+		, 
+		{ 'mandatory': { 'OfferToReceiveAudio': true, 'OfferToReceiveVideo': true }}
+	);
+	
+	}
+	function onicecandidate(event) {
+	if (!peer || !event || !event.candidate) return;
+	var candidate = event.candidate;
+	//$("#candidato").val(JSON.stringify(candidate));
+	// POST-ICE-to-other-Peer(candidate.candidate, candidate.sdpMLineIndex);
+	
+	//ws.send(JSON.stringify(candidate));
+	
+	}
+	function crearAnswer(offer){
+	console.log("Entrando en crearAnswer");
+	//var offer = JSON.parse($("#suDescripcion").val());
+	peer = null;
+	peer = new RTCPeerConnection(iceServers,optional);
+	peer.onicecandidate = onicecandidate;
+	peer.onaddstream = onaddstream;
+	peer.addStream (streamToAttach);
+	
+	if (navigator.mozGetUserMedia){
+		peer.setRemoteDescription(new RTCSessionDescription(offer), function() {
+			peer.createAnswer(function(answer) {
+				peer.setLocalDescription(new RTCSessionDescription(answer), function() {
+					//$("#miDescripcion").html(JSON.stringify(answer));
+					setTimeout(function(){
+					ws.send(JSON.stringify(answer));
+					},1000);
+			  }, error);
+			}, error);
+		}, error);
+	}else{
+		insertarRemoteDes();
+		peer.createAnswer(function(answer) {
+			peer.setLocalDescription(answer);
+			//$("#miDescripcion").html(JSON.stringify(answer));
+			setTimeout(function(){
+			ws.send(JSON.stringify(answer));
+			},1000);
+			console.log("Answer:");
+			console.log(answer);
+			},
+			error
+			, { 'mandatory': { 'OfferToReceiveAudio': true, 'OfferToReceiveVideo': true } }
+		);
+	}
+	
+	console.log("crearAnswer finalizado");
+	console.log(peer);
+	}
+	function insertarRemoteDes(sessionDescription){
+	console.log("insertandoRemote");
+	//var sessionDescription = JSON.parse($("#suDescripcion").val());
+	peer.setRemoteDescription(new RTCSessionDescription(sessionDescription));
+	}
+	function handling(sessionDescription){
+	//var sessionDescription = JSON.parse($("#resultado").val());
+	peer.setRemoteDescription(new RTCSessionDescription(sessionDescription));
+	}
+	
+	function error(e){
+	console.log(e);
+	}
+	function addIc(candidate){
+	//var candidate = JSON.parse($("#candidato2").val());
+	peer.addIceCandidate(new RTCIceCandidate({
+		sdpMLineIndex: candidate.sdpMLineIndex,
+		candidate: candidate.candidate
+	}));
+	}
+	function onaddstream(event) {
+	if (!event) return;
+	if (navigator.webkitGetUserMedia){
+		videoRemoto.src = webkitURL.createObjectURL(event.stream);		
+	}
+	if (navigator.mozGetUserMedia){
+		videoRemoto.mozSrcObject  = event.stream;		
+	}
+	waitUntilRemoteStreamStartsFlowing();
+	}
+	function waitUntilRemoteStreamStartsFlowing(){
+	if (!(videoRemoto.readyState <= HTMLMediaElement.HAVE_CURRENT_DATA 
+		|| videoRemoto.paused || videoRemoto.currentTime <= 0)) 
+	{
+		// remote stream started flowing!
+	} 
+	else setTimeout(waitUntilRemoteStreamStartsFlowing, 50);
+	}
+	
 });

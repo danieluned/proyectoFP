@@ -54,7 +54,6 @@
 				    <ul class="sinEstilo">
 						<li class="h4"><s:a action="jugarAjedrez" cssClass="btn-lg btn-success" ><s:text name="unoContraUno"/></s:a></li>
 						<li class="h4"><s:a action="aprender" cssClass="btn-lg btn-success" ><s:text name="aprender"/></s:a></li>
-						<li class="h4"><s:a action="webrtc" cssClass="btn-lg btn-success" ><s:text name="webrtc"/></s:a></li>
 					</ul>
 				</div>
 			</div>
