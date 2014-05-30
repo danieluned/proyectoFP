@@ -1,0 +1,360 @@
+@import url(http://fonts.googleapis.com/css?family=Fontdiner+Swanky);
+.alineadoVertical{
+	outline:1px solid red;
+	background: rgba(0,0,0,.8);
+}
+.centrado{
+	text-align:center;
+}
+html,
+body {
+  height: 100%;
+  bacground-color:black;
+  /* The html and body elements cannot have any padding or margin. */
+}
+html{
+	overflow-x:hidden;
+}
+/* Wrapper for page content to push down footer */
+#wrap {
+  min-height: 100%;
+  
+  /* Negative indent footer by it's height */
+  margin: 0 auto -30px;
+}
+#push,
+#footer {
+  height: 30px;
+}
+#footer {
+ background-color: black;
+ text-align:center;
+ padding-top:3px;
+ overflow:hidden;
+}
+#envolver{
+	margin-rigth: 10px;
+}
+header{
+	background-color: black !important;
+ text-align:center;
+ padding-top:3px;
+overflow:hidden;
+ height:50px;
+ margin-bottom:10px;
+}
+
+@media (max-width: 767px) {
+	#footer {
+	  margin-left: -20px;
+	  margin-right: -20px;
+	  padding-left: 20px;
+	  padding-right: 20px;
+	}
+}
+
+.aBotones{
+	 list-style:none;
+	padding: 0;
+}
+.h2:after,
+.h3:after,
+.h4:after {
+    position: absolute;
+    content: "";
+    left: 0;
+    top: 0;
+    bottom: 0;
+    width: 5px;
+    border-radius: 2px;
+    box-shadow:
+        inset 0 1px 1px rgba(0,0,0,0.5),
+        0 1px 1px rgba(255,255,255,0.3);
+}
+ 
+.h2:after { background: #0AF; }
+.h3:after { background: #3BF; }
+.h4:after { background: #6Cf; }
+ 
+.h1 {
+    font-size: 36px;
+    line-height: 40px;
+    
+    font-weight: normal;
+    color: white;
+    font-family: 'Hammersmith One', sans-serif;
+    text-shadow: 0 -1px 0 rgba(0,0,0,0.4);
+    position: relative;
+    color: #6Cf;
+}
+ 
+.h2 {
+    margin: 1em 0 .6em 0;
+    padding: 0 0 0 20px;
+    font-weight: normal;
+    color: white;
+    font-family: 'Hammersmith One', sans-serif;
+    text-shadow: 0 -1px 0 rgba(0,0,0,0.4);
+    position: relative;
+    font-size: 30px;
+    line-height: 40px;
+}
+ 
+.h3 {
+    margin: 1em 0 .6em 0;
+    padding: 0 0 0 20px;
+    font-weight: normal;
+    color: white;
+    font-family: 'Hammersmith One', sans-serif;
+    text-shadow: 0 -1px 0 rgba(0,0,0,0.4);
+    position: relative;
+    font-size: 24px;
+    line-height: 40px;
+    font-family: 'Questrial', sans-serif;
+}
+ 
+.h4 {
+    margin: 1em 0 .6em 0;
+    padding: 0 0 0 20px;
+    font-weight: normal;
+    color: white;
+    font-family: 'Hammersmith One', sans-serif;
+    text-shadow: 0 -1px 0 rgba(0,0,0,0.4);
+    position: relative;
+    font-size: 18px;
+    line-height: 20px;
+    font-family: 'Questrial', sans-serif;
+}
+.sinEstilo {
+	display:block;
+	list-style:none;
+	margin-left:0;
+	padding-left:0;
+}
+.sinEstilo a{
+	min-width:140px;
+	width:80%;
+	display:block;
+	text-align:center;
+}
+.botoncico{
+	text-align:center;
+    border:1px solid black;
+    padding:20px;
+    margin-top:6px;
+    background:grey;
+    width:190px;
+    text-decoration:none;
+    display:block;
+    font-weight:bolder;
+    color:white;
+  
+}
+
+
+.im{
+	width:50px;
+}
+.rojo{
+	background-color:red;
+	
+}
+.verde{
+	background-color:green;
+}
+.botoncico:hover{
+	text-decoration:none;
+	 color:white;
+	 -webkit-box-shadow:inset 0 0 0 6px #ffffff;
+	box-shadow:inset 0 0 0 6px #ffffff;
+	 
+}
+
+input{
+	color:black !important;
+}
+.ui-tabs p, .ui-tabs span{
+	color:whie;
+}
+.ui-tabs-active *{
+	color:black;
+}
+* {
+	color:white;
+}
+.center-block {
+	float: none !important
+}
+.negroTransparente {
+	background-color: rgba(100,100,100,.5);
+	
+}
+.glyphicon:empty {
+    width: 3em;
+}
+a:hover {
+    text-decoration:none !important;
+}
+#salir {
+position: absolute;
+top: 0px;
+right: 20px;
+	
+}
+#cambiarTablero{
+	height:20px;
+	width:30px;
+	overflow:hidden;
+	position: absolute;
+top: 0px;
+left: 12px;
+}
+#cambiarChat2{
+	height:20px;
+	width:30px;
+	overflow:hidden;
+	position: absolute;
+top: 0px;
+left: 44px;
+}
+#cambiarPartidas{
+	height:20px;
+	width:30px;
+	overflow:hidden;
+	position: absolute;
+top: 0px;
+left: 76px;
+}
+#cambiarControles{
+	height:20px;
+	width:30px;
+	overflow:hidden;
+	position: absolute;
+top: 0px;
+left: 108px;
+}
+#cambiarChat{
+position: absolute;
+top: 0px;
+right: 60px;
+}
+#fullscreen{
+	position: absolute;
+top: 20px;
+right: 20px;
+	
+}
+#click{
+		position: absolute;
+top: 20px;
+left: 60px;
+}
+#es{
+	position: absolute;
+top: 20px;
+left: 20px;
+	
+}
+#en{
+	position: absolute;
+top: 20px;
+
+left: 50px;
+}
+.negro2Transparente {
+	background-color: rgba(0,0,0,1);
+	
+}
+.centrado{
+	vertical-align: middle;
+}
+.titulo{
+	
+	text-shadow: 0 0 10px #666666;
+	color:#fce300;
+	margin-top:0;
+	font-family: 'Fontdiner Swanky', cursive;
+	
+}
+
+@-webkit-keyframes animatedBackground {
+	10% { background-position: 0 0; }
+	50% { background-position: -100px 0; }
+	100% { background-position: 0px 0; }
+}
+@keyframes animatedBackground {
+	10% { background-position: 0 0; }
+	50% { background-position: -100px 0; }
+	100% { background-position: 0px 0; }
+}
+body{
+	background-color:black;
+}
+#tablero {
+	margin:auto;
+	background: black;
+}
+#contenido{
+	margin-left:20px;
+	
+}
+#wrapTablero{
+	height:500px;
+	width:500px;
+}
+#tablero table{
+	border-spacing:0;
+}
+.b{
+	background:#EADECF;
+}
+.n{
+	background:#895A20;
+}
+.bp , .bc,.bt,.br,.bd,.ba,
+.np , .nc,.nt,.nr,.nd,.na{
+	background-position:center; 
+	background-size:100% 100%;
+}
+.bp{
+	background-image: url('../img/piezas/bp.svg');
+}
+.bt{
+	background-image: url('../img/piezas/bt.svg');
+}
+.bc{
+	background-image: url('../img/piezas/bc.svg');
+}
+.ba{
+	background-image: url('../img/piezas/ba.svg');
+}
+.bd{
+	background-image: url('../img/piezas/bd.svg');
+}
+.br{
+	background-image: url('../img/piezas/br.svg');
+}
+.np{
+	background-image: url('../img/piezas/np.svg');
+}
+.nt{
+	background-image: url('../img/piezas/nt.svg');
+}
+.nc{
+	background-image: url('../img/piezas/nc.svg');
+}
+.na{
+	background-image: url('../img/piezas/na.svg');
+}
+.nr{
+	background-image: url('../img/piezas/nr.svg');
+}
+.nd{
+	background-image: url('../img/piezas/nd.svg');
+}
+.azul{
+	outline: 0.3em solid blue !important;
+}
+.rojo{
+	outline: 0.3em solid red;
+}

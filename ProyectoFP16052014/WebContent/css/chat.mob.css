@@ -1,0 +1,111 @@
+#envolver {
+	position:absolute;
+	height: 250px;
+	width: 300px;
+	margin-right:20px;
+}
+#wrapmivideo,#wrapsuvideo{
+	position:absolute;
+}
+
+button{
+color: black;	
+}
+#animacion1{
+	display: block;
+	width:100px;
+background: none repeat scroll 0% 0% #00F;
+z-index: 4000;
+border: 1px solid blue;
+top: 240px;
+position: absolute;
+right:0px;
+}
+#chat div {
+	width:100%;
+	
+	overflow-y:scroll;
+	
+}
+#tiempos p {
+	color:yellow;
+}
+#tiempo{
+	background-color:rgba(240,100,100,0.5);
+}
+
+#chat ul{
+	overflow-y:scroll;
+	overflow-x:hidden;
+	height:40px;
+	width:100%;
+	display:inline-block;
+}
+#chat ul li{
+	float:left;
+}
+#chat {
+	margin:auto;
+	/*outline:red 4px solid;*/
+}
+#chat p{
+	color:black;
+}
+.ui-icon{
+	width:30px;
+	height:30px;
+	background-color:red;
+	
+}
+#wrapTablero .ui-icon{
+	bottom: -50px;
+	
+}
+#partidas{
+	width:400px;
+	background: none repeat scroll 0% 0% rgba(130, 120, 214, 0.8);
+	position:absolute;
+	
+	padding:0;
+}
+
+.item{
+	overflow:hidden;
+	background:black;
+	
+}
+
+#controlesPartida , #mover, #tiempos, #moverTablero, #arrastrarmivideo,#arrastrarsuvideo{
+	cursor: move;
+	color: yellow;
+	text-align:center;
+	background-color:rgba(0,0,0,0.6);
+	font-weight:bolder;
+}
+#wrapTablero,#envolver,#tiempos,#partidas{
+	margin-bottom:50px;
+}
+#tablaPartidas{
+	overflow:scroll;
+}
+.item{
+	overflow:visible;
+}
+#tablaPartidas table{
+	background:black;
+	width:400px !important;
+	/*height:100%;*/
+}
+#tablaPartidas td{
+	
+}
+#listaPartidas tr:nth-child(odd) {
+    background-color: grey;
+    color:white;
+    font-weight:bolder;
+}
+#listaPartidas tr:nth-child(even) {
+     background-color: black;
+    color:white;
+    font-weight:bolder;
+}
