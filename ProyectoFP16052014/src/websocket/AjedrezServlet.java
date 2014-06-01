@@ -79,7 +79,7 @@ public class AjedrezServlet extends WebSocketServlet implements Runnable{
    }
   public void cerrarPartidas(){
 	  for (Partida partida : AjedrezServlet.partidas.values()) {
-		if (!partida.getEstadoActual().equals("jugando") 
+		if (!partida.getEstadoActual().equals("Jugando") 
 			||  !partida.getEstadoActual().equals("EsperandoOtroJugador") 
 			){
 			partidas.remove(partida);
@@ -178,7 +178,20 @@ public class AjedrezServlet extends WebSocketServlet implements Runnable{
     			
         	  }
     	  }
-    	  
+    	  System.out.println("Partida "+p.getJugadorBlancas()+" vs "+p.getJugadorNegras()+" ->"+p.getEstadoActual());
+    	  if (p.getEstadoActual().equals("EsperandoOtroJugador") ){
+    		  if (p.getJugadorBlancas().equals(this.nombre) ){
+    			  p.setEstadoActual("Abandonan Blancas");
+    			  AjedrezServlet.partidas.remove(p);
+    			  esNuevaLista = true;
+    		  }else
+    		  	{
+    			  p.setEstadoActual("Abandonan Negras");
+    			  AjedrezServlet.partidas.remove(p);
+    			  esNuevaLista = true;
+    		  }
+    		  System.out.println("Se cerro la partida por cancelarla.");
+    	  }
     		
       }
       AjedrezServlet.this.conexiones.remove(this.connectionId);
@@ -392,8 +405,70 @@ public class AjedrezServlet extends WebSocketServlet implements Runnable{
         case "actualizarPartidas":
         	 
         	break;
-        case "salirPartida":
-          
+        case "pedirAbandono":
+        	//Doy por abandonada la partida si la tubiese en la que estaba por cliquear crar a otra.
+        	if (!(this.partida.equals(""))) {
+                if(AjedrezServlet.partidas.get(this.partida)!=null){
+             	   
+             	   if (AjedrezServlet.partidas.get(this.partida).getEstadoActual().equals("Jugando")){
+             		   if (AjedrezServlet.partidas.get(this.partida).getJugadorBlancas().equals(this.nombre)){
+             			   AjedrezServlet.partidas.get(this.partida).getConexBlancas()
+                   		 .getWsOutbound().writeTextMessage(CharBuffer.wrap("{\"tipo\":\"finPartida\",\"blancas\":\"" +  AjedrezServlet.partidas.get(this.partida).getJugadorBlancas() + "\", \"negras\":\"" +  AjedrezServlet.partidas.get(this.partida).getJugadorNegras() + "\" , \"accion\":\"pierdes\" }"));
+                   		 AjedrezServlet.partidas.get(this.partida).getConexNegras()
+                   		 .getWsOutbound().writeTextMessage(CharBuffer.wrap("{\"tipo\":\"finPartida\",\"blancas\":\"" +  AjedrezServlet.partidas.get(this.partida).getJugadorBlancas() + "\", \"negras\":\"" +  AjedrezServlet.partidas.get(this.partida).getJugadorNegras() + "\" , \"accion\":\"ganas\" }"));
+             		   }else{
+             			   AjedrezServlet.partidas.get(this.partida).getConexBlancas()
+                   		 .getWsOutbound().writeTextMessage(CharBuffer.wrap("{\"tipo\":\"finPartida\",\"blancas\":\"" +  AjedrezServlet.partidas.get(this.partida).getJugadorBlancas() + "\", \"negras\":\"" +  AjedrezServlet.partidas.get(this.partida).getJugadorNegras() + "\" , \"accion\":\"ganas\" }"));
+                   		 AjedrezServlet.partidas.get(this.partida).getConexNegras()
+                   		 .getWsOutbound().writeTextMessage(CharBuffer.wrap("{\"tipo\":\"finPartida\",\"blancas\":\"" +  AjedrezServlet.partidas.get(this.partida).getJugadorBlancas() + "\", \"negras\":\"" +  AjedrezServlet.partidas.get(this.partida).getJugadorNegras() + "\" , \"accion\":\"pierdes\" }"));
+             			 }
+             		 
+             		  
+             	   }
+             	   AjedrezServlet.partidas.get(this.partida).setEstadoActual("finalizada");
+             	 partidas.remove(this.partida);
+             	 AjedrezServlet.this.actualizarPartidas();
+                }
+         	}
+         
+         	this.partida = "";
+        	break;
+        case "aceptaTablas":
+        	if (!(this.partida.equals(""))) {
+                if(AjedrezServlet.partidas.get(this.partida)!=null){
+             	   if (AjedrezServlet.partidas.get(this.partida).getEstadoActual().equals("Jugando")){
+             		    AjedrezServlet.partidas.get(this.partida).setEstadoActual("Tablas");
+             		   AjedrezServlet.this.actualizarPartidas();
+             		  AjedrezServlet.partidas.get(this.partida).getConexBlancas()
+               		 .getWsOutbound().writeTextMessage(CharBuffer.wrap("{\"tipo\":\"finPartida\",\"blancas\":\"" +  AjedrezServlet.partidas.get(this.partida).getJugadorBlancas() + "\", \"negras\":\"" +  AjedrezServlet.partidas.get(this.partida).getJugadorNegras() + "\" , \"accion\":\"Tablas\" }"));
+               		 AjedrezServlet.partidas.get(this.partida).getConexNegras()
+               		 .getWsOutbound().writeTextMessage(CharBuffer.wrap("{\"tipo\":\"finPartida\",\"blancas\":\"" +  AjedrezServlet.partidas.get(this.partida).getJugadorBlancas() + "\", \"negras\":\"" +  AjedrezServlet.partidas.get(this.partida).getJugadorNegras() + "\" , \"accion\":\"Tablas\" }"));
+         		   
+             	   }
+                }
+        	}
+        	
+        	break;
+        case "pedirTablas":
+        	if (!(this.partida.equals(""))) {
+                if(AjedrezServlet.partidas.get(this.partida)!=null){
+             	   
+             	   if (AjedrezServlet.partidas.get(this.partida).getEstadoActual().equals("Jugando")){
+             		   if (AjedrezServlet.partidas.get(this.partida).getJugadorBlancas().equals(this.nombre)){
+             			  AjedrezServlet.partidas.get(this.partida).getConexNegras()
+                    		 .getWsOutbound().writeTextMessage(CharBuffer.wrap("{\"tipo\":\"aceptarTablas\"}"));
+              			 
+             			   }else{
+             			   AjedrezServlet.partidas.get(this.partida).getConexBlancas()
+                   		 .getWsOutbound().writeTextMessage(CharBuffer.wrap("{\"tipo\":\"aceptarTablas\"}"));
+                   		}
+             		 
+             		  
+             	   }
+             	  
+             	 
+                }
+         	}
         	break;
         case "crearPartida":
         	//Doy por abandonada la partida si la tubiese en la que estaba por cliquear crar a otra.

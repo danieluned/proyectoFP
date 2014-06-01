@@ -302,7 +302,7 @@ function ajusteVertical(){
 	centradoVertical(".alineadoVertical");
 	var h = $(document).height();
 	$("#wrap").css("height",h);
-	console.log("altura:"+h);
+	//console.log("altura:"+h);
 }
 function cambiarCabecera(){
 		var max = 580;

@@ -21,13 +21,16 @@ $(function(){
 	var width2;
 	var height2;
 	var estado="";
+	var ladoBlancas=true;
+	var estaEnBlancas = true;
 	/*** Conf inicial ***/
 	ajustar(divd);
 	dibujarTablero(divd);
 	pintarCasillas(divd);
 	colocarFichas(divd);
 	conectar();
-	
+	mostrarControlesIdle();
+	//cerrarBtnconex();
 	/** indicarle al chat que tiene pestañas */
 	$("#chat").tabs();
 	
@@ -79,6 +82,9 @@ $(function(){
 	});
 	
 	$("#rotar").click(rotarTablero);
+	$("#pedirAbandonar").click(enviarAbandono);
+	$("#pedirTablas").click(enviarTablas);
+	$("#pedirTablas").prop( "disabled", true );
 	//
 	
 	//Vendor prefixes
@@ -145,17 +151,19 @@ $(function(){
 	//WEBRTC variables y eventos  
 	//Variables
 	var peer;
+	var puedePedirTablas= false;
 	var streamLocal;
 	var streamToAttach;
 	var videoLocal = document.getElementById("videoLocal");
 	var videoRemoto = document.getElementById("videoRemoto");
 	//Eventos           
-
+	
 	$("#crearOffer").click(crearOffer);
 	$("#crearAnswer").click(crearAnswer);
 
 	$("#handling").click(handling);
 	$("#btnActivarMedia").click(activarMedia);
+	$("#btnColgar").click(closeMedia);
 	//FIN WEBRTC var. y eventos
 	
 	//FUNCTIONES
@@ -199,8 +207,10 @@ $(function(){
 		$("#tick")[0].play();
 	}
 	/*** Funciones ***/
+	var cant=0;
 	function rotarTablero(){
 		
+		 
 		$(divd).find("tbody").each(function(e,i){
 			
 			$(this).find("tr").each(function(e,i){
@@ -212,6 +222,11 @@ $(function(){
 			arr.reverse();
 			$(this).html(arr);
 		});
+		if (estaEnBlancas){
+			estaEnBlancas=false;
+		}else{
+			estaEnBlancas=true;
+		}
 	}
 	function refrescarEscucharUnirse(){
 		$(".unirse").click(function(){
@@ -365,7 +380,15 @@ $(function(){
 		console.log(str);
 		return str;
 	}
-	
+	function enviarAbandono(){
+		var str = '{ "tipo":"pedirAbandono"}';
+		ws.send(str);
+	}
+	function enviarTablas(){
+		var str = '{ "tipo":"pedirTablas"}';
+		ws.send(str);
+		$("#pedirTablas").prop( "disabled", true );
+	}
 	function procesarMensaje(mensaje){
 		try{
 			var json =  JSON.parse(mensaje);
@@ -396,12 +419,24 @@ $(function(){
 				case "movimiento":
 					moverFicha(json.inicio,json.fin);
 					soundMove();	
+					$("#pedirTablas").prop( "disabled", false );
 					break;
 				case "resetearPartida":
 						pintarCasillas(divd);
 						colocarFichas(divd);
 						soundNewGame();
 						estado="jugando";
+						activarModoPartida();
+						//alert("JuegasdeBlancas?->"+ladoBlancas+"\nTableroConBlancas?->"+estaEnBlancas);
+						if (!ladoBlancas && estaEnBlancas){
+							rotarTablero();
+						}
+						if (ladoBlancas && !estaEnBlancas){
+							rotarTablero();
+						}
+						ladoBlancas=true;
+								
+						
 					break;
 				case "partidasDisponibles":
 					var str="";
@@ -439,7 +474,17 @@ $(function(){
 					
 				break;
 				case "rotarTablero":
-					rotarTablero();
+						
+					
+					ladoBlancas=false;
+					
+						
+					
+						
+					
+						
+					
+				
 					
 				break;
 				case "elegirFicha":
@@ -489,9 +534,36 @@ $(function(){
 						crearFicha(ficha,color,posicion);
 					break;
 				case "finPartida":
+						
 						if (estado =="jugando"){
+							
 							ejecutar(json.accion);
 						}
+					break;
+				case "aceptarTablas":
+					bootbox.dialog(
+							
+							{
+								 message: "I am a custom dialog",
+								 title: "Custom title",
+						buttons: {
+							success2: {
+								label: "Aceptar tablas",
+								className: "btn-success",
+								callback: function() {
+									ws.send('{ "tipo": "aceptaTablas"}');
+									console.log("tablas aceptadas");
+								}
+							},
+							success: {
+								label: "Rechazar tablas",
+								className: "btn-success",
+								callback: function() {
+									console.log("tablas rechazadas");
+								}
+							}
+						}
+						});
 					break;
 				default:
 					
@@ -499,27 +571,45 @@ $(function(){
 			}
 			if (json.type && json.type == "offer"){
 				//alert("Entro json.offer");;
+				console.log("Nos estan llamando");
 				crearAnswer(json);
+				console.log("Le hemos contestado");
 			}
 			if (json.type && json.type == "answer"){
+				console.log("Nos estan respondiendo");
 				handling(json);
+				console.log("Fin de la respuesta");
 			}
 			
 		}catch(err){
 			console.log(err);
 		}
 	}
+	function mostrarControlesIdle(){
+		$("#partidas").css("visibility","visible");
+		$("#tiempos").css("visibility","hidden");
+	}
+	function activarModoPartida(){
+		$("#tiempos").css("visibility","visible");
+		$("#partidas").css("visibility","hidden");
+	}
 	function ejecutar(accion){
-		alert(accion);
+		//alert(accion);
 		switch(accion){
-		case "tablas":
+		case "Tablas":
+			bootbox.alert("Has hecho tablas");
 			break;
 		case "ganas":
+			bootbox.alert("Has ganado a tu oponente");
 			break;
 		case "pierdes":
+			bootbox.alert("Has perdido");
 			break;
 			
 		}
+		
+		mostrarControlesIdle();
+		estado="idle";
 	}
 	function ajuste(ev){
 		ajustar(divd);
@@ -778,7 +868,7 @@ $(function(){
 	}
 
 
-
+	
 	    
 	       //WEBRTC Funciones
 	function activarMedia(){
@@ -795,14 +885,43 @@ $(function(){
 			}
 		}
 		,error
-	);
+		);
+	 	if (peer!=null){
+	 		peer.addStream (streamToAttach);
+	 	}
+	 	console.log("entro");
+	 	//$("#btnActivarMedia").hide();
+	 	//$("#crearOffer").show();
+	}
+	function cerrarBtnconex(){
+		//$("#crearOffer").hide();
+		
+	}
+	function closeMedia(){
+		
+		streamToAttach.stop();
+		//$("#btnActivarMedia").show();
+		
+	}
+	function close(){
+		if ( peer ) {
+			peer.close();
+			peer = null;
+			
+	        
+		}
 	}
 	function crearOffer(){
-	peer = null;
+	close();
+	
 	peer = new RTCPeerConnection(iceServers,optional);
 	peer.onicecandidate = onicecandidate;
+	
 	peer.onaddstream = onaddstream;
-	peer.addStream (streamToAttach);
+	if (streamToAttach !=null){
+		peer.addStream (streamToAttach);
+	}
+	
 	peer.createOffer(
 		function(sessionDescription) {
 			peer.setLocalDescription(sessionDescription);
@@ -818,7 +937,8 @@ $(function(){
 		, 
 		{ 'mandatory': { 'OfferToReceiveAudio': true, 'OfferToReceiveVideo': true }}
 	);
-	
+		//$("#crearOffer").hide();
+		
 	}
 	function onicecandidate(event) {
 	if (!peer || !event || !event.candidate) return;
@@ -830,13 +950,18 @@ $(function(){
 	
 	}
 	function crearAnswer(offer){
-	console.log("Entrando en crearAnswer");
+	close();
+	
+	//console.log("Entrando en crearAnswer");
 	//var offer = JSON.parse($("#suDescripcion").val());
-	peer = null;
+	
 	peer = new RTCPeerConnection(iceServers,optional);
 	peer.onicecandidate = onicecandidate;
 	peer.onaddstream = onaddstream;
-	peer.addStream (streamToAttach);
+	if (streamToAttach !=null){
+		peer.addStream (streamToAttach);
+	}
+	
 	
 	if (navigator.mozGetUserMedia){
 		peer.setRemoteDescription(new RTCSessionDescription(offer), function() {
@@ -850,7 +975,8 @@ $(function(){
 			}, error);
 		}, error);
 	}else{
-		insertarRemoteDes();
+	
+		insertarRemoteDes(offer);
 		peer.createAnswer(function(answer) {
 			peer.setLocalDescription(answer);
 			//$("#miDescripcion").html(JSON.stringify(answer));

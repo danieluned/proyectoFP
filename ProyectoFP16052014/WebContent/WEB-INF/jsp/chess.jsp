@@ -48,10 +48,11 @@
 					<a id="en" href="?request_locale=en">EN</a>
 					<s:a action="deslogearse" cssClass="btn-sm btn-danger glyphicon glyphicon-off" id="salir"></s:a>
 					<button id="cambiarChat" class="btn-sm">Layout</button>
-					<button id="cambiarTablero" class="btn-xs">Tablero</button>
+					<!-- <button id="cambiarTablero" class="btn-xs">Tablero</button>
 					<button id="cambiarChat2" class="btn-xs">Chat</button>
 					<button id="cambiarPartidas" class="btn-xs">Partidas</button>
 					<button id="cambiarControles" class="btn-xs">Controles</button>
+					-->
 					<!--<button id="click">Animacion</button>-->
 				</div>
 			</header>
@@ -166,16 +167,18 @@
 				        </div>
 				        <input type="text" id="mensaje"/><button id="enviar"><s:text name="enviarMensaje"/></button>
 					</div>	
+					
 						<div id="tiempos" class="item">
 							<p>Tiempo blancas:<span id="tiempoBlancas"></span></p>
 							<p>Tiempo negras:<span id="tiempoNegras"></span></p>
 							<button id="rotar" class="btn-xs">Rotar Tablero</button>
+							<button id="pedirTablas" class="btn-sm">Ofrecer Tablas</button>
+							<button id="pedirAbandonar" class="btn-sm btn-danger">Abandonar</button>
 						</div>
 					<div id="partidas" class="item">
 						<div id="controlesPartida">Partidas</div>
 						<button id="crearPartida" class="btn-sm">Crear Partida</button>
-						<button id="crearPartida" class="btn-sm">Ofrecer Tablas</button>
-						<button id="crearPartida" class="btn-sm btn-danger">Abandonar</button>
+						
 						<div id="tablaPartidas">
 							<table >
 								<thead>
@@ -192,15 +195,16 @@
 							</table>
 						</div>
 					</div>
+					
 				</div>
 				<div class="col-xs-0">
 					<div class="item" id="wrapmivideo" >
 						<div id="arrastrarmivideo" >mi video</div>
 						<video id="videoLocal" controls autoplay>
 						</video>
-						<button id="btnActivarMedia">activar media</button>
-						<button id="crearAnswer">Soy quien contesta</button>
-						<button id="crearOffer">Soy Quien LLama</button>
+						<button id="btnActivarMedia">Encender Camara</button>
+						<button id="crearOffer">Transmitir</button>
+						<button id="btnColgar">Parar de transmitir</button>
 					</div>
 				     <div class="item" id="wrapsuvideo" >
 				     	<div id="arrastrarsuvideo">su video</div>

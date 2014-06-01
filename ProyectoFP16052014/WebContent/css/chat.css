@@ -4,8 +4,18 @@
 	width: 300px;
 	margin-right:20px;
 }
+.modal-dialog *{
+	color:black !important;
+}
 #wrapmivideo,#wrapsuvideo{
 	position:absolute;
+	width:200px;
+	height:100px;
+	margin-bottom:100px;
+}
+#wrapmivideo video ,#wrapsuvideo video{
+	width:100%;
+	height:100%;
 }
 #wrapmivideo .ui-icon,#wrapsuvideo .ui-icon{
 	bottom: -10px;
@@ -56,7 +66,7 @@ right:0px;
 .ui-icon{
 	width:30px;
 	height:30px;
-	background-color:red;
+	background-color:rgba(0,0,0,.4);
 	
 }
 #wrapTablero .ui-icon{
