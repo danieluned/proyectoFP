@@ -1,5 +1,8 @@
 $(function(){
-	
+	/**
+	 * Para los cursores
+	 * http://jsfiddle.net/wNKcU/5/
+	 */
 	/*** Atributos ***/
 	var divd = $("#tablero");
 	//Variables para recoger coordenadas
@@ -23,6 +26,7 @@ $(function(){
 	var estado="";
 	var ladoBlancas=true;
 	var estaEnBlancas = true;
+	var seleccionadoObjecto = false;
 	/*** Conf inicial ***/
 	ajustar(divd);
 	dibujarTablero(divd);
@@ -40,6 +44,8 @@ $(function(){
 	//Evento para recoger coordenadas 
 	//$("#tablero td").click(recogerCoordenada);
 	$("#fichas li").click(activarFigura);
+	$("#tablero td").click(accionTablero);
+	$("#cancelarSeleccion").click(cancelarSeleccion);
 	/** Cuando presionamos el boton de conectar
 		ejecutamos la conexion */
 	
@@ -559,12 +565,18 @@ $(function(){
 						});
 					;
 				break;
-				case "crearFicha":
+				case "crearFicha2":
 						var posicion = json.posicion;
 						var color = json.color;
 						var ficha = json.ficha;
-						crearFicha(ficha,color,posicion);
+						crearFicha2(ficha,color,posicion);
 					break;
+				case "crearFicha":
+					var posicion = json.posicion;
+					var color = json.color;
+					var ficha = json.ficha;
+					crearFicha(ficha,color,posicion);
+				break;
 				case "finPartida":
 						
 						if (estado =="jugando"){
@@ -847,10 +859,47 @@ $(function(){
 		coordenadaFinal = null;
 		
 	}
+	function cancelarSeleccion(){
+		seleccionadoObjecto = false;
+		ficha = null;
+	}
 	function activarFigura(){
+		seleccionadoObjecto = true;
+		ficha = $(this).attr("id");
 		
 	}
-	
+	var ficha =null;
+	function colocarFicha(ficha,casilla){
+		ws.send("{ \"tipo\": \"colocarFicha\" , \"ficha\":\""+ficha+"\" , \"casilla\": \""+casilla+"\" }");
+	}
+	function accionTablero(){
+		if (seleccionadoObjecto){
+			colocarFicha(ficha,$(this).attr("id"))
+		}else{
+			if (coordenadaInicial == null){
+				pintarCasilla(divd,$(this).attr("id"),"azul");
+				coordenadaInicial = $(this).attr("id");
+			}else{
+				if (coordenadaInicial != null && coordenadaFinal == null){
+					if(coordenadaInicial == $(this).attr("id")){
+						coordenadaInicial = null;
+						despintarCasilla(divd,$(this).attr("id"),"azul");
+					}else{
+						pintarCasilla(divd,$(this).attr("id"),"azul");
+						coordenadaFinal = $(this).attr("id");
+					}
+					
+				}
+			}
+			if (coordenadaInicial != null && coordenadaFinal != null){
+				$("#"+coordenadaInicial).toggleClass("azul");
+				$("#"+coordenadaFinal).toggleClass("azul");
+				enviarCoordenadas();
+				coordenadaInicial = null;
+				coordenadaFinal = null;
+			}
+		}
+	}
 	function recogerCoordenada (){	//Funcion evento
 		
 		if (coordenadaInicial == null){
@@ -923,6 +972,17 @@ $(function(){
 		if (ficha =="caballo") str+="c";
 		if (ficha=="alfil") str +="a";
 		if (ficha == "dama") str +="d";
+		$("#"+posicion).toggleClass(obtenerFicha(posicion));
+		$("#"+posicion).toggleClass(str);
+	}
+	function crearFicha2(ficha,color,posicion){
+		var str ="";
+		if (color == "b"){
+			str+="b";
+		}else{
+			str+="n";
+		}
+		str+=ficha;
 		$("#"+posicion).toggleClass(obtenerFicha(posicion));
 		$("#"+posicion).toggleClass(str);
 	}

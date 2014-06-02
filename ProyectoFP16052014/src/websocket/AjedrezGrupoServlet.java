@@ -119,7 +119,21 @@ public class AjedrezGrupoServlet extends WebSocketServlet{
 		partidas.remove(sala);
 		enviarListaPartidasAusuarios();
 	}
-	
+	public void colocarFicha(String ficha,String casilla,String sala){
+		partidas.get(sala).ponerFicha(casilla, ficha);
+		for (String usuario : partidas.get(sala).usuarios.keySet()){
+			try {
+				String posicion = casilla;
+				char color = ficha.charAt(0);
+				char ficha2 = ficha.charAt(1);
+				
+				conexiones.get(usuario).getWsOutbound().writeTextMessage(CharBuffer.wrap("{ \"tipo\" : \"crearFicha2\" , \"posicion\" : \""+posicion+"\" ,\"color\": \""+color+"\" , \"ficha\":\""+ficha2+"\" }"));
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+	}
 	public void enviarListaPartidasAusuarios() {
 		String str = listaSalasEnJson();
 		for (WebSocketConnection conn : conexiones.values()) {
@@ -300,6 +314,15 @@ public class AjedrezGrupoServlet extends WebSocketServlet{
         		
         	}
         	
+        	break;
+        case "colocarFicha":
+        	String sala4 = obtenerSalaUsuario(this.nombre);
+        	String casilla = (String)json.get("casilla");
+        	String ficha = (String)json.get("ficha");
+        	if (sala4 != ""){
+        		colocarFicha(ficha,casilla,sala4);
+        		
+        	}
         	break;
         case "aceptaTablas":
         	

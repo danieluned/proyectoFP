@@ -31,10 +31,10 @@ public class PartidaGrupo {
 		usuarios.remove(usuario);
 	}
 	public void ponerFicha(String casilla,String ficha){
-		fichas.put("casilla", ficha);
+		fichas.put(casilla, ficha);
 	}
 	public void ponerColor(String casilla,String color){
-		colores.put("casilla", color);
+		colores.put(casilla, color);
 	}
 	
 	public String fichasTableroJson(){
