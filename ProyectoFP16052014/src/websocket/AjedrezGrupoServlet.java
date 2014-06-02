@@ -90,9 +90,31 @@ public class AjedrezGrupoServlet extends WebSocketServlet{
 					// TODO Auto-generated catch block
 					System.out.println("Fallo al enviar accion ui normal");
 				}
+				//Webrtc- cuando se une un usuario preguntara si hay media
+				//si hay media, se enviara el id al hoster para que contatacte
+				String pedirQueLeLlamen ="{\"tipo\": \"llamame\", \"usuario\": \""+usuario+"\"}";
+				try {
+					conexiones.get(partidas.get(sala).creador).getWsOutbound().writeTextMessage(CharBuffer.wrap(pedirQueLeLlamen));
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				//
 			}
-			
+			try {
+				conexiones.get(usuario).getWsOutbound().writeTextMessage(CharBuffer.wrap(partidas.get(sala).efectosTableroJson()));
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			try {
+				conexiones.get(usuario).getWsOutbound().writeTextMessage(CharBuffer.wrap(partidas.get(sala).fichasTableroJson()));
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		}
+		
 		refrescarListaUsuariosdePartida(sala);
 	}
 	public void salirPartida(String usuario,String sala){
@@ -107,6 +129,18 @@ public class AjedrezGrupoServlet extends WebSocketServlet{
 	public void enviarOrdenAusuario(String usuario, String accion){
 		
 	}
+	public void enviarMovimiento(String de , String a, String sala){
+		partidas.get(sala).moverFicha(de,a);
+		String str = partidas.get(sala).fichasTableroJson();
+		for (String usuario : partidas.get(sala).usuarios.keySet()){
+			try {
+				conexiones.get(usuario).getWsOutbound().writeTextMessage(CharBuffer.wrap(str));
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+	}
 	public void cerrarSala(String sala){
 		for (String usuario : partidas.get(sala).usuarios.keySet()){
 			try {
@@ -118,6 +152,44 @@ public class AjedrezGrupoServlet extends WebSocketServlet{
 		}
 		partidas.remove(sala);
 		enviarListaPartidasAusuarios();
+	}
+	public void quitarEfecto(String efecto,String casilla,String sala){
+		partidas.get(sala).quitarEfecto(casilla);
+		for (String usuario : partidas.get(sala).usuarios.keySet()){
+			try {
+				
+				String jsonEfectos = partidas.get(sala).efectosTableroJson();
+				conexiones.get(usuario).getWsOutbound().writeTextMessage(CharBuffer.wrap(jsonEfectos));
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+	}
+	public void quitarFicha(String ficha,String casilla,String sala){
+		partidas.get(sala).quitarFicha(casilla);
+		for (String usuario : partidas.get(sala).usuarios.keySet()){
+			try {
+				String jsonEfectos = partidas.get(sala).fichasTableroJson();
+				conexiones.get(usuario).getWsOutbound().writeTextMessage(CharBuffer.wrap(jsonEfectos));
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+	}
+	public void colocarEfecto(String efecto,String casilla,String sala){
+		partidas.get(sala).ponerEfecto(casilla, efecto);
+		for (String usuario : partidas.get(sala).usuarios.keySet()){
+			try {
+				
+				String jsonEfectos = partidas.get(sala).efectosTableroJson();
+				conexiones.get(usuario).getWsOutbound().writeTextMessage(CharBuffer.wrap(jsonEfectos));
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
 	}
 	public void colocarFicha(String ficha,String casilla,String sala){
 		partidas.get(sala).ponerFicha(casilla, ficha);
@@ -156,6 +228,9 @@ public class AjedrezGrupoServlet extends WebSocketServlet{
 			}
 		}
 	}
+	public void activarMedia(String sala){
+		partidas.get(sala).mediaOn=true;
+	}
 	public String crearListaUsuariosDeSalaJson(String sala){
 		String str2 = "{ \"tipo\":\"listaUsuarios\" , \"usuarios\":  [ ";
 		int con=0;
@@ -190,7 +265,7 @@ public class AjedrezGrupoServlet extends WebSocketServlet{
     String partida = "";
     String connectionId;
     String nombre;
-
+    JSONObject offer;
     WebSocketConnection(String paramString1, String paramString2)
     {
       this.connectionId = paramString1;
@@ -214,6 +289,7 @@ public class AjedrezGrupoServlet extends WebSocketServlet{
    
     public void onClose(int status)
     {
+    	quitarConexion(this.nombre);
     	String sala = obtenerSalaUsuario(this.nombre);
     	if (sala != ""){
     		if (sala.equals(this.nombre)){
@@ -224,7 +300,7 @@ public class AjedrezGrupoServlet extends WebSocketServlet{
     		}
     		
     	}
-    	quitarConexion(this.nombre);
+    	
     }
 
     public void onTextMessage(CharBuffer charBuffer) throws IOException {
@@ -235,8 +311,7 @@ public class AjedrezGrupoServlet extends WebSocketServlet{
         JSONObject json = (JSONObject)new JSONParser().parse(datos);
         
         if(json.get("sdp")!=null){
-	  		  	
-	  	    	
+        	
 	  	    	
 	    }
         //
@@ -245,21 +320,35 @@ public class AjedrezGrupoServlet extends WebSocketServlet{
         if (tipo!=null)
         switch (tipo)
         {
-        case "movimiento":
+        case "mediaOn":
         	
+        	
+        	if ( obtenerSalaUsuario(this.nombre) != ""){
+        		
+        		activarMedia( obtenerSalaUsuario(this.nombre));
+        	}
+        	break;
+        case "movimiento":
+        	String sala = obtenerSalaUsuario(this.nombre);
+        	String de =(String) json.get("inicio");
+        	String a = (String)json.get("fin");
+        	if (sala != ""){
+        		
+        		enviarMovimiento(de,a,sala);
+        	}
           
           break;
         case "mensajeUsuario":
         	
-        	String sala = obtenerSalaUsuario(this.nombre);
-        	if (sala != ""){
+        	String sala5 = obtenerSalaUsuario(this.nombre);
+        	if (sala5 != ""){
         		boolean enviado = false;
             	String de2 = this.nombre;
                 String a2 = StringEscapeUtils.escapeHtml4((String)json.get("a"));
             	String contenido2 = StringEscapeUtils.escapeHtml4((String)json.get("contenido"));
             	String mensaje2 = "{\"tipo\":\"mensajeUsuario\",\"contenido\":\"" + contenido2 + "\", \"de\":\"" + de2 + "\" , \"a\":\"" + a2 + "\" }";
             	
-            	if (partidas.get(sala).estaUsuarioEnEstaSala(a2)){
+            	if (partidas.get(sala5).estaUsuarioEnEstaSala(a2)){
             		conexiones.get(a2).getWsOutbound().writeTextMessage(CharBuffer.wrap(mensaje2));
             		enviado=true;
             	}
@@ -278,8 +367,8 @@ public class AjedrezGrupoServlet extends WebSocketServlet{
         		
         		String contenido = StringEscapeUtils.escapeHtml4((String)json.get("contenido"));
 
-                String de = this.nombre;
-                String mensaje = "{\"tipo\":\"mensajeGeneral\",\"contenido\":\"" + contenido + "\", \"de\":\"" + de + "\"}";
+                String de5 = this.nombre;
+                String mensaje = "{\"tipo\":\"mensajeGeneral\",\"contenido\":\"" + contenido + "\", \"de\":\"" + de5 + "\"}";
         		
                 enviarMensaje(mensaje, sala2);
         		
@@ -315,12 +404,39 @@ public class AjedrezGrupoServlet extends WebSocketServlet{
         	}
         	
         	break;
+        case "colocarEfecto":
+        	String sala6 = obtenerSalaUsuario(this.nombre);
+        	String casilla6 = (String)json.get("casilla");
+        	String efecto6 = (String)json.get("efecto");
+        	if (sala6 != ""){
+        		colocarEfecto(efecto6,casilla6,sala6);
+        		
+        	}
+        	break;
         case "colocarFicha":
         	String sala4 = obtenerSalaUsuario(this.nombre);
         	String casilla = (String)json.get("casilla");
         	String ficha = (String)json.get("ficha");
         	if (sala4 != ""){
         		colocarFicha(ficha,casilla,sala4);
+        		
+        	}
+        	break;
+        case "quitarEfecto":
+        	String sala16 = obtenerSalaUsuario(this.nombre);
+        	String casilla16 = (String)json.get("casilla");
+        	String efecto16 = (String)json.get("efecto");
+        	if (sala16 != ""){
+        		quitarEfecto(efecto16,casilla16,sala16);
+        		
+        	}
+        	break;
+        case "quitarFicha":
+        	String sala14 = obtenerSalaUsuario(this.nombre);
+        	String casilla1 = (String)json.get("casilla");
+        	String ficha1 = (String)json.get("ficha");
+        	if (sala14 != ""){
+        		quitarFicha(ficha1,casilla1,sala14);
         		
         	}
         	break;

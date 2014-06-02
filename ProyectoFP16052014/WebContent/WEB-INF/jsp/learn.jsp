@@ -142,6 +142,7 @@
 										<td id="h1"></td>
 									</tr>
 								</table>
+								<button id="borrarTodo">Borrar Todo</button><button id="rotar" class="btn-xs"><s:text name="rotarTablero"/></button>
 							</div>
 						</div>
 					</div>
@@ -160,8 +161,9 @@
 				        </div>
 				        <input type="text" id="mensaje"/><button id="enviar"><s:text name="enviarMensaje"/></button>
 					</div>	
-						<div id="fichas" class="item">
+						<div id="objetos" class="item">
 						<button id="cancelarSeleccion">Cancelar Seleccion</button>
+							<div id="fichas">
 							<h2>Fichas</h2>
 							<ul>
 								<li id="bp">Peon Blancas</li>
@@ -179,17 +181,18 @@
 								<li id="nd">Dama Negras</li>
 								<li id="nr">Rey Negras</li>
 							</ul>
+							</div>
+							<div id="colores">
+							
 							<h2>Colores</h2>
 							<ul>
 								<li id="r">Rojo</li>
 								<li id="a">Azul</li>
 								<li id="v">Verde</li>
 							</ul>
+							</div>
 						</div>
-						<div id="tiempos" class="item">
-							<button id="rotar" class="btn-xs"><s:text name="rotarTablero"/></button>
-							
-						</div>
+						
 					<div id="partidas" class="item">
 						<div id="controlesPartida"><s:text name="listaPartidas"/></div>
 						<button id="crearPartida" class="btn-sm"><s:text name="nuevaPartida"/></button>
@@ -226,6 +229,7 @@
 						<button id="btnActivarMedia"><s:text name="camaraOn"/></button>
 						<button id="crearOffer"><s:text name="peerOn"/></button>
 						<button id="btnColgar"><s:text name="peerOff"/></button>
+						<button id="enviarAtodos"><s:text name="enviarAtodos"/></button>
 					</div>
 				     <div class="item" id="wrapsuvideo" >
 				     	<div id="arrastrarsuvideo"><s:text name="suInfo"/></div>

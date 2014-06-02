@@ -364,3 +364,29 @@ body{
 .rojo{
 	outline: 0.3em solid red;
 }
+.r{
+	
+	background-color:red;
+}
+.a{
+	background-color:blue;
+}
+.v{
+	background-color:green;
+}
+/**
+.r{
+	
+	outline: 0.3em solid red;
+	outline-offset: -0.3em;
+}
+.a{
+	outline: 0.3em solid blue;
+	outline-offset: -0.3em;
+}
+.v{
+	outline: 0.3em solid green;
+	outline-offset: -0.3em;
+}
+
+**/

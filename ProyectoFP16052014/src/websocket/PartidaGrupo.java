@@ -13,7 +13,7 @@ public class PartidaGrupo {
 	//a1 a2 a3 .. b1 b2 b3 ... h1 h2 ..h8
 	HashMap<String,String> fichas = new HashMap<String,String>();
 	HashMap<String,String> colores = new HashMap<String,String>();
-	
+	boolean mediaOn = false;
 	String creador ="";
 	
 	HashMap<String,String> usuarios = new HashMap<String,String>();
@@ -33,10 +33,36 @@ public class PartidaGrupo {
 	public void ponerFicha(String casilla,String ficha){
 		fichas.put(casilla, ficha);
 	}
-	public void ponerColor(String casilla,String color){
+	
+	public void ponerEfecto(String casilla,String color){
 		colores.put(casilla, color);
 	}
-	
+	public void quitarFicha(String casilla){
+		fichas.remove(casilla);
+	}
+	public void quitarEfecto(String casilla){
+		colores.remove(casilla);
+	}
+	public void moverFicha(String de, String a){
+		if (fichas.get(de)!= null && fichas.get(de)!=""){
+			fichas.put(a,fichas.get(de));
+			fichas.remove(de);
+		}
+		
+	}
+	public String efectosTableroJson(){
+		String str1 ="{ \"tipo\": \"efectosTablero\" , \"efectos\" : [";
+		int con = 0;
+		for (String efecto : colores.keySet()) {
+			if (con==0){
+				str1+= "{\"casilla\": \""+efecto+"\", \"efecto\": \""+colores.get(efecto)+"\" } ";
+			}else{
+				str1+= ",{\"casilla\": \""+efecto+"\", \"efecto\": \""+colores.get(efecto)+"\" } ";
+			}
+			con++;
+		}
+		return str1 +="]}";
+	}
 	public String fichasTableroJson(){
 		String str1 ="{ \"tipo\": \"fichasTablero\" , \"fichas\" : [";
 		int con = 0;
