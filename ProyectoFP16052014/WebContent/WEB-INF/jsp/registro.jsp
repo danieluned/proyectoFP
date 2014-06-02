@@ -7,13 +7,13 @@
 <!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
 <!--[if gt IE 8]><!--> <html class="no-js"> <!--<![endif]-->
 	<head>
-		<meta charset="UTF-8">
-		<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-		<meta name="viewport" content="width=device-width, initial-scale=1">
-		<meta name="description" content="Pantalla de registro">
+		<meta charset="UTF-8"/>
+		<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
+		<meta name="viewport" content="width=device-width, initial-scale=1"/>
+		<meta name="description" content="Pantalla de registro"/>
 		<title><s:text name="registro"/></title>
-		<link rel="stylesheet" href="css/normalize.min.css">
-        <link rel="stylesheet" href="css/black-tie/jquery-ui-1.10.4.custom.css" >
+		<link rel="stylesheet" href="css/normalize.min.css"/>
+        <link rel="stylesheet" href="css/black-tie/jquery-ui-1.10.4.custom.css"/>
 		<link rel="stylesheet" href="css/bootstrap.css"/>
 		<link rel="stylesheet" href="css/juego2.css"/>
 		<link rel="stylesheet" href="css/chat.css"/>
@@ -38,8 +38,8 @@
 						<h1 class="titulo"><s:text name="tituloJuego"/></h1>
 					</s:a>
 					<button class="btn-sm btn-info glyphicon glyphicon-fullscreen" id="fullscreen"></button>
-					<a id="es" href="?request_locale=es">ES</a>
-					<a id="en" href="?request_locale=en">EN</a>
+					<a id="es" href="?request_locale=es"><s:text name="castellano"/></a>
+					<a id="en" href="?request_locale=en"><s:text name="ingles"/></a>
 					
 				</div>
 			</header>

@@ -8,34 +8,33 @@ $(function(){
 	/** id para obtener el nombre del usuario */
 	
 	var nombre;
-	/** id para obtener el boton de conectar */
-	var idButtonConectar ="#conectar";
+	
 	/** la conexion websocket */
 	var ws = null;
 	/** donde pondremos los mensajes generales */
-	var idChat ="#p-00"; //Pesta�a del chat general
+	var idChat ="#p-00"; //Pestaña del chat general
 	/** Enviar mensaje texto */
 	var idBotonEnviar ="#enviar";
 	var idInputMensaje = "#mensaje";
-	var timePing = null;
 	var inicial = true;
 	var ho ;
-	var wo; 
 	var width2;
 	var height2;
-	
+	var estado="";
+	var ladoBlancas=true;
+	var estaEnBlancas = true;
 	/*** Conf inicial ***/
 	ajustar(divd);
 	dibujarTablero(divd);
 	pintarCasillas(divd);
 	colocarFichas(divd);
-	toggleElementosWebsocket();
 	conectar();
-	
+	mostrarControlesIdle();
+	//cerrarBtnconex();
 	/** indicarle al chat que tiene pestañas */
 	$("#chat").tabs();
-	ajustarPaneles();
 	
+	ajustarPaneles();
 	/*** Eventos ***/
 	$(window).resize(ajuste);
 	//Evento para recoger coordenadas 
@@ -83,46 +82,103 @@ $(function(){
 	});
 	
 	$("#rotar").click(rotarTablero);
-		
-		/*
-		 $("tbody").each(function(elem,index){
-		      var arr = $.makeArray($("tr",this).detach());
-		      arr.reverse();
-		        $(this).append(arr);
-		  });
-		 */
-	$("#enviarSonido").click(function(){
-		activarSonido = true;
-		timer2 = setInterval(
-                function () {
-                	var blob = crearSonido();
-            		ws.send(blob);
-            		vaciarSonido();
-            		//alert("hola");
-                },1000);
-		
-	});
-	$("#webcam").click(function(){
-		
-		 /***video streaming***/
-        timer = setInterval(
-                function () {
-                	/** Enviar video como una imagen **/
-                	var width = video.videoWidth;
-                    var height = video.videoHeight;
-                   
-                    ctx.drawImage(video, 0, 0, 213, 160);
-                    var data = canvas.get()[0].toDataURL('image/jpeg', 1.0);
-                    var newblob = convertToBinary(data);
-                  
-                    ws.send(newblob);
-           	//   var sonidoAenviarBlob = crearSonido();
-           	// $("#algo2").attr("src",data);
-              // procesarMensaje("{'tipo': 'media', 'video' : '"+newblob+"' }");
-              //vaciarSonido();
-                },290);
-	});
+	$("#pedirAbandonar").click(enviarAbandono);
+	$("#pedirTablas").click(enviarTablas);
+	$("#pedirTablas").prop( "disabled", true );
+	//
 	
+	//Vendor prefixes
+	navigator.getUserMedia =  
+	navigator.getUserMedia ||
+	navigator.webkitGetUserMedia ||
+	navigator.mozGetUserMedia ;
+				
+	window.RTCPeerConnection = 	
+	window.RTCPeerConnection ||
+	window.mozRTCPeerConnection ||
+	window.webkitRTCPeerConnection ;
+
+	window.URL =
+	window.mozURL ||
+	window.URL ||
+	window.webkitURL ;
+
+	window.RTCSessionDescription =
+	window.RTCSessionDescription ||
+	window.mozRTCSessionDescription ||
+	window.webkitRTCSessionDescription ;
+
+	        //Opciones iniciales
+	var DtlsSrtpKeyAgreement = { DtlsSrtpKeyAgreement: true };
+	var optional = { optional: [DtlsSrtpKeyAgreement]};
+	var iceServers = {
+		   iceServers: [{url:'stun:stun01.sipphone.com'},
+		                {url:'stun:stun.ekiga.net'},
+		                {url:'stun:stun.fwdnet.net'},
+		                {url:'stun:stun.ideasip.com'},
+		                {url:'stun:stun.iptel.org'},
+		                {url:'stun:stun.rixtelecom.se'},
+		                {url:'stun:stun.schlund.de'},
+		                {url:'stun:stun.l.google.com:19302'},
+		                {url:'stun:stun1.l.google.com:19302'},
+		                {url:'stun:stun2.l.google.com:19302'},
+		                {url:'stun:stun3.l.google.com:19302'},
+		                {url:'stun:stun4.l.google.com:19302'},
+		                {url:'stun:stunserver.org'},
+		                {url:'stun:stun.softjoys.com'},
+		                {url:'stun:stun.voiparound.com'},
+		                {url:'stun:stun.voipbuster.com'},
+		                {url:'stun:stun.voipstunt.com'},
+		                {url:'stun:stun.voxgratia.org'},
+		                {url:'stun:stun.xten.com'},
+		                {
+		                    url: 'turn:numb.viagenie.ca',
+		                    credential: 'muazkh',
+		                    username: 'webrtc@live.com'
+		                },
+		                {
+		                    url: 'turn:192.158.29.39:3478?transport=udp',
+		                    credential: 'JZEOEt2V3Qb0y27GRntt2u2PAYA=',
+		                    username: '28224511:1379330808'
+		                },
+		                {
+		                    url: 'turn:192.158.29.39:3478?transport=tcp',
+		                    credential: 'JZEOEt2V3Qb0y27GRntt2u2PAYA=',
+		                    username: '28224511:1379330808'
+		                }]
+		         };
+
+	//WEBRTC variables y eventos  
+	//Variables
+	var peer;
+	var puedePedirTablas= false;
+	var streamLocal;
+	var streamToAttach;
+	var videoLocal = document.getElementById("videoLocal");
+	var videoRemoto = document.getElementById("videoRemoto");
+	//Eventos           
+	
+	$("#crearOffer").click(crearOffer);
+	$("#crearAnswer").click(crearAnswer);
+
+	$("#handling").click(handling);
+	$("#btnActivarMedia").click(activarMedia);
+	$("#btnColgar").click(closeMedia);
+	//FIN WEBRTC var. y eventos
+	
+	//FUNCTIONES
+		//Functiones generales
+	var ping;
+	function hacerPing(){
+		if (ping==null){
+			ping = setInterval(function(){
+				ws.send("ping");
+			},10000);
+		}
+	}
+	function pararPing(){
+		clearInterval(ping);
+	}
 	function decode_base64(s) {
 	    var e={},i,k,v=[],r='',w=String.fromCharCode;
 	    var n=[[65,91],[97,123],[48,58],[43,44],[47,48]];
@@ -151,8 +207,10 @@ $(function(){
 		$("#tick")[0].play();
 	}
 	/*** Funciones ***/
+	var cant=0;
 	function rotarTablero(){
 		
+		 
 		$(divd).find("tbody").each(function(e,i){
 			
 			$(this).find("tr").each(function(e,i){
@@ -164,6 +222,11 @@ $(function(){
 			arr.reverse();
 			$(this).html(arr);
 		});
+		if (estaEnBlancas){
+			estaEnBlancas=false;
+		}else{
+			estaEnBlancas=true;
+		}
 	}
 	function refrescarEscucharUnirse(){
 		$(".unirse").click(function(){
@@ -190,6 +253,7 @@ $(function(){
 		}else{
 			var URL = 'ws://' + location.host  + '/grupo';
 		}
+		
 		//var URL = 'ws://192.168.56.1:8080/websocket/simple?nombre='+nombre;
 		//var URL = 'ws://localhost:8080/websocket/simple?nombre='+nombre;
 		var timePing;
@@ -204,10 +268,10 @@ $(function(){
 		    ws.onopen = function (event) {
 		      
 		        $(idChat).append("Conectado");
-		        toggleElementosWebsocket();
-		        ocultarConectarse();
+		       // toggleElementosWebsocket();
+		        //ocultarConectarse();
 		       
-		        //enviarPings();
+		        hacerPing();
 		    };
 		    ws.onmessage = function (event) {
 		       procesarMensaje(event.data);
@@ -215,18 +279,21 @@ $(function(){
 		     
 		    };
 		    ws.onclose = function (event) {
-		    	 alert("No se ha podido conectar a Websockets.");
-			       // $(idChat).append("Cerrado");
-			       var parth = location.pathname.split("/");
-					if (parth.length >2){
-						var srtf = 'http://' + location.host  + '/ProyectoFP16052014/principal';
-					}else{
-						var srtf = 'http://' + location.host  + '/principal';
-					}
-			       window.location.replace(srtf);
+		       alert("No se ha podido conectar a Websockets.");
+		       // $(idChat).append("Cerrado");
+		       var parth = location.pathname.split("/");
+				if (parth.length >2){
+					var srtf = 'http://' + location.host  + '/ProyectoFP16052014/principal';
+				}else{
+					var srtf = 'http://' + location.host  + '/principal';
+				}
+		       window.location.replace(srtf);
+		       pararPing();
 		    };
 		    ws.onerror = function (event) {
-		    	 alert("Error en Websockets.");
+		       //$(idChat).append("Error");
+		        alert("Error en Websockets.");
+		       
 			       // $(idChat).append("Cerrado");
 			       var parth = location.pathname.split("/");
 					if (parth.length >2){
@@ -252,9 +319,9 @@ $(function(){
 	   return correcto;
 	}
 	function toggleElementosWebsocket(){
-		$("#tablero").toggle();
-		$("#enviar").toggle();
-		$("#mensaje").toggle();
+		//$("#tablero").toggle();
+		//("#enviar").toggle();
+		//$("#mensaje").toggle();
 		$("#resetearPartida").toggle();
 	}
 	function ocultarConectarse(){
@@ -262,12 +329,13 @@ $(function(){
 		$("#nombre").hide();
 	}
 	function asignarEscuchadorBoton(){
+		//alert("creando");
 		crearPestania($(this).text());
 	}
 	function crearPestania(identificador){
 		var buscar = "#p-"+identificador;
 		if( $(buscar).length == 0){
-			var li = "<li><a href='#p-"+identificador+"'><span>"+identificador+"</span></a></li>";
+			var li = "<li><a href='#p-"+identificador+"'><span>"+identificador+"</span></a><button class='cerrarPestania' b='p-"+identificador+"'>X</button></li>";
 			$("#chat ul").append(li);
 			var di = "<div id='p-"+identificador+"'></div>";
 			$("#chat").append(di);
@@ -312,169 +380,236 @@ $(function(){
 		console.log(str);
 		return str;
 	}
-	
+	function enviarAbandono(){
+		var str = '{ "tipo":"pedirAbandono"}';
+		ws.send(str);
+	}
+	function enviarTablas(){
+		var str = '{ "tipo":"pedirTablas"}';
+		ws.send(str);
+		$("#pedirTablas").prop( "disabled", true );
+	}
 	function procesarMensaje(mensaje){
 		try{
 			var json =  JSON.parse(mensaje);
-		
-		
-		
-		//console.log(json);
-		switch (json.tipo) {
-			case "mensajeGeneral": //Se recibe un mensaje para el chat general
-				var claseBotonGeneral = "";
-				 $(idChat).append("<p><button class='"+claseBotonGeneral+"' title='"+json.de+"'>"+json.de+"</button>: "+json.contenido+"</p>");
-				 $(idChat).scrollTop($(idChat)[0].scrollHeight);
-				 $("button[title='"+json.de+"']").click(asignarEscuchadorBoton);
-				 $(idChat).scrollTop($(idChat).prop('scrollHeight'));
-				 break;
-			case "mensajeCorrectoChat": //Mensaje a un usuario en concreto.
-				 $(idChat).append("<p><span style='color:blue;'>'"+json.contenido+"'</span></p>");
-				 $(idChat).scrollTop($(idChat).prop('scrollHeight'));
-				break;
-			case "mensajeUsuario":
-				crearPestania(json.de);
-				$("#p-"+json.de).append("<p>"+json.de+": "+json.contenido+"</span></p>");
-				$("#p-"+json.de).scrollTop($("#p-"+json.de).prop('scrollHeight'));
-				break;
-			case "mensajeReplica":
-				crearPestania(json.a);
-				 $("#p-"+json.a).append("<p>"+json.de+": "+json.contenido+"</span></p>");
-				 $("#p-"+json.a).scrollTop($("#p-"+json.a).prop('scrollHeight'));
-				break;
-			case "movimiento":
-				moverFicha(json.inicio,json.fin);
-				soundMove();	
-				break;
-			case "resetearPartida":
-					pintarCasillas(divd);
-					colocarFichas(divd);
-					soundNewGame();
-				break;
-			case "partidasDisponibles":
-				var str="";
-				for (var int = 0; int < json.partidas.length; int++) {
-					//alert(json.partidas[int].estado);
-					var strB="";
-					var strN="";
-					if (json.partidas[int].blancas !=""){
-						strB += "<button title='"+json.partidas[int].blancas+"'>"+json.partidas[int].blancas+"</button>";
-					}
-					if (json.partidas[int].negras !=""){
-						strN += "<button title='"+json.partidas[int].negras+"'>"+json.partidas[int].negras+"</button>";
-					}
-					if (json.partidas[int].estado == "EsperandoOtroJugador"){
-						
-						str += "<tr><td>"+strB+"</td><td>"+strN+"</td><td>Esperando/Waiting</td><td></td>";
-					
-						str += "<td><button class='unirse' b='"+json.partidas[int].blancas+"' n='"+json.partidas[int].negras+"'>Unirse</button></td></tr>";
-					}
-					if (json.partidas[int].estado == "Jugando"){
-						str += "<tr><td>"+strB+"</td><td>"+strN+"</td><td>Jugando/Playing</td><td></td>";
-						str += "<td></td></tr>";
-					}
-					
-				}
-				
-				$("#listaPartidas").html(str);
-				$("#listaPartidas button[title]").unbind().click(asignarEscuchadorBoton);
-				refrescarEscucharUnirse();
-				break;
-			case "tiempo":
-				$("#tiempoBlancas").html(json.tiempoBlancas);
-				$("#tiempoNegras").html(json.tiempoNegras);
-				
-			break;
-			case "rotarTablero":
-				rotarTablero();
-				
-			break;
-			case "elegirFicha":
-				//BoxJquery
-				
-				bootbox.dialog({
-					message: "Elige la ficha que mas te interese:",
-					title: "Tu pe�n ha coronado",
-					buttons: {
-						success2: {
-							label: "<img src='img/piezas/bt.svg' />!",
-							className: "btn-success",
-							callback: function() {
-								ws.send('{ "tipo": "movimiento","inicio":"a1", "fin":"a1" , "ficha":"torre"}');
+			console.log(json);
+			if (json.tipo)
+			switch (json.tipo) {
+				case "mensajeGeneral": //Se recibe un mensaje para el chat general
+					var claseBotonGeneral = "";
+					 $(idChat).append("<p><button class='"+claseBotonGeneral+"' title='"+json.de+"'>"+json.de+"</button>: "+json.contenido+"</p>");
+					 $(idChat).scrollTop($(idChat)[0].scrollHeight);
+					 $("button[title='"+json.de+"']").click(asignarEscuchadorBoton);
+					 $(idChat).scrollTop($(idChat).prop('scrollHeight'));
+					 break;
+				case "mensajeCorrectoChat": //Mensaje a un usuario en concreto.
+					 $(idChat).append("<p><span style='color:blue;'>'"+json.contenido+"'</span></p>");
+					 $(idChat).scrollTop($(idChat).prop('scrollHeight'));
+					break;
+				case "mensajeUsuario":
+					crearPestania(json.de);
+					$("#p-"+json.de).append("<p>"+json.de+": "+json.contenido+"</span></p>");
+					$("#p-"+json.de).scrollTop($("#p-"+json.de).prop('scrollHeight'));
+					break;
+				case "mensajeReplica":
+					crearPestania(json.a);
+					 $("#p-"+json.a).append("<p>"+json.de+": "+json.contenido+"</span></p>");
+					 $("#p-"+json.a).scrollTop($("#p-"+json.a).prop('scrollHeight'));
+					break;
+				case "movimiento":
+					moverFicha(json.inicio,json.fin);
+					soundMove();	
+					$("#pedirTablas").prop( "disabled", false );
+					break;
+				case "resetearPartida":
+						pintarCasillas(divd);
+						colocarFichas(divd);
+						soundNewGame();
+						estado="jugando";
+						activarModoPartida();
+						//alert("JuegasdeBlancas?->"+ladoBlancas+"\nTableroConBlancas?->"+estaEnBlancas);
+						if (!ladoBlancas && estaEnBlancas){
+							rotarTablero();
+						}
+						if (ladoBlancas && !estaEnBlancas){
+							rotarTablero();
+						}
+						ladoBlancas=true;
 								
-							}
-						},
-						success: {
-							label: "<img src='img/piezas/bc.svg' />!",
-							className: "btn-success",
-							callback: function() {
-								ws.send('{ "tipo": "movimiento","inicio":"a1", "fin":"a1" , "ficha":"caballo"}');
-							}
-						},
-						danger: {
-							label: "<img src='img/piezas/ba.svg' />!",
-							className: "btn-danger",
-							callback: function() {
-								ws.send('{ "tipo": "movimiento","inicio":"a1", "fin":"a1" , "ficha":"alfil"}');
-							}
-						},
-						main: {
-							label: "<img src='img/piezas/bd.svg' />!",
-							className: "btn-primary",
-							callback: function() {
-								ws.send('{ "tipo": "movimiento","inicio":"a1", "fin":"a1" , "ficha":"dama"}');
+						
+					break;
+				case "partidasDisponibles":
+					var str="";
+					for (var int = 0; int < json.partidas.length; int++) {
+						//alert(json.partidas[int].estado);
+						var strB="";
+						var strN="";
+						if (json.partidas[int].blancas !=""){
+							strB += "<button title='"+json.partidas[int].blancas+"'>"+json.partidas[int].blancas+"</button>";
+						}
+						if (json.partidas[int].negras !=""){
+							strN += "<button title='"+json.partidas[int].negras+"'>"+json.partidas[int].negras+"</button>";
+						}
+						if (json.partidas[int].estado == "EsperandoOtroJugador"){
+							
+							str += "<tr><td>"+strB+"</td><td>"+strN+"</td><td>Esperando/Waiting</td><td></td>";
+						
+							str += "<td><button class='unirse' b='"+json.partidas[int].blancas+"' n='"+json.partidas[int].negras+"'>Unirse</button></td></tr>";
+						}
+						if (json.partidas[int].estado == "Jugando"){
+							str += "<tr><td>"+strB+"</td><td>"+strN+"</td><td>Jugando/Playing</td><td></td>";
+							str += "<td></td></tr>";
+						}
+						
+					}
+					
+					$("#listaPartidas").html(str);
+					$("#listaPartidas button[title]").unbind().click(asignarEscuchadorBoton);
+					refrescarEscucharUnirse();
+					break;
+				case "tiempo":
+					
+					$("#tiempoBlancas").html(tiempoAhumano(json.tiempoBlancas));
+					$("#tiempoNegras").html(tiempoAhumano(json.tiempoNegras));
+					
+				break;
+				case "rotarTablero":
+						
+					
+					ladoBlancas=false;
+					
+						
+					
+						
+					
+						
+					
+				
+					
+				break;
+				case "elegirFicha":
+					//BoxJquery
+					
+					bootbox.dialog({
+						message: "Elige la ficha que mas te interese:",
+						title: "Tu peón ha coronado",
+						buttons: {
+							success2: {
+								label: "<img src='img/piezas/bt.svg' />!",
+								className: "btn-success",
+								callback: function() {
+									ws.send('{ "tipo": "movimiento","inicio":"a1", "fin":"a1" , "ficha":"torre"}');
+									
+								}
+							},
+							success: {
+								label: "<img src='img/piezas/bc.svg' />!",
+								className: "btn-success",
+								callback: function() {
+									ws.send('{ "tipo": "movimiento","inicio":"a1", "fin":"a1" , "ficha":"caballo"}');
+								}
+							},
+							danger: {
+								label: "<img src='img/piezas/ba.svg' />!",
+								className: "btn-success",
+								callback: function() {
+									ws.send('{ "tipo": "movimiento","inicio":"a1", "fin":"a1" , "ficha":"alfil"}');
+								}
+							},
+							main: {
+								label: "<img src='img/piezas/bd.svg' />!",
+								className: "btn-success",
+								callback: function() {
+									ws.send('{ "tipo": "movimiento","inicio":"a1", "fin":"a1" , "ficha":"dama"}');
+								}
 							}
 						}
-					}
-					});
-				;
-			break;
-			case "crearFicha":
-					var posicion = json.posicion;
-					var color = json.color;
-					var ficha = json.ficha;
-					crearFicha(ficha,color,posicion);
+						});
+					;
 				break;
-			case "media":
-				var target = document.getElementById("algo2");
-				
-					url = window.URL.createObjectURL(json.video);
-					target.onload = function() {
-	            		 window.URL.revokeObjectURL(url);
-		            };
-				
-				
-	            
-	            target.src = url;
-				break;
-			default:
-				
-				break;
-		}
+				case "crearFicha":
+						var posicion = json.posicion;
+						var color = json.color;
+						var ficha = json.ficha;
+						crearFicha(ficha,color,posicion);
+					break;
+				case "finPartida":
+						
+						if (estado =="jugando"){
+							
+							ejecutar(json.accion);
+						}
+					break;
+				case "aceptarTablas":
+					bootbox.dialog(
+							
+							{
+								 message: "I am a custom dialog",
+								 title: "Custom title",
+						buttons: {
+							success2: {
+								label: "Aceptar tablas",
+								className: "btn-success",
+								callback: function() {
+									ws.send('{ "tipo": "aceptaTablas"}');
+									console.log("tablas aceptadas");
+								}
+							},
+							success: {
+								label: "Rechazar tablas",
+								className: "btn-success",
+								callback: function() {
+									console.log("tablas rechazadas");
+								}
+							}
+						}
+						});
+					break;
+				default:
+					
+					break;
+			}
+			if (json.type && json.type == "offer"){
+				//alert("Entro json.offer");;
+				console.log("Nos estan llamando");
+				crearAnswer(json);
+				console.log("Le hemos contestado");
+			}
+			if (json.type && json.type == "answer"){
+				console.log("Nos estan respondiendo");
+				handling(json);
+				console.log("Fin de la respuesta");
+			}
+			
 		}catch(err){
-			var target = document.getElementById("target");
-			var sonido = document.getElementById("sonido");
-			if (mensaje.size == 32812 || mensaje.size == 41004){
-	        	 url = window.URL.createObjectURL(mensaje);
-	        	sonido.onload= function() {
-	        		window.URL.revokeObjectURL(url);
-	            };
-	        	sonido.src = url;
-	        	sonido.play();
-	        }else{
-	        	 url = window.URL.createObjectURL(mensaje);
-		        	target.onload = function() {
-		        		 window.URL.revokeObjectURL(url);
-		            };
-		            target.src = url;
-	        }
-	        
-	      
-	       
-			
-			
-           
+			console.log(err);
 		}
+	}
+	function mostrarControlesIdle(){
+		$("#partidas").css("visibility","visible");
+		$("#tiempos").css("visibility","hidden");
+	}
+	function activarModoPartida(){
+		$("#tiempos").css("visibility","visible");
+		$("#partidas").css("visibility","hidden");
+	}
+	function ejecutar(accion){
+		//alert(accion);
+		switch(accion){
+		case "Tablas":
+			bootbox.alert("Has hecho tablas");
+			break;
+		case "ganas":
+			bootbox.alert("Has ganado a tu oponente");
+			break;
+		case "pierdes":
+			bootbox.alert("Has perdido");
+			break;
+			
+		}
+		
+		mostrarControlesIdle();
+		estado="idle";
 	}
 	function ajuste(ev){
 		ajustar(divd);
@@ -503,6 +638,7 @@ $(function(){
 			console.log("controlesPartida4");
 		}
 	}
+	
 	function tiempoAhumano(segundos){
 		
 		var minutos = parseInt(parseInt(segundos)/60);
@@ -518,76 +654,75 @@ $(function(){
 		return minutos+":"+segundos;
 	}
 	function ajustar(div){
-
-		var w = parseInt($(div).parent().width());
-		var h2 = parseInt($(div).parent().height());
-		ho = parseInt($(window).height()-100);
-		$("#contenido").css("height",""+ho+"px");
-	if (inicial){
-		width2 = parseInt($(window).width() *0.9);
-		height2 = parseInt($(window).height()*0.9)-100;
-		
-		w = width2;
-		h2 = height2;
-		//console.log("inicial "+ho +"-"+wo);
-		if (height2<width2){
-			$("#wrapTablero").css("width",""+height2+"px");
-			$("#wrapTablero").css("height",""+height2+"px");
 			
-		}else{
-			$("#wrapTablero").css("width",""+width2+"px");
-			$("#wrapTablero").css("height",""+width2+"px");
+			var w = parseInt($(div).parent().width());
+			var h2 = parseInt($(div).parent().height());
+			ho = parseInt($(window).height()-100);
+			$("#contenido").css("height",""+ho+"px");
+		if (inicial){
+			width2 = parseInt($(window).width() *0.9);
+			height2 = parseInt($(window).height()*0.9)-100;
 			
-		}
-		inicial = false;
-	}
-		//var h = w;
-	var width3 = parseInt($(window).width()*0.9);
-	var height3 = parseInt($(window).height()*0.9)-100;
-	var wmin;
-	var hmin;
-	var entro= false;
-	if (width3 != width2 || height3 != height2){
-		entro = true;
-		if (width3 < width2 ){
-			wmin = width3;
-		}else{
-			wmin = width2;
-		}
-		if (height3 < height2){
-			hmin = height3;
-		}else{
-			hmin = height2;
-		}
-		w = wmin;
-		h2 = hmin; 
-		
-		height2 = height3;
-		width2 = width3;
-	}
-	
-	//console.log("inicial:"+inicial+" Hi: "+h2+" Wi:"+w);
-		if (w>h2){
-		//if(w>h){
-			$(div).css("width",""+h2+"px");
-			$(div).css("height",""+h2+"px");
-			if (entro){
-				$("#wrapTablero").width(h2);
-				$("#wrapTablero").height(h2);
+			w = width2;
+			h2 = height2;
+			//console.log("inicial "+ho +"-"+wo);
+			if (height2<width2){
+				$("#wrapTablero").css("width",""+height2+"px");
+				$("#wrapTablero").css("height",""+height2+"px");
+				
+			}else{
+				$("#wrapTablero").css("width",""+width2+"px");
+				$("#wrapTablero").css("height",""+width2+"px");
+				
 			}
-		}else{
-			$(div).css("width",""+(w)+"px");
-			$(div).css("height",""+(w)+"px");
-			if (entro){
-				$("#wrapTablero").width(w);
-				$("#wrapTablero").height(w);
-			}
+			inicial = false;
 		}
-	
+			//var h = w;
+		var width3 = parseInt($(window).width()*0.9);
+		var height3 = parseInt($(window).height()*0.9)-100;
+		var wmin;
+		var hmin;
+		var entro= false;
+		if (width3 != width2 || height3 != height2){
+			entro = true;
+			if (width3 < width2 ){
+				wmin = width3;
+			}else{
+				wmin = width2;
+			}
+			if (height3 < height2){
+				hmin = height3;
+			}else{
+				hmin = height2;
+			}
+			w = wmin;
+			h2 = hmin; 
+			
+			height2 = height3;
+			width2 = width3;
+		}
 		
+		//console.log("inicial:"+inicial+" Hi: "+h2+" Wi:"+w);
+			if (w>h2){
+			//if(w>h){
+				$(div).css("width",""+h2+"px");
+				$(div).css("height",""+h2+"px");
+				if (entro){
+					$("#wrapTablero").width(h2);
+					$("#wrapTablero").height(h2);
+				}
+			}else{
+				$(div).css("width",""+(w)+"px");
+				$(div).css("height",""+(w)+"px");
+				if (entro){
+					$("#wrapTablero").width(w);
+					$("#wrapTablero").height(w);
+				}
+			}
 		
-		
-
+			
+			
+			
 	}
 	
 	function dibujarTablero(lugar){
@@ -674,7 +809,7 @@ $(function(){
 			}
 		}
 		if (coordenadaInicial != null && coordenadaFinal != null){
-			//Funci�n para enviar coordenadas
+			//Función para enviar coordenadas
 			/*Tendria que enviar coordenadas
 			 * al servidor y luego este me enviaria
 			 * si es aceptable o no.
@@ -693,11 +828,18 @@ $(function(){
 		//moverFicha(coordenadaInicial,coordenadaFinal);
 	}
 	function moverFicha(inicio, fin){
+		
+		
 		//alert(inicio+"-"+fin);
 		var ficha = obtenerFicha(inicio);
 		$("#"+inicio).toggleClass(ficha);
+		
 		$("#"+fin).toggleClass(obtenerFicha(fin));
 		$("#"+fin).toggleClass(ficha);
+		
+		$("#tablero td").removeClass("rojo");
+		$("#"+inicio).addClass("rojo");
+		$("#"+fin).addClass("rojo");
 		
 	}
 	function obtenerFicha(posicion){
@@ -725,277 +867,170 @@ $(function(){
 		$("#"+posicion).toggleClass(str);
 	}
 
+
 	
-	/******Video Streaming*******/
-	$("#webcam").hide();
-	$("#activarMedia").click(activarMedia);
-	$("#pararMedia").click(pararMedia);
-	 var video = $("#live").get()[0];
-     var canvas = $("#canvas");
-     var ctx = canvas.get()[0].getContext('2d');
-      var options = {
-    		  
-             "video" : true,
-             "audio" : true
-      };
-      var options2 = {
-    		  audio: false,
-    		    video: {
-    		       mandatory: {
-    		           chromeMediaSource: 'screen',
-    		           maxWidth: 1280,
-    		           maxHeight: 720
-    		       },
-    		       optional: []
-    		    }
-      }
-      var timer2;
-     var timer;
-      // use the chrome specific GetUserMedia function
-     window.URL = window.URL || window.webkitURL;
- 	 navigator.getUserMedia  = navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia || navigator.msGetUserMedia;
- 	function activarMedia(){
-	 	 navigator.getUserMedia(options,
-	 			 success,
-	 	 		function (err){
-	 	 			console.log("Unable to get video stream!");
-	 	 			conCamara = false;
-	 	 		}
-	 	 );
-	 	
+	    
+	       //WEBRTC Funciones
+	function activarMedia(){
+	navigator.getUserMedia({"audio":true,"video":true},
+		function (stream){
+			if (navigator.webkitGetUserMedia){
+				videoLocal.src = webkitURL.createObjectURL(stream);
+				streamToAttach = stream;
+			}
+			if (navigator.mozGetUserMedia){
+				videoLocal.mozSrcObject = stream;
+				videoLocal.play();
+				streamToAttach = stream;
+			}
+		}
+		,error
+		);
+	 	if (peer!=null){
+	 		peer.addStream (streamToAttach);
+	 	}
+	 	console.log("entro");
+	 	//$("#btnActivarMedia").hide();
+	 	//$("#crearOffer").show();
 	}
- 	var activarSonido = false;
- var conCamara = false;
-    function pararMedia(){
-    	activarSonido = false;
-    	streamm.stop();
-    	conCamara = false;
-    	clearInterval(timer);
-    	clearInterval(timer2);
-    	 recorder.onaudioprocess = "";
-    }
-     function convertToBinary (dataURI) {
-           // convert base64 to raw binary data held in a string
-           // doesn't handle URLEncoded DataURIs
-           var byteString = atob(dataURI.split(',')[1]);
-
-           // separate out the mime component
-           var mimeString = dataURI.split(',')[0].split(':')[1].split(';')[0]
-
-           // write the bytes of the string to an ArrayBuffer
-           var ab = new ArrayBuffer(byteString.length);
-           var ia = new Uint8Array(ab);
-           for (var i = 0; i < byteString.length; i++) {
-               ia[i] = byteString.charCodeAt(i);
-           }
-
-           // write the ArrayBuffer to a blob, and you're done
-           var bb = new Blob([ab]);
-           return bb;
-       }
-     function enviarPings(){
-    	
-    		 timePing =setInterval(
-    			  function(){ ws.send(enviarPing());console.log("enviado ping");},	10000
-    		);
-    	
-     }
- 	/*** AUDIO ***/
-     var reader2 = new window.FileReader();
-     function sonidoListo(asd){
-    	 reader2.readAsDataURL(asd); 
-     }
-     reader2.onloadend = function() {
-                    base64data2 = reader2.result;                
-                    //console.log(base64data );
-                   //$("#sonido").attr("src",base64data);
-                  sonidoAenviar = base64Data2;
-      };
-      
-     var streamm ;
- 	function success(e){
- 		//console.log("estoy en el success");
- 		//conCamara = true;
- 		$("#webcam").show();
- 		streamm = e;
- 	    // creates the audio context
- 	    audioContext = window.AudioContext || window.webkitAudioContext;
- 	    context = new audioContext();
- 	    //Para el video 
- 	    video.src = window.URL.createObjectURL(e);
- 	    video.muted=true;
- 	    // creates a gain node
- 	    volume = context.createGain();
- 	 
- 	    // creates an audio node from the microphone incoming stream
- 	    audioInput = context.createMediaStreamSource(e);
- 	 
- 	    // connect the stream to the gain node
- 	    audioInput.connect(volume);
- 	 
- 	   
- 	    var bufferSize = 2048;
- 	    try {
- 	    	 recorder = context.createJavaScriptNode(bufferSize, 2, 2) ;
- 	    }
- 	    catch(err) {
- 	    	 recorder = context.createScriptProcessor(bufferSize, 2, 2);
- 	    }
- 	   
- 	    		
- 	    recorder.onaudioprocess = function(e){
- 	    	if (activarSonido){
- 	        console.log ('recording');
- 	        var left = e.inputBuffer.getChannelData (0);
- 	        var right = e.inputBuffer.getChannelData (1);
- 	        // we clone the samples
- 	        leftchannel.push (new Float32Array (left));
- 	        rightchannel.push (new Float32Array (right));
- 	        recordingLength += bufferSize;
- 	    	}
- 	    };
- 	 
- 	    // we connect the recorder
- 	    volume.connect (recorder);
- 	    recorder.connect (context.destination);
- 	   
- 	}
- 	
- 	
- 
- 	
- 	////*******
- // variables
- 	var leftchannel = [];
- 	var rightchannel = [];
- 	var recorder = null;
- 	var recording = false;
- 	var recordingLength = 0;
- 	var volume = null;
- 	var audioInput = null;
- 	var sampleRate = 44100;
- 	var audioContext = null;
- 	var context = null;
- 	var outputElement = document.getElementById('output');
- 	var outputString;
-// when key is down
- 	function vaciarSonido(){
- 			leftchannel.length = rightchannel.length = 0;
-	        leftchannel = [];
-	        rightchannel = [];
-	        recordingLength = 0;
- 	}
- 	function crearSonido(){
- 	    	
- 	        //outputElement.innerHTML = 'Recording now...';
- 	        // we stop recording
- 	       
- 	        
- 	       // outputElement.innerHTML = 'Building wav file...';
- 	        
- 	        // we flat the left and right channels down
- 	        var leftBuffer = mergeBuffers ( leftchannel, recordingLength );
- 	        var rightBuffer = mergeBuffers ( rightchannel, recordingLength );
- 	        // we interleave both channels together
- 	        var interleaved = interleave ( leftBuffer, rightBuffer );
- 	        
- 	        // we create our wav file
- 	        var buffer = new ArrayBuffer(44 + interleaved.length * 2);
- 	        var view = new DataView(buffer);
- 	        
- 	        // RIFF chunk descriptor
- 	        writeUTFBytes(view, 0, 'RIFF');
- 	        view.setUint32(4, 44 + interleaved.length * 2, true);
- 	        writeUTFBytes(view, 8, 'WAVE');
- 	        // FMT sub-chunk
- 	        writeUTFBytes(view, 12, 'fmt ');
- 	        view.setUint32(16, 16, true);
- 	        view.setUint16(20, 1, true);
- 	        // stereo (2 channels)
- 	        view.setUint16(22, 2, true);
- 	        view.setUint32(24, sampleRate, true);
- 	        view.setUint32(28, sampleRate * 4, true);
- 	        view.setUint16(32, 4, true);
- 	        view.setUint16(34, 16, true);
- 	        // data sub-chunk
- 	        writeUTFBytes(view, 36, 'data');
- 	        view.setUint32(40, interleaved.length * 2, true);
- 	        
- 	        // write the PCM samples
- 	        var lng = interleaved.length;
- 	        var index = 44;
- 	        var volume = 1;
- 	        for (var i = 0; i < lng; i++){
- 	            view.setInt16(index, interleaved[i] * (0x7FFF * volume), true);
- 	            index += 2;
- 	        }
- 	        
- 	        // our final binary blob
- 	        var blob = new Blob ( [ view ], { type : 'audio/wav' } );
- 	        return blob;
- 	        
- 	        /*
- 	        // let's save it locally
- 	        outputElement.innerHTML = 'Handing off the file now...';
- 	        
- 	        var url = window.URL.createObjectURL(blob);
- 	       // console.log(url);
- 	        
- 	        var link = window.document.createElement('a');
- 	        link.href = url;
- 	        link.download = 'output.wav';
- 	        var click = document.createEvent("Event");
- 	        click.initEvent("click", true, true);
- 	        link.dispatchEvent(click);
- 	        */
- 	        /*
- 	       var reader = new window.FileReader();
- 	      reader.readAsDataURL(blob); 
- 	      reader.onloadend = function() {
- 	                     base64data = reader.result;                
- 	                     //console.log(base64data );
- 	                    //$("#sonido").attr("src",base64data);
- 	                     sonidoAenviar = base64Data;
- 	       }
- 	     */
- 	     
- 	    
- 	}
- 	
- 	function interleave(leftChannel, rightChannel){
- 	  var length = leftChannel.length + rightChannel.length;
- 	  var result = new Float32Array(length);
-
- 	  var inputIndex = 0;
-
- 	  for (var index = 0; index < length; ){
- 	    result[index++] = leftChannel[inputIndex];
- 	    result[index++] = rightChannel[inputIndex];
- 	    inputIndex++;
- 	  }
- 	  return result;
- 	}
-
- 	function mergeBuffers(channelBuffer, recordingLength){
- 	  var result = new Float32Array(recordingLength);
- 	  var offset = 0;
- 	  var lng = channelBuffer.length;
- 	  for (var i = 0; i < lng; i++){
- 	    var buffer = channelBuffer[i];
- 	    result.set(buffer, offset);
- 	    offset += buffer.length;
- 	  }
- 	  return result;
- 	}
-
- 	function writeUTFBytes(view, offset, string){ 
- 	  var lng = string.length;
- 	  for (var i = 0; i < lng; i++){
- 	    view.setUint8(offset + i, string.charCodeAt(i));
- 	  }
- 	}
-
- 	
-
- 	
-});//Final on ready JQUERY
+	function cerrarBtnconex(){
+		//$("#crearOffer").hide();
+		
+	}
+	function closeMedia(){
+		
+		streamToAttach.stop();
+		//$("#btnActivarMedia").show();
+		
+	}
+	function close(){
+		if ( peer ) {
+			peer.close();
+			peer = null;
+			
+	        
+		}
+	}
+	function crearOffer(){
+	close();
+	
+	peer = new RTCPeerConnection(iceServers,optional);
+	peer.onicecandidate = onicecandidate;
+	
+	peer.onaddstream = onaddstream;
+	if (streamToAttach !=null){
+		peer.addStream (streamToAttach);
+	}
+	
+	peer.createOffer(
+		function(sessionDescription) {
+			peer.setLocalDescription(sessionDescription);
+			//$("#miDescripcion").html(JSON.stringify(sessionDescription));
+			//Se ejecuta tan rapido que no da tiempo a crear el objeto
+			setTimeout(function(){
+				ws.send(JSON.stringify(sessionDescription)); 
+			},1000);
+			
+		}
+		, 
+		error
+		, 
+		{ 'mandatory': { 'OfferToReceiveAudio': true, 'OfferToReceiveVideo': true }}
+	);
+		//$("#crearOffer").hide();
+		
+	}
+	function onicecandidate(event) {
+	if (!peer || !event || !event.candidate) return;
+	var candidate = event.candidate;
+	//$("#candidato").val(JSON.stringify(candidate));
+	// POST-ICE-to-other-Peer(candidate.candidate, candidate.sdpMLineIndex);
+	
+	//ws.send(JSON.stringify(candidate));
+	
+	}
+	function crearAnswer(offer){
+	close();
+	
+	//console.log("Entrando en crearAnswer");
+	//var offer = JSON.parse($("#suDescripcion").val());
+	
+	peer = new RTCPeerConnection(iceServers,optional);
+	peer.onicecandidate = onicecandidate;
+	peer.onaddstream = onaddstream;
+	if (streamToAttach !=null){
+		peer.addStream (streamToAttach);
+	}
+	
+	
+	if (navigator.mozGetUserMedia){
+		peer.setRemoteDescription(new RTCSessionDescription(offer), function() {
+			peer.createAnswer(function(answer) {
+				peer.setLocalDescription(new RTCSessionDescription(answer), function() {
+					//$("#miDescripcion").html(JSON.stringify(answer));
+					setTimeout(function(){
+					ws.send(JSON.stringify(answer));
+					},1000);
+			  }, error);
+			}, error);
+		}, error);
+	}else{
+	
+		insertarRemoteDes(offer);
+		peer.createAnswer(function(answer) {
+			peer.setLocalDescription(answer);
+			//$("#miDescripcion").html(JSON.stringify(answer));
+			setTimeout(function(){
+			ws.send(JSON.stringify(answer));
+			},1000);
+			console.log("Answer:");
+			console.log(answer);
+			},
+			error
+			, { 'mandatory': { 'OfferToReceiveAudio': true, 'OfferToReceiveVideo': true } }
+		);
+	}
+	
+	console.log("crearAnswer finalizado");
+	console.log(peer);
+	}
+	function insertarRemoteDes(sessionDescription){
+	console.log("insertandoRemote");
+	//var sessionDescription = JSON.parse($("#suDescripcion").val());
+	peer.setRemoteDescription(new RTCSessionDescription(sessionDescription));
+	}
+	function handling(sessionDescription){
+	//var sessionDescription = JSON.parse($("#resultado").val());
+	peer.setRemoteDescription(new RTCSessionDescription(sessionDescription));
+	}
+	
+	function error(e){
+	console.log(e);
+	}
+	function addIc(candidate){
+	//var candidate = JSON.parse($("#candidato2").val());
+	peer.addIceCandidate(new RTCIceCandidate({
+		sdpMLineIndex: candidate.sdpMLineIndex,
+		candidate: candidate.candidate
+	}));
+	}
+	function onaddstream(event) {
+	if (!event) return;
+	if (navigator.webkitGetUserMedia){
+		videoRemoto.src = webkitURL.createObjectURL(event.stream);		
+	}
+	if (navigator.mozGetUserMedia){
+		videoRemoto.mozSrcObject  = event.stream;		
+	}
+	waitUntilRemoteStreamStartsFlowing();
+	}
+	function waitUntilRemoteStreamStartsFlowing(){
+	if (!(videoRemoto.readyState <= HTMLMediaElement.HAVE_CURRENT_DATA 
+		|| videoRemoto.paused || videoRemoto.currentTime <= 0)) 
+	{
+		// remote stream started flowing!
+	} 
+	else setTimeout(waitUntilRemoteStreamStartsFlowing, 50);
+	}
+	
+});
