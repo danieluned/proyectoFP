@@ -94,6 +94,7 @@ $(function(){
 	$("#pedirTablas").click(enviarTablas);
 	$("#pedirTablas").prop( "disabled", true );
 	$("#salirSala").click(salirSala);
+	$("#comunicarse").click(llamarAusuarios);
 	//
 	
 	//Vendor prefixes
@@ -160,7 +161,7 @@ $(function(){
 	//WEBRTC variables y eventos  
 	//Variables
 	var conexiones = {};
-	
+	var videos = {};
 	var peer;
 	var puedePedirTablas= false;
 	var streamLocal;
@@ -182,7 +183,11 @@ $(function(){
 		//Functiones generales
 	var ping;
 	function enviarPeticiones(){
-		ws.send("{\"tipo\":\"mediaOn\"}");
+		//ws.send("{\"tipo\":\"mediaOn\"}");
+		for (var key in conexiones){
+			console.log(key+"->");
+			console.log(conexiones[key]);
+		}
 	}
 	function hacerPing(){
 		if (ping==null){
@@ -407,6 +412,16 @@ $(function(){
 			console.log(json);
 			if (json.tipo)
 			switch (json.tipo) {
+			case "answer":
+				//WebRTC
+				//Nos traen una respuesta
+				aceptarHandling(json.descripcion,json.de);
+				break;
+			case "offer":
+				//WebRTC
+				//Nos piden una respuesta.
+				crearAnswer(json.descripcion, json.de);
+				break;
 			case "llamame":
 				var usuario = json.usuario;
 				conexiones[usuario] = "hola"+usuario;
@@ -430,10 +445,40 @@ $(function(){
 					}
 				break;
 				case "listaUsuarios":
+					//Webrtc
+					/*
+					 * Cogere esta lista y creare un array de conexiones con cada uno de ellos.
+					 * 
+					 */
+					
+					//Fin webrtc
 					var str4 = "<ul>";
 					for (var i=0; i<json.usuarios.length ; i++){
 						str4+= "<li>"+json.usuarios[i].nombre+"</li>";
+						//Webrtc
+						/*
+						if (!conexiones[json.usuarios[i].nombre]){
+							videos[json.usuarios[i].nombre] = $(document.createElement('video'));
+							crearOffer(json.usuarios[i].nombre);
+						}
+						*/
+						if (!conexiones[json.usuarios[i].nombre]){
+							$("#listaVideos").append("<video id='video"+json.usuarios[i].nombre+"' controls autoplay></video>");
+							console.log("No esta "+json.usuarios[i].nombre+" en la lista.. añadiendo conexion sinpeer y video");
+							conexiones[json.usuarios[i].nombre] = "sinpeer";
+							
+							//mostrar videos
+							
+						}else{
+							console.log("YA esta "+json.usuarios[i].nombre+" en la lista!!");
+						}
+						
 					}
+					/*
+					for(var prop in conexiones) {
+					     alert(prop+"->"+conexiones[prop]);
+					}
+					*/
 					str4+="</ul>";
 					$("#listaUsuarios").html(str4);
 				break;
@@ -609,8 +654,8 @@ $(function(){
 					bootbox.dialog(
 							
 							{
-								 message: "I am a custom dialog",
-								 title: "Custom title",
+								 message: "¿Quieres aceptar las tablas?",
+								 title: "Tu adversario pide tablas.",
 						buttons: {
 							success2: {
 								label: "Aceptar tablas",
@@ -634,6 +679,7 @@ $(function(){
 					
 					break;
 			}
+			/*
 			if (json.type && json.type == "offer"){
 				//alert("Entro json.offer");;
 				console.log("Nos estan llamando");
@@ -645,7 +691,7 @@ $(function(){
 				handling(json);
 				console.log("Fin de la respuesta");
 			}
-			
+			*/
 		}catch(err){
 			console.log(err);
 		}
@@ -1064,170 +1110,16 @@ $(function(){
 
 	
 	    
-	       //WEBRTC Funciones
-	function activarMedia(){
-	navigator.getUserMedia({"audio":true,"video":true},
-		function (stream){
-			if (navigator.webkitGetUserMedia){
-				videoLocal.src = webkitURL.createObjectURL(stream);
-				streamToAttach = stream;
-			}
-			if (navigator.mozGetUserMedia){
-				videoLocal.mozSrcObject = stream;
-				videoLocal.play();
-				streamToAttach = stream;
-			}
-		}
-		,error
-		);
-	 	if (peer!=null){
-	 		peer.addStream (streamToAttach);
-	 	}
-	 	console.log("entro");
-	 	//$("#btnActivarMedia").hide();
-	 	//$("#crearOffer").show();
-	}
-	function cerrarBtnconex(){
-		//$("#crearOffer").hide();
-		
-	}
-	function closeMedia(){
-		
-		streamToAttach.stop();
-		//$("#btnActivarMedia").show();
-		
-	}
-	function close(){
-		if ( peer ) {
-			peer.close();
-			peer = null;
-			
-	        
+	       
+	
+	 /****WebRTC de ARRAYS*********/
+	function llamarAusuarios(){
+		if (!streamToAttach)
+		activarMedia();
+		for (var usuario in conexiones){
+			crearOffer(usuario);
 		}
 	}
-	function crearOffer(){
-	close();
-	
-	peer = new RTCPeerConnection(iceServers,optional);
-	peer.onicecandidate = onicecandidate;
-	
-	peer.onaddstream = onaddstream;
-	if (streamToAttach !=null){
-		peer.addStream (streamToAttach);
-	}
-	
-	peer.createOffer(
-		function(sessionDescription) {
-			peer.setLocalDescription(sessionDescription);
-			//$("#miDescripcion").html(JSON.stringify(sessionDescription));
-			//Se ejecuta tan rapido que no da tiempo a crear el objeto
-			setTimeout(function(){
-				ws.send(JSON.stringify(sessionDescription)); 
-			},1000);
-			
-		}
-		, 
-		error
-		, 
-		{ 'mandatory': { 'OfferToReceiveAudio': true, 'OfferToReceiveVideo': true }}
-	);
-		//$("#crearOffer").hide();
-		
-	}
-	function onicecandidate(event) {
-	if (!peer || !event || !event.candidate) return;
-	var candidate = event.candidate;
-	//$("#candidato").val(JSON.stringify(candidate));
-	// POST-ICE-to-other-Peer(candidate.candidate, candidate.sdpMLineIndex);
-	
-	//ws.send(JSON.stringify(candidate));
-	
-	}
-	function crearAnswer(offer){
-	close();
-	
-	//console.log("Entrando en crearAnswer");
-	//var offer = JSON.parse($("#suDescripcion").val());
-	
-	peer = new RTCPeerConnection(iceServers,optional);
-	peer.onicecandidate = onicecandidate;
-	peer.onaddstream = onaddstream;
-	if (streamToAttach !=null){
-		peer.addStream (streamToAttach);
-	}
-	
-	
-	if (navigator.mozGetUserMedia){
-		peer.setRemoteDescription(new RTCSessionDescription(offer), function() {
-			peer.createAnswer(function(answer) {
-				peer.setLocalDescription(new RTCSessionDescription(answer), function() {
-					//$("#miDescripcion").html(JSON.stringify(answer));
-					setTimeout(function(){
-					ws.send(JSON.stringify(answer));
-					},1000);
-			  }, error);
-			}, error);
-		}, error);
-	}else{
-	
-		insertarRemoteDes(offer);
-		peer.createAnswer(function(answer) {
-			peer.setLocalDescription(answer);
-			//$("#miDescripcion").html(JSON.stringify(answer));
-			setTimeout(function(){
-			ws.send(JSON.stringify(answer));
-			},1000);
-			console.log("Answer:");
-			console.log(answer);
-			},
-			error
-			, { 'mandatory': { 'OfferToReceiveAudio': true, 'OfferToReceiveVideo': true } }
-		);
-	}
-	
-	console.log("crearAnswer finalizado");
-	console.log(peer);
-	}
-	function insertarRemoteDes(sessionDescription){
-	console.log("insertandoRemote");
-	//var sessionDescription = JSON.parse($("#suDescripcion").val());
-	peer.setRemoteDescription(new RTCSessionDescription(sessionDescription));
-	}
-	function handling(sessionDescription){
-	//var sessionDescription = JSON.parse($("#resultado").val());
-	peer.setRemoteDescription(new RTCSessionDescription(sessionDescription));
-	}
-	
-	function error(e){
-	console.log(e);
-	}
-	function addIc(candidate){
-	//var candidate = JSON.parse($("#candidato2").val());
-	peer.addIceCandidate(new RTCIceCandidate({
-		sdpMLineIndex: candidate.sdpMLineIndex,
-		candidate: candidate.candidate
-	}));
-	}
-	function onaddstream(event) {
-	if (!event) return;
-	if (navigator.webkitGetUserMedia){
-		videoRemoto.src = webkitURL.createObjectURL(event.stream);		
-	}
-	if (navigator.mozGetUserMedia){
-		videoRemoto.mozSrcObject  = event.stream;		
-	}
-	waitUntilRemoteStreamStartsFlowing();
-	}
-	function waitUntilRemoteStreamStartsFlowing(){
-	if (!(videoRemoto.readyState <= HTMLMediaElement.HAVE_CURRENT_DATA 
-		|| videoRemoto.paused || videoRemoto.currentTime <= 0)) 
-	{
-		// remote stream started flowing!
-	} 
-	else setTimeout(waitUntilRemoteStreamStartsFlowing, 50);
-	}
-	
-	//WEBRTC con arrays 
 	function activarMedia(){
 		navigator.getUserMedia({"audio":true,"video":true},
 			function (stream){
@@ -1244,7 +1136,7 @@ $(function(){
 			,error
 			);
 		 	
-		 	console.log("entro");
+		 	console.log("se activo la media");
 		 	
 		}
 		
@@ -1254,35 +1146,42 @@ $(function(){
 			//$("#btnActivarMedia").show();
 			
 		}
-		function close(){
-			for(var prop in conexiones) {
-			     alert(prop+"->"+conexiones[prop]);
-			}
-			if ( peer ) {
-				peer.close();
-				peer = null;
-				
-		        
+		function close(usuario){
+			if (conexiones[usuario]!= "sinpeer"){
+				conexiones[usuario].close();
+				conexiones[usuario] = null;
 			}
 		}
-		function crearOffer(){
-		close();
 		
-		peer = new RTCPeerConnection(iceServers,optional);
-		peer.onicecandidate = onicecandidate;
+		function crearOffer(usuario){
+		close(usuario);
 		
-		peer.onaddstream = onaddstream;
+		conexiones[usuario] = new RTCPeerConnection(iceServers,optional);
+		conexiones[usuario].onicecandidate = onicecandidate;
+		
+		conexiones[usuario].onaddstream = function (event){
+			console.log("evento onaddstream disparado!");
+			if (!event) return;
+			if (navigator.webkitGetUserMedia){
+				document.getElementById("video"+usuario).src = webkitURL.createObjectURL(event.stream);		
+			}
+			if (navigator.mozGetUserMedia){
+				document.getElementById("video"+usuario).mozSrcObject  = event.stream;		
+			}
+			
+			
+		};
 		if (streamToAttach !=null){
-			peer.addStream (streamToAttach);
+			conexiones[usuario].addStream (streamToAttach);
 		}
 		
-		peer.createOffer(
+		conexiones[usuario].createOffer(
 			function(sessionDescription) {
-				peer.setLocalDescription(sessionDescription);
+				conexiones[usuario].setLocalDescription(sessionDescription);
 				//$("#miDescripcion").html(JSON.stringify(sessionDescription));
 				//Se ejecuta tan rapido que no da tiempo a crear el objeto
 				setTimeout(function(){
-					ws.send(JSON.stringify(sessionDescription)); 
+					ws.send("{\"tipo\": \"offer\" , \"a\": \""+usuario+"\" , \"sd\" : "+JSON.stringify(sessionDescription)+" }"); 
 				},1000);
 				
 			}
@@ -1295,47 +1194,63 @@ $(function(){
 			
 		}
 		function onicecandidate(event) {
+		/*
 		if (!peer || !event || !event.candidate) return;
 		var candidate = event.candidate;
 		//$("#candidato").val(JSON.stringify(candidate));
 		// POST-ICE-to-other-Peer(candidate.candidate, candidate.sdpMLineIndex);
 		
 		//ws.send(JSON.stringify(candidate));
-		
+		*/
 		}
-		function crearAnswer(offer){
-		close();
+		function crearAnswer(offer,usuario){
+		close(usuario);
 		
 		//console.log("Entrando en crearAnswer");
 		//var offer = JSON.parse($("#suDescripcion").val());
 		
-		peer = new RTCPeerConnection(iceServers,optional);
-		peer.onicecandidate = onicecandidate;
-		peer.onaddstream = onaddstream;
+		conexiones[usuario] = new RTCPeerConnection(iceServers,optional);
+		conexiones[usuario].onicecandidate = onicecandidate;
+		conexiones[usuario].onaddstream = function a(event){
+			if (!event) return;
+			if (navigator.webkitGetUserMedia){
+				document.getElementById("video"+usuario).src = webkitURL.createObjectURL(event.stream);		
+			}
+			if (navigator.mozGetUserMedia){
+				document.getElementById("video"+usuario).mozSrcObject  = event.stream;		
+			}
+			/*
+			if (!(videos[usuario].readyState <= HTMLMediaElement.HAVE_CURRENT_DATA 
+					|| videos[usuario].paused || videos[usuario].currentTime <= 0)) 
+				{
+					// remote stream started flowing!
+				} 
+			*/
+		};
 		if (streamToAttach !=null){
-			peer.addStream (streamToAttach);
+			conexiones[usuario].addStream (streamToAttach);
 		}
 		
 		
 		if (navigator.mozGetUserMedia){
-			peer.setRemoteDescription(new RTCSessionDescription(offer), function() {
-				peer.createAnswer(function(answer) {
-					peer.setLocalDescription(new RTCSessionDescription(answer), function() {
+			conexiones[usuario].setRemoteDescription(new RTCSessionDescription(offer), function() {
+				conexiones[usuario].createAnswer(function(answer) {
+					conexiones[usuario].setLocalDescription(new RTCSessionDescription(answer), function() {
 						//$("#miDescripcion").html(JSON.stringify(answer));
 						setTimeout(function(){
-						ws.send(JSON.stringify(answer));
+							ws.send("{\"tipo\": \"answer\" , \"a\":  \""+usuario+"\", \"sd\" : "+JSON.stringify(answer)+" }");
 						},1000);
 				  }, error);
 				}, error);
 			}, error);
 		}else{
 		
-			insertarRemoteDes(offer);
-			peer.createAnswer(function(answer) {
-				peer.setLocalDescription(answer);
+			insertarRemoteDes(offer,usuario);
+			conexiones[usuario].createAnswer(function(answer) {
+				conexiones[usuario].setLocalDescription(answer);
 				//$("#miDescripcion").html(JSON.stringify(answer));
 				setTimeout(function(){
-				ws.send(JSON.stringify(answer));
+					ws.send("{\"tipo\": \"answer\" , \"a\":  \""+usuario+"\", \"sd\" : "+JSON.stringify(answer)+" }");
 				},1000);
 				console.log("Answer:");
 				console.log(answer);
@@ -1346,28 +1261,33 @@ $(function(){
 		}
 		
 		console.log("crearAnswer finalizado");
-		console.log(peer);
+		//console.log(peer);
 		}
-		function insertarRemoteDes(sessionDescription){
+		function insertarRemoteDes(sessionDescription,usuario){
 		console.log("insertandoRemote");
 		//var sessionDescription = JSON.parse($("#suDescripcion").val());
-		peer.setRemoteDescription(new RTCSessionDescription(sessionDescription));
+		conexiones[usuario].setRemoteDescription(new RTCSessionDescription(sessionDescription));
 		}
-		function handling(sessionDescription){
+		function aceptarHandling(sessionDescription,usuario){
+		conexiones[usuario].setRemoteDescription(new RTCSessionDescription(sessionDescription));
+		}
+		function handling(sessionDescription,usuario){
 		//var sessionDescription = JSON.parse($("#resultado").val());
-		peer.setRemoteDescription(new RTCSessionDescription(sessionDescription));
+		conexiones[usuario].setRemoteDescription(new RTCSessionDescription(sessionDescription));
 		}
 		
 		function error(e){
 		console.log(e);
 		}
-		function addIc(candidate){
+		function addIc(candidate,usuario){
 		//var candidate = JSON.parse($("#candidato2").val());
-		peer.addIceCandidate(new RTCIceCandidate({
+		conexiones[usuario].addIceCandidate(new RTCIceCandidate({
 			sdpMLineIndex: candidate.sdpMLineIndex,
 			candidate: candidate.candidate
 		}));
 		}
+		
+		
 		function onaddstream(event) {
 		if (!event) return;
 		if (navigator.webkitGetUserMedia){

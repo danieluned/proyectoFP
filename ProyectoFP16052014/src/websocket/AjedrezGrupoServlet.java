@@ -75,6 +75,22 @@ public class AjedrezGrupoServlet extends WebSocketServlet{
 			}
 		}
 		if (partidas.containsKey(sala)){
+			//Webrtc- cuando se une un usuario preguntara si hay media
+			//si hay media, se enviara el id al hoster para que contatacte
+			/*
+			String pedirQueLeLlamen ="{\"tipo\": \"llamame\", \"usuario\": \""+usuario+"\"}";
+			try {
+				conexiones.get(partidas.get(sala).creador).getWsOutbound().writeTextMessage(CharBuffer.wrap(pedirQueLeLlamen));
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			*/
+			//Nueva version ahora cada vez que uno se une , buscara todos los usuarios e intentara establecer
+			//un peer con cada uno de ellos.
+			//1º Cogemos todos los usuarios de la sala
+			// **No hace falta aqui, lo hare cuando se refresca la lista de usuarios.
+			//Fin WebRTC
 			partidas.get(sala).addUsuario(usuario);
 			if (sala.equals(usuario)){
 				try {
@@ -90,16 +106,7 @@ public class AjedrezGrupoServlet extends WebSocketServlet{
 					// TODO Auto-generated catch block
 					System.out.println("Fallo al enviar accion ui normal");
 				}
-				//Webrtc- cuando se une un usuario preguntara si hay media
-				//si hay media, se enviara el id al hoster para que contatacte
-				String pedirQueLeLlamen ="{\"tipo\": \"llamame\", \"usuario\": \""+usuario+"\"}";
-				try {
-					conexiones.get(partidas.get(sala).creador).getWsOutbound().writeTextMessage(CharBuffer.wrap(pedirQueLeLlamen));
-				} catch (IOException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-				//
+				
 			}
 			try {
 				conexiones.get(usuario).getWsOutbound().writeTextMessage(CharBuffer.wrap(partidas.get(sala).efectosTableroJson()));
@@ -245,6 +252,28 @@ public class AjedrezGrupoServlet extends WebSocketServlet{
 		str2+= "]}";
 		return str2;
 	}
+	public void enviarDescripcion(String destino, String procedencia, JSONObject descripcion){
+		
+		String oferta = "{ \"tipo\": \"offer\" , \"de\": \""+procedencia+"\" , \"descripcion\" : "+descripcion.toJSONString()+" }";
+		try {
+			this.conexiones.get(destino).getWsOutbound().writeTextMessage(CharBuffer.wrap(oferta));
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			System.out.println("no se pudo enviar la offerta de descripción  "+procedencia+" -> "+destino+" con descripcion = "+descripcion.toJSONString());
+		}
+		
+	}
+public void enviarRespuesta(String destino, String procedencia, JSONObject descripcion){
+		
+		String oferta = "{ \"tipo\": \"answer\" , \"de\": \""+procedencia+"\" , \"descripcion\" : "+descripcion.toJSONString()+" }";
+		try {
+			this.conexiones.get(destino).getWsOutbound().writeTextMessage(CharBuffer.wrap(oferta));
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			System.out.println("no se pudo enviar la respuesta de descripción  "+procedencia+" -> "+destino+" con descripcion = "+descripcion.toJSONString());
+		}
+		
+	}
 	 public String listaSalasEnJson(){
 	    	String str = "{ \"tipo\":\"listaSalas\" , \"salas\": [" ;
 	    	int c = 0;
@@ -292,12 +321,10 @@ public class AjedrezGrupoServlet extends WebSocketServlet{
     	quitarConexion(this.nombre);
     	String sala = obtenerSalaUsuario(this.nombre);
     	if (sala != ""){
-    		if (sala.equals(this.nombre)){
-    			cerrarSala(this.nombre);
-    		}else{
+    		
     			salirPartida(this.nombre, sala);
         		refrescarListaUsuariosdePartida(sala);
-    		}
+    		
     		
     	}
     	
@@ -305,7 +332,7 @@ public class AjedrezGrupoServlet extends WebSocketServlet{
 
     public void onTextMessage(CharBuffer charBuffer) throws IOException {
       String datos = charBuffer.toString();
-      System.out.println(datos);
+      System.out.println(this.nombre+" envia "+datos);
       try
       {
         JSONObject json = (JSONObject)new JSONParser().parse(datos);
@@ -320,6 +347,12 @@ public class AjedrezGrupoServlet extends WebSocketServlet{
         if (tipo!=null)
         switch (tipo)
         {
+        case "offer":
+        		enviarDescripcion((String)json.get("a"),this.nombre,(JSONObject)json.get("sd"));
+        	break;
+        case "answer":
+        		enviarRespuesta((String)json.get("a"),this.nombre,(JSONObject)json.get("sd"));
+        	break;
         case "mediaOn":
         	
         	

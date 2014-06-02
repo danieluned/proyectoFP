@@ -216,6 +216,7 @@
 					
 				</div>
 				<div id="wrapListaUsuarios" class="item">
+					<button id="comunicarse">Unirse VideoLLamada</button>
 					<h2>Lista Usuarios</h2>
 					<div id="listaUsuarios">
 					</div>
@@ -236,6 +237,8 @@
 				     	<video id="videoRemoto" controls autoplay>
 						</video>
 				     </div>         
+				</div>
+				<div id="listaVideos">
 				</div>
 			</div>
 			<!-- Sonidos -->
