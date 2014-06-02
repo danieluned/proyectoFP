@@ -38,8 +38,8 @@ $(function(){
 	/*** Eventos ***/
 	$(window).resize(ajuste);
 	//Evento para recoger coordenadas 
-	$("#tablero td").click(recogerCoordenada);
-	
+	//$("#tablero td").click(recogerCoordenada);
+	$("#fichas li").click(activarFigura);
 	/** Cuando presionamos el boton de conectar
 		ejecutamos la conexion */
 	
@@ -85,6 +85,7 @@ $(function(){
 	$("#pedirAbandonar").click(enviarAbandono);
 	$("#pedirTablas").click(enviarTablas);
 	$("#pedirTablas").prop( "disabled", true );
+	$("#salirSala").click(salirSala);
 	//
 	
 	//Vendor prefixes
@@ -230,16 +231,9 @@ $(function(){
 	}
 	function refrescarEscucharUnirse(){
 		$(".unirse").click(function(){
-			var blancas = $(this).attr("b");
-			var negras = $(this).attr("n");
-			var idPartida ="";
-			if (blancas == ""){
-				idPartida = negras;
-			}else{
-				idPartida = blancas;
-			}
-			ws.send(unirsePartidaJSON(idPartida));
-			
+			var sala = $(this).attr("sala");
+			ws.send(unirsePartidaJSON(sala));
+			//alert("enviado"+unirsePartidaJSON(sala));
 		});
 	}
 	
@@ -389,12 +383,50 @@ $(function(){
 		ws.send(str);
 		$("#pedirTablas").prop( "disabled", true );
 	}
+	function salirSala(){
+		var str = '{ "tipo":"salirSala" }';
+		ws.send(str);
+	}
 	function procesarMensaje(mensaje){
 		try{
 			var json =  JSON.parse(mensaje);
 			console.log(json);
 			if (json.tipo)
 			switch (json.tipo) {
+			case "ui" :
+					alert(json.modelo);
+					switch (json.modelo){
+					case "normal":
+						mostrarControlesNormal();
+						break;
+					case "idle":
+						mostrarControlesIdle();
+						break;
+					case "admin":
+						mostrarControlesAdmin();
+						break;
+						
+					}
+				break;
+				case "listaUsuarios":
+					var str4 = "<ul>";
+					for (var i=0; i<json.usuarios.length ; i++){
+						str4+= "<li>"+json.usuarios[i].nombre+"</li>";
+					}
+					str4+="</ul>";
+					$("#listaUsuarios").html(str4);
+				break;
+				case "listaSalas":
+					console.log(json);
+					console.log(mensaje);
+					var str1= "";
+					for(var i=0; i<json.salas.length;i++){
+						str1+= "<tr><td><span>"+json.salas[i].creador+"</span></td><td><button class='unirse' sala='"+json.salas[i].creador+"'>Unirse</button></td></tr>";
+					}
+					$("#listaPartidas").html(str1);
+					refrescarEscucharUnirse();
+				break;
+				
 				case "mensajeGeneral": //Se recibe un mensaje para el chat general
 					var claseBotonGeneral = "";
 					 $(idChat).append("<p><button class='"+claseBotonGeneral+"' title='"+json.de+"'>"+json.de+"</button>: "+json.contenido+"</p>");
@@ -587,7 +619,33 @@ $(function(){
 	}
 	function mostrarControlesIdle(){
 		$("#partidas").css("visibility","visible");
+		
+		$("#wrapTablero").css("visibility","hidden");
 		$("#tiempos").css("visibility","hidden");
+		$("#envolver").css("visibility","hidden");
+		$("#wrapListaUsuarios").css("visibility","hidden");
+		$("#wrapmivideo").css("visibility","hidden");
+		$("#wrapsuvideo").css("visibility","hidden");
+	}
+	function mostrarControlesAdmin(){
+		$("#partidas").css("visibility","hidden");
+		
+		$("#wrapTablero").css("visibility","visible");
+		$("#tiempos").css("visibility","visible");
+		$("#envolver").css("visibility","visible");
+		$("#wrapListaUsuarios").css("visibility","visible");
+		$("#wrapmivideo").css("visibility","visible");
+		$("#wrapsuvideo").css("visibility","hidden");
+	}
+	function mostrarControlesNormal(){
+		$("#partidas").css("visibility","hidden");
+		
+		$("#wrapTablero").css("visibility","visible");
+		$("#tiempos").css("visibility","hidden");
+		$("#envolver").css("visibility","visible");
+		$("#wrapListaUsuarios").css("visibility","visible");
+		$("#wrapmivideo").css("visibility","hidden");
+		$("#wrapsuvideo").css("visibility","visible");
 	}
 	function activarModoPartida(){
 		$("#tiempos").css("visibility","visible");
@@ -789,7 +847,9 @@ $(function(){
 		coordenadaFinal = null;
 		
 	}
-	
+	function activarFigura(){
+		
+	}
 	
 	function recogerCoordenada (){	//Funcion evento
 		

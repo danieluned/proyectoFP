@@ -160,13 +160,31 @@
 				        </div>
 				        <input type="text" id="mensaje"/><button id="enviar"><s:text name="enviarMensaje"/></button>
 					</div>	
-					
+						<div id="fichas" class="item">
+							<h2>Fichas</h2>
+							<ul>
+								<li>Peon Blancas</li>
+								<li>Torre Blancas</li>
+								<li>Caballo Blancas</li>
+								<li>Alfil Blancas</li>
+								<li>Dama Blancas</li>
+								<li>Rey Blancas</li>
+							</ul>
+							<h2>Colores</h2>
+							<ul>
+								<li>Rojo</li>
+								<li>Azul</li>
+								<li>Verde</li>
+							</ul>
+							<h2>Generales</h2>
+							<ul>
+								<li>Limpiar</li>
+								<li>Limpiar Todo</li>
+							</ul>
+						</div>
 						<div id="tiempos" class="item">
-							<p><s:text name="tiempoBlancas"/><span id="tiempoBlancas"></span></p>
-							<p><s:text name="tiempoNegras"/><span id="tiempoNegras"></span></p>
 							<button id="rotar" class="btn-xs"><s:text name="rotarTablero"/></button>
-							<button id="pedirTablas" class="btn-sm"><s:text name="ofrecerTablas"/></button>
-							<button id="pedirAbandonar" class="btn-sm btn-danger"><s:text name="ofrecerAbandono"/></button>
+							
 						</div>
 					<div id="partidas" class="item">
 						<div id="controlesPartida"><s:text name="listaPartidas"/></div>
@@ -189,6 +207,12 @@
 						</div>
 					</div>
 					
+				</div>
+				<div id="wrapListaUsuarios" class="item">
+					<h2>Lista Usuarios</h2>
+					<div id="listaUsuarios">
+					</div>
+					<button id="salirSala">Salir Sala</button>
 				</div>
 				<div class="col-xs-0">
 					<div class="item" id="wrapmivideo" >
