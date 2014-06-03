@@ -130,7 +130,7 @@ public class AjedrezGrupoServlet extends WebSocketServlet{
 			conexiones.get(usuario).getWsOutbound().writeTextMessage(CharBuffer.wrap("{ \"tipo\" : \"ui\" , \"modelo\" : \"idle\" }"));
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
-			e.printStackTrace();
+			System.out.println("Error al enviar accion al usuario "+usuario);
 		}
 	}
 	public void enviarOrdenAusuario(String usuario, String accion){

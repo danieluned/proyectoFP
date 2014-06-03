@@ -1,28 +1,38 @@
+/*
 #envolver {
 	position:absolute;
 	height: 250px;
 	width: 300px;
 	margin-right:20px;
 }
+*/
 .modal-dialog *{
 	color:black !important;
 }
-#wrapmivideo,#wrapsuvideo{
+/*
+#wrapListaUsuarios ,#objetos{
+	position:absolute;
+}
+
+#wrapmivideo,#wrapsuvideo , .wraprival{
 	position:absolute;
 	width:200px;
 	height:100px;
 	margin-bottom:100px;
 }
-#wrapmivideo video ,#wrapsuvideo video{
+
+#wrapmivideo video ,#wrapsuvideo video , .wraprival video{
 	width:100%;
 	height:100%;
 }
-#wrapmivideo .ui-icon,#wrapsuvideo .ui-icon{
+#wrapmivideo .ui-icon,#wrapsuvideo .ui-icon , .wraprival .ui-icon{
 	bottom: -10px;
 }
+*/
 button{
 color: black;	
 }
+/*
 #animacion1{
 	display: block;
 	width:100px;
@@ -33,6 +43,7 @@ top: 240px;
 position: absolute;
 right:0px;
 }
+*/
 #chat div {
 	width:100%;
 	
@@ -63,19 +74,21 @@ right:0px;
 #chat p{
 	color:black;
 }
+/*
 .ui-icon{
 	width:30px;
 	height:30px;
 	background-color:rgba(0,0,0,.4);
 	
 }
+
 #wrapTablero .ui-icon{
 	bottom: -50px;
 	
 }
 #partidas{
 	width:400px;
-	background: none repeat scroll 0% 0% rgba(130, 120, 214, 0.8);
+	background: none repeat scroll 0% 0% rgba(0, 0, 0, 0.8);
 	position:absolute;
 	
 	padding:0;
@@ -86,8 +99,8 @@ right:0px;
 	
 	background: rgba(0,0,0,.4);
 }
-
-#controlesPartida , #mover, #tiempos, #moverTablero, #arrastrarmivideo,#arrastrarsuvideo{
+*/
+#controlesPartida , #mover, #tiempos, #moverTablero, #arrastrarmivideo,#arrastrarsuvideo ,.arrastable {
 	cursor: move;
 	color: yellow;
 	text-align:center;
@@ -99,6 +112,10 @@ right:0px;
 }
 #tablaPartidas{
 	overflow:scroll;
+}
+div.gridster>ul>li{
+	background:red;
+	overflow:hidden;
 }
 .item{
 	overflow:visible;

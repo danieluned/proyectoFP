@@ -22,10 +22,14 @@
 		<script src="js/jquery-ui-1.10.4.custom.js"></script>
 		<script src="js/bootstrap.js"></script>
 		<script src="js/bootbox.min.js"></script>
+		<!--<script src="js/arrange.js"></script>-->
 		<script src="js/learn.js"></script>
 		<script src="js/design.js"></script>
-		<script src="js/arrange.js"></script>
 		
+		
+		<script>
+			var user = "<%= session.getAttribute( "usuario" ) %>";
+		</script>
 	</head>
 	 <body id="body">
         <!--[if lt IE 7]>
@@ -33,10 +37,7 @@
         <![endif]-->
 		<div class="container-fluid negroTransparente" id="wrap">
 			<header class="row">
-				<div class="col-xs-12 col-xs-offset-0
-				            col-sm-12 col-sm-offset-0
-				            col-md-12 col-md-offset-0
-				            col-lg-12 col-lg-offset-0">
+				
 					<s:a action="principal">
 						<img class="im" src="img/Logotipo.png"/>
 						<h1 class="titulo"><s:text name="tituloJuego"/></h1>
@@ -52,11 +53,10 @@
 					<button id="cambiarControles" class="btn-xs">Controles</button>
 					-->
 					<!--<button id="click">Animacion</button>-->
-				</div>
+				<
 			</header>
-			<div class="row" id="contenido">
-				<div class="col-xs-12">
-					<div class="row">
+			<div id="contenido">
+			
 						<div id="wrapTablero" class="item">
 							<div id="moverTablero"><s:text name="tablero"/></div>
 							<div id="tablero">
@@ -145,9 +145,9 @@
 								<button id="borrarTodo">Borrar Todo</button><button id="rotar" class="btn-xs"><s:text name="rotarTablero"/></button>
 							</div>
 						</div>
-					</div>
-				</div>
-				<div class="col-xs-0">
+					
+			
+			
 					
 					<div id="envolver" class="item">
 						<div id="mover"><s:text name="chat"/></div>
@@ -162,6 +162,7 @@
 				        <input type="text" id="mensaje"/><button id="enviar"><s:text name="enviarMensaje"/></button>
 					</div>	
 						<div id="objetos" class="item">
+						<div class="arrastable">Insertar Objeto</div>
 						<button id="cancelarSeleccion">Cancelar Seleccion</button>
 							<div id="fichas">
 							<h2>Fichas</h2>
@@ -214,34 +215,38 @@
 						</div>
 					</div>
 					
-				</div>
+				
 				<div id="wrapListaUsuarios" class="item">
-					<button id="comunicarse">Unirse VideoLLamada</button>
-					<h2>Lista Usuarios</h2>
+					<div class="arrastable">Lista Usuarios</div>
 					<div id="listaUsuarios">
 					</div>
+					<button id="btnActivarMedia"><s:text name="camaraOn"/></button>
+					<button id="comunicarse">Unirse VideoLLamada</button>
 					<button id="salirSala">Salir Sala</button>
 				</div>
-				<div class="col-xs-0">
-					<div class="item" id="wrapmivideo" >
+				
+				
+				<div class="item" id="wrapmivideo" >
 						<div id="arrastrarmivideo" ><s:text name="miInfo"/></div>
 						<video id="videoLocal" controls autoplay>
 						</video>
-						<button id="btnActivarMedia"><s:text name="camaraOn"/></button>
-						<button id="crearOffer"><s:text name="peerOn"/></button>
-						<button id="btnColgar"><s:text name="peerOff"/></button>
-						<button id="enviarAtodos"><s:text name="enviarAtodos"/></button>
 					</div>
-				     <div class="item" id="wrapsuvideo" >
-				     	<div id="arrastrarsuvideo"><s:text name="suInfo"/></div>
-				     	<video id="videoRemoto" controls autoplay>
-						</video>
-				     </div>         
-				</div>
-				<div id="listaVideos">
+				<div id="listaVideos" class="item"></div>
+			
+			</div>
+			<div id="push">
+			</div>
+			
+		</div>
+		<footer id="footer">
+			<div class="container">
+				<div class="row center-block">
+					<s:text name="footer"/>
 				</div>
 			</div>
-			<!-- Sonidos -->
+		</footer>
+		
+		<!-- Sonidos -->
 			<audio id="newgame">
 				<source src="sounds/NEWGAME.mp3" type="audio/mp3" />
 			</audio>
@@ -251,20 +256,10 @@
 			<audio id=tick>
 				<source src="sounds/Tick.mp3" type="audio/mp3" />
 			</audio>
-			<div id="push">
-			</div>
 			<!-- -Animaciones 
 			<div id="animacion1">
 				<span>Victoria</span>
 			</div>
 			-->
-		</div>
-		<footer id="footer">
-			<div class="container">
-				<div class="row center-block">
-					<s:text name="footer"/>
-				</div>
-			</div>
-		</footer>
 	</body>
 </html>

@@ -15,6 +15,7 @@
 		<link rel="stylesheet" href="css/normalize.min.css"/>
         <link rel="stylesheet" href="css/black-tie/jquery-ui-1.10.4.custom.css"/>
 		<link rel="stylesheet" href="css/bootstrap.css"/>
+		<link rel="stylesheet" href="css/jquery.gridster.min.css"/>
 		<link rel="stylesheet" href="css/juego2.css"/>
 		<link rel="stylesheet" href="css/chat.css"/>
 		<script src="js/modernizr-2.6.2-respond-1.1.0.min.js"></script>
@@ -22,9 +23,11 @@
 		<script src="js/jquery-ui-1.10.4.custom.js"></script>
 		<script src="js/bootstrap.js"></script>
 		<script src="js/bootbox.min.js"></script>
+		<script src="js/jquery.gridster.min.js"></script>
 		<script src="js/juego2.js"></script>
 		<script src="js/design.js"></script>
-		<script src="js/arrange.js"></script>
+		
+		<!--<script src="js/arrange.js"></script>-->
 		
 	</head>
 	 <body id="body">
@@ -54,10 +57,12 @@
 					<!--<button id="click">Animacion</button>-->
 				</div>
 			</header>
-			<div class="row" id="contenido">
-				<div class="col-xs-12">
-					<div class="row">
-						<div id="wrapTablero" class="item">
+			<div id="contenido">
+				<div class="gridster">
+					<ul>
+						<li data-row="1" data-col="1" data-sizex="1" data-sizey="1">
+						<!-- TABLERO -->
+						<div id="wrapTablero">
 							<div id="moverTablero"><s:text name="tablero"/></div>
 							<div id="tablero">
 								<table>
@@ -144,6 +149,29 @@
 								</table>
 							</div>
 						</div>
+						<!-- FIN TABLERO -->
+						</li>
+						<li data-row="2" data-col="1" data-sizex="1" data-sizey="1">
+						<!--  -->
+						<!--  -->
+						</li>
+						<li data-row="3" data-col="1" data-sizex="1" data-sizey="1"></li>
+						 
+						<li data-row="1" data-col="2" data-sizex="2" data-sizey="1"></li>
+						<li data-row="2" data-col="2" data-sizex="2" data-sizey="2"></li>
+						 
+						<li data-row="1" data-col="4" data-sizex="1" data-sizey="1"></li>
+						<li data-row="2" data-col="4" data-sizex="2" data-sizey="1"></li>
+						<li data-row="3" data-col="4" data-sizex="1" data-sizey="1"></li>
+						 
+						<li data-row="1" data-col="5" data-sizex="1" data-sizey="1"></li>
+						<li data-row="3" data-col="5" data-sizex="1" data-sizey="1"></li>
+						 
+						<li data-row="1" data-col="6" data-sizex="1" data-sizey="1"></li>
+						<li data-row="2" data-col="6" data-sizex="1" data-sizey="2"></li>
+					</ul>
+				</div>
+						
 					</div>
 				</div>
 				<div class="col-xs-0">
@@ -206,7 +234,16 @@
 				     </div>         
 				</div>
 			</div>
-			<!-- Sonidos -->
+			
+		</div>
+		<footer id="footer">
+			<div class="container">
+				<div class="row center-block">
+					<s:text name="footer"/>
+				</div>
+			</div>
+		</footer>
+		<!-- Sonidos -->
 			<audio id="newgame">
 				<source src="sounds/NEWGAME.mp3" type="audio/mp3" />
 			</audio>
@@ -223,13 +260,5 @@
 				<span>Victoria</span>
 			</div>
 			-->
-		</div>
-		<footer id="footer">
-			<div class="container">
-				<div class="row center-block">
-					<s:text name="footer"/>
-				</div>
-			</div>
-		</footer>
 	</body>
 </html>

@@ -1,4 +1,5 @@
 $(function(){
+	
 	/**
 	 * Para los cursores
 	 * http://jsfiddle.net/wNKcU/5/
@@ -462,16 +463,26 @@ $(function(){
 							crearOffer(json.usuarios[i].nombre);
 						}
 						*/
-						if (!conexiones[json.usuarios[i].nombre]){
-							$("#listaVideos").append("<video id='video"+json.usuarios[i].nombre+"' controls autoplay></video>");
-							console.log("No esta "+json.usuarios[i].nombre+" en la lista.. añadiendo conexion sinpeer y video");
-							conexiones[json.usuarios[i].nombre] = "sinpeer";
-							
-							//mostrar videos
-							
-						}else{
-							console.log("YA esta "+json.usuarios[i].nombre+" en la lista!!");
+						
+						if (user != json.usuarios[i].nombre){
+							if (!conexiones[json.usuarios[i].nombre]){
+								var divs = "<div class='item wraprival'><div class='arrastable'>"+json.usuarios[i].nombre+"</div><video id='video"+json.usuarios[i].nombre+"' controls autoplay></video></div>";
+								$("#listaVideos")
+								.append(divs);
+								$(divs).resizable({
+									 handles: 'se'
+								 });
+								console.log("No esta "+json.usuarios[i].nombre+" en la lista.. añadiendo conexion sinpeer y video");
+								conexiones[json.usuarios[i].nombre] = "sinpeer";
+								refrescarDraggable();
+								
+								//mostrar videos
+								
+							}else{
+								console.log("YA esta "+json.usuarios[i].nombre+" en la lista!!");
+							}
 						}
+						
 						
 					}
 					/*
@@ -709,34 +720,22 @@ $(function(){
 		}
 	}
 	function mostrarControlesIdle(){
-		$("#partidas").css("visibility","visible");
+		$("#partidas").show();
 		
-		$("#wrapTablero").css("visibility","hidden");
-		$("#tiempos").css("visibility","hidden");
-		$("#envolver").css("visibility","hidden");
-		$("#wrapListaUsuarios").css("visibility","hidden");
-		$("#wrapmivideo").css("visibility","hidden");
-		$("#wrapsuvideo").css("visibility","hidden");
+		$("#wrapTablero , #tiempos, #envolver, #wrapListaUsuarios, #wrapmivideo, #objetos").hide();
+		
+		
 	}
 	function mostrarControlesAdmin(){
-		$("#partidas").css("visibility","hidden");
+		$("#partidas").hide();
+		$("#wrapTablero , #tiempos, #envolver, #wrapListaUsuarios, #wrapmivideo ,#objetos").show();
 		
-		$("#wrapTablero").css("visibility","visible");
-		$("#tiempos").css("visibility","visible");
-		$("#envolver").css("visibility","visible");
-		$("#wrapListaUsuarios").css("visibility","visible");
-		$("#wrapmivideo").css("visibility","visible");
-		$("#wrapsuvideo").css("visibility","hidden");
+		
 	}
 	function mostrarControlesNormal(){
-		$("#partidas").css("visibility","hidden");
+		$("#partidas").hide();
+		$("#wrapTablero , #tiempos, #envolver, #wrapListaUsuarios, #wrapmivideo ,#objetos").show();
 		
-		$("#wrapTablero").css("visibility","visible");
-		$("#tiempos").css("visibility","hidden");
-		$("#envolver").css("visibility","visible");
-		$("#wrapListaUsuarios").css("visibility","visible");
-		$("#wrapmivideo").css("visibility","hidden");
-		$("#wrapsuvideo").css("visibility","visible");
 	}
 	function activarModoPartida(){
 		$("#tiempos").css("visibility","visible");

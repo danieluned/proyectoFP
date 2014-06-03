@@ -164,7 +164,7 @@
 })();
 
 $(function(){
-	arreglar();
+	
 	ajusteVertical();
 	cambiarCabecera();
 	
@@ -194,6 +194,7 @@ $(function(){
 	$("#cambiarChat2").click(mostrarOcultarChat);
 	$("#cambiarControles").click(mostrarOcultarControles);
 	$("#cambiarPartidas").click(mostrarOcultarPartidas);
+	/*
 	$("#tiempos").draggable({
 		containment: $("#wrap")
 		});
@@ -205,6 +206,14 @@ $(function(){
 		containment: $("#wrap"),
 		handle: "#controlesPartida"
 	    });
+	$("#wrapListaUsuarios").draggable({
+		containment: $("#wrap"),
+		handle: ".arrastable"
+	    });
+	$("#objetos").draggable({
+		containment: $("#wrap"),
+		handle: ".arrastable"
+	    });
 	$( "#wrapTablero" ).draggable({ containment: $("#wrap"),
 		handle: "#moverTablero",
 		});
@@ -214,6 +223,7 @@ $(function(){
 	$( "#wrapsuvideo" ).draggable({ containment: $("#wrap"),
 		handle: "#arrastrarsuvideo",
 		});
+	
 	$("#wrapmivideo").resizable({
 		 
 	      handles: 'se'
@@ -233,6 +243,7 @@ $(function(){
 	      handles: 'se'
 	    });
 	
+	
 	$("#wrapTablero").resizable({
       aspectRatio: true,
       minHeight: 250,
@@ -244,6 +255,21 @@ $(function(){
 	$("#click").click(animacion1);
 	$("#wrapsuvideo").resize(ajustarvideo);
 	$( "#wrapmivideo").resize(ajustarvideo);
+	
+	
+	$('#contenido').masonry({
+		  columnWidth: 50,
+		  itemSelector: '.item'
+	});
+	*/
+	 var gridster = $(".gridster ul").gridster({
+         widget_base_dimensions: [100, 55],
+         widget_margins: [5, 5],
+         autogrow_cols: true,
+         resize: {
+           enabled: true
+         }
+       }).data('gridster');
 });
 function ajustarvideo(){
 	//console.log($(this).width()+" - "+$(this).height());
@@ -275,12 +301,8 @@ function ajustarPaneles(){
 	$("#chat div").css("height",h-100);
 }
 function arreglar(){
-	var container = $('#contenido');
-	// initialize
-	container.masonry({
-	  columnWidth: 50,
-	  itemSelector: '.item'
-	});
+	$("#contenido").masonry( 'reload' );
+	
 	
 }
 function mostrarOcultarTablero(){
@@ -300,10 +322,21 @@ function ajusteVertical(){
 	//Para cambiar la cabecera
 	cambiarCabecera();
 	centradoVertical(".alineadoVertical");
-	var h = $(document).height();
-	$("#wrap").css("height",h);
+	//var h = $(document).height();
+	//$("#wrap").css("height",h);
 	//console.log("altura:"+h);
 }
+function refrescarDraggable(){
+	$(".wraprival").draggable({
+		containment: $("#wrap"),
+		handle: ".arrastable"
+	    });
+	$(".wraprival").resizable({
+		 
+	    handles: 'se'
+	  });
+}
+
 function cambiarCabecera(){
 		var max = 580;
 		var w = parseInt($(window).width());
