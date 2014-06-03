@@ -186,7 +186,7 @@ input{
 	color:black;
 }
 * {
-	color:white;
+	/*color:white;*/
 }
 .center-block {
 	float: none !important

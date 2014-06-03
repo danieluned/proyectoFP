@@ -1,15 +1,15 @@
-/*
+
 #envolver {
 	position:absolute;
 	height: 250px;
 	width: 300px;
 	margin-right:20px;
 }
-*/
+
 .modal-dialog *{
 	color:black !important;
 }
-/*
+
 #wrapListaUsuarios ,#objetos{
 	position:absolute;
 }
@@ -32,7 +32,7 @@
 button{
 color: black;	
 }
-/*
+
 #animacion1{
 	display: block;
 	width:100px;
@@ -43,7 +43,7 @@ top: 240px;
 position: absolute;
 right:0px;
 }
-*/
+
 #chat div {
 	width:100%;
 	
@@ -74,7 +74,7 @@ right:0px;
 #chat p{
 	color:black;
 }
-/*
+
 .ui-icon{
 	width:30px;
 	height:30px;
@@ -99,7 +99,7 @@ right:0px;
 	
 	background: rgba(0,0,0,.4);
 }
-*/
+
 #controlesPartida , #mover, #tiempos, #moverTablero, #arrastrarmivideo,#arrastrarsuvideo ,.arrastable {
 	cursor: move;
 	color: yellow;

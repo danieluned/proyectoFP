@@ -194,7 +194,7 @@ $(function(){
 	$("#cambiarChat2").click(mostrarOcultarChat);
 	$("#cambiarControles").click(mostrarOcultarControles);
 	$("#cambiarPartidas").click(mostrarOcultarPartidas);
-	/*
+	
 	$("#tiempos").draggable({
 		containment: $("#wrap")
 		});
@@ -261,7 +261,7 @@ $(function(){
 		  columnWidth: 50,
 		  itemSelector: '.item'
 	});
-	*/
+	/*
 	 var gridster = $(".gridster ul").gridster({
          widget_base_dimensions: [100, 55],
          widget_margins: [5, 5],
@@ -269,7 +269,7 @@ $(function(){
          resize: {
            enabled: true
          }
-       }).data('gridster');
+       }).data('gridster');*/
 });
 function ajustarvideo(){
 	//console.log($(this).width()+" - "+$(this).height());
@@ -301,7 +301,10 @@ function ajustarPaneles(){
 	$("#chat div").css("height",h-100);
 }
 function arreglar(){
-	$("#contenido").masonry( 'reload' );
+	$('#contenido').masonry({
+		  columnWidth: 50,
+		  itemSelector: '.item'
+	});
 	
 	
 }

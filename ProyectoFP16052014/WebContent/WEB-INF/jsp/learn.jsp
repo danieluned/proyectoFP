@@ -22,7 +22,7 @@
 		<script src="js/jquery-ui-1.10.4.custom.js"></script>
 		<script src="js/bootstrap.js"></script>
 		<script src="js/bootbox.min.js"></script>
-		<!--<script src="js/arrange.js"></script>-->
+		<script src="js/arrange.js"></script>
 		<script src="js/learn.js"></script>
 		<script src="js/design.js"></script>
 		

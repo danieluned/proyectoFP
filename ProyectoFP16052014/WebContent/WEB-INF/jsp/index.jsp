@@ -18,7 +18,6 @@
 		<link rel="stylesheet" href="css/jquery.gridster.min.css"/>
 		<link rel="stylesheet" href="css/juego2.css"/>
 		<link rel="stylesheet" href="css/chat.css"/>
-		
 		<script src="js/modernizr-2.6.2-respond-1.1.0.min.js"></script>
 		<script src="js/jquery-1.10.2.js"></script>
 		<script src="js/jquery-ui-1.10.4.custom.js"></script>
