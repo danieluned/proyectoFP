@@ -1,3 +1,4 @@
+
 (function ($) {
     // Detect touch support
     $.support.touch = 'ontouchend' in document;
@@ -343,8 +344,25 @@ function arreglar(){
 	    });
 	
 }
+var i=0;
 function mostrarOcultarTablero(){
-	$("#wrapTablero").toggle();
+	if (i%2==0){
+		$("#contenido").block({ 
+            theme:     true, 
+            message:  $("#partidas2"), 
+        
+		css: { border : '5px solid red',
+			height: '100%',
+			
+			} 
+        }); 
+	}else{
+		$("#contenido").unblock();
+	}
+	i++;
+	      
+	   
+	//$("#wrapTablero").toggle();
 }
 function mostrarOcultarControles(){
 	$("#tiempos").toggle();

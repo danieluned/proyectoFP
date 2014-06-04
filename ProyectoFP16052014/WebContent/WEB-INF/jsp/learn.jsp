@@ -22,6 +22,7 @@
 		<script src="js/jquery-ui-1.10.4.custom.js"></script>
 		<script src="js/bootstrap.js"></script>
 		<script src="js/bootbox.min.js"></script>
+		<script src="js/jquery.blockUI.js"></script>
 		<script src="js/arrange.js"></script>
 		<script src="js/learn.js"></script>
 		<script src="js/design.js"></script>
@@ -30,6 +31,11 @@
 		<script>
 			var user = "<%= session.getAttribute( "usuario" ) %>";
 		</script>
+		<style>
+		#partidas{
+			
+		}
+		</style>
 	</head>
 	 <body id="body">
         <!--[if lt IE 7]>
@@ -47,7 +53,9 @@
 					<a id="en" href="?request_locale=en"><s:text name="ingles"/></a>
 					<s:a action="deslogearse" cssClass="btn-sm btn-danger glyphicon glyphicon-off" id="salir"></s:a>
 					<button id="cambiarChat" class="btn-sm"><s:text name="layout"/></button>
-					<!-- <button id="cambiarTablero" class="btn-xs">Tablero</button>
+					
+					<!-- 
+					<button id="cambiarTablero" class="btn-xs">Tablero</button>
 					<button id="cambiarChat2" class="btn-xs">Chat</button>
 					<button id="cambiarPartidas" class="btn-xs">Partidas</button>
 					<button id="cambiarControles" class="btn-xs">Controles</button>
@@ -56,35 +64,42 @@
 				
 			</header>
 			<div id="contenido">
-			<div id="partidas" class="item ">
-						<div id="controlesPartida"><s:text name="listaPartidas"/></div>
-						<button id="crearPartida" class="btn-sm"><s:text name="nuevaPartida"/></button>
-						
-						<div id="tablaPartidas">
-							<table >
-								<thead>
-									<tr>
-										<th><s:text name="blancas"/></th>
-										<th><s:text name="negras"/></th>
-										<th><s:text name="estado"/></th>
-										<th><s:text name="turno"/></th>
-										<th><s:text name="accion"/></th>
-									</tr>
-								</thead>
-								<tbody id="listaPartidas">
-								</tbody>
-							</table>
+				
+				
+						<div id="objetos" class="item">
+						<div class="arrastable">Insertar Objeto</div>
+						<button id="cancelarSeleccion">Cancelar Seleccion</button>
+							<div id="fichas">
+							<h2>Fichas</h2>
+							<ul>
+								<li id="bp">Peon Blancas</li>
+								<li id="bt">Torre Blancas</li>
+								<li id="bc">Caballo Blancas</li>
+								<li id="ba">Alfil Blancas</li>
+								<li id="bd">Dama Blancas</li>
+								<li id="br">Rey Blancas</li>
+							</ul>
+							<ul>
+								<li id="np">Peon Negras</li>
+								<li id="nt">Torre Negras</li>
+								<li id="nc">Caballo Negras</li>
+								<li id="na">Alfil Negras</li>
+								<li id="nd">Dama Negras</li>
+								<li id="nr">Rey Negras</li>
+							</ul>
+							</div>
+							<div id="colores">
+							
+							<h2>Colores</h2>
+							<ul>
+								<li id="r">Rojo</li>
+								<li id="a">Azul</li>
+								<li id="v">Verde</li>
+							</ul>
+							</div>
 						</div>
-					</div>
-			<div id="wrapListaUsuarios" class="item">
-					<div class="arrastable">Lista Usuarios</div>
-					<div id="listaUsuarios">
-					</div>
-					<button id="btnActivarMedia"><s:text name="camaraOn"/></button>
-					<button id="comunicarse">Unirse VideoLLamada</button>
-					<button id="salirSala">Salir Sala</button>
-				</div>
-						<div id="wrapTablero" class="item">
+						
+						<div id="wrapTablero" class="item" style="margin-bottom:80px;">
 							<div id="moverTablero"><s:text name="tablero"/></div>
 							<div id="tablero">
 								<table>
@@ -172,10 +187,7 @@
 								<button id="borrarTodo">Borrar Todo</button><button id="rotar" class="btn-xs"><s:text name="rotarTablero"/></button>
 							</div>
 						</div>
-					
-			
-			
-					
+						
 					<div id="envolver" class="item">
 						<div id="mover"><s:text name="chat"/></div>
 						<div id="chat">
@@ -188,39 +200,26 @@
 				        </div>
 				        <input type="text" id="mensaje"/><button id="enviar"><s:text name="enviarMensaje"/></button>
 					</div>	
-						<div id="objetos" class="item">
-						<div class="arrastable">Insertar Objeto</div>
-						<button id="cancelarSeleccion">Cancelar Seleccion</button>
-							<div id="fichas">
-							<h2>Fichas</h2>
-							<ul>
-								<li id="bp">Peon Blancas</li>
-								<li id="bt">Torre Blancas</li>
-								<li id="bc">Caballo Blancas</li>
-								<li id="ba">Alfil Blancas</li>
-								<li id="bd">Dama Blancas</li>
-								<li id="br">Rey Blancas</li>
-							</ul>
-							<ul>
-								<li id="np">Peon Negras</li>
-								<li id="nt">Torre Negras</li>
-								<li id="nc">Caballo Negras</li>
-								<li id="na">Alfil Negras</li>
-								<li id="nd">Dama Negras</li>
-								<li id="nr">Rey Negras</li>
-							</ul>
-							</div>
-							<div id="colores">
-							
-							<h2>Colores</h2>
-							<ul>
-								<li id="r">Rojo</li>
-								<li id="a">Azul</li>
-								<li id="v">Verde</li>
-							</ul>
-							</div>
-						</div>
+					
+					
+				
+					
+					
+				<div id="wrapListaUsuarios" class="item">
+					<div class="arrastable">Lista Usuarios</div>
+					<div id="listaUsuarios">
+					</div>
+					<button id="btnActivarMedia"><s:text name="camaraOn"/></button>
+					<button id="comunicarse">Unirse VideoLLamada</button>
+					<button id="salirSala">Salir Sala</button>
+				</div>
+				
 						
+					
+			
+			
+					
+				
 					
 					
 				
@@ -233,7 +232,23 @@
 						</video>
 					</div>
 				<div id="listaVideos" class="item"></div>
-			
+			<div id="partidas" class="item" >
+						<div id="controlesPartida"><s:text name="listaPartidas"/></div>
+						<button id="crearPartida" class="btn-sm"><s:text name="nuevaPartida"/></button>
+						
+						<div id="tablaPartidas">
+							<table >
+								<thead>
+									<tr>
+										<th><s:text name="nombre"/></th>
+										<th><s:text name="accion"/></th>
+									</tr>
+								</thead>
+								<tbody id="listaPartidas">
+								</tbody>
+							</table>
+				   </div>
+			</div>
 			</div>
 			<div id="push">
 			</div>

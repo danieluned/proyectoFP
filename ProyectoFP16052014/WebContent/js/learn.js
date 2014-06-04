@@ -10,7 +10,7 @@ $(function(){
 	var coordenadaInicial = null;
 	var coordenadaFinal = null;
 	/** id para obtener el nombre del usuario */
-	
+	var entraPorPrimeraVez = true;
 	var nombre;
 	
 	/** la conexion websocket */
@@ -161,6 +161,7 @@ $(function(){
 
 	//WEBRTC variables y eventos  
 	//Variables
+	 
 	var conexiones = {};
 	var videos = {};
 	var peer;
@@ -431,7 +432,7 @@ $(function(){
 				}
 				break;
 			case "ui" :
-					//alert(json.modelo);
+				
 					switch (json.modelo){
 					case "normal":
 						mostrarControlesNormal();
@@ -444,6 +445,9 @@ $(function(){
 						break;
 						
 					}
+					
+						arreglar();
+					
 				break;
 				case "listaUsuarios":
 					//Webrtc
@@ -453,6 +457,21 @@ $(function(){
 					 */
 					
 					//Fin webrtc
+					for (var attr in conexiones){
+						var esta= false;
+						for (var i=0; i<json.usuarios.length ; i++){
+							if (attr == json.usuarios[i].nombre){
+								esta = true;
+							}
+							
+						}
+						if (!esta){
+							
+							
+							delete conexiones[attr];
+							$("video#video"+attr).attr("src","").parent().remove();
+						}
+					}
 					var str4 = "<ul>";
 					for (var i=0; i<json.usuarios.length ; i++){
 						str4+= "<li>"+json.usuarios[i].nombre+"</li>";
@@ -482,9 +501,10 @@ $(function(){
 								console.log("YA esta "+json.usuarios[i].nombre+" en la lista!!");
 							}
 						}
-						
+						 
 						
 					}
+					
 					/*
 					for(var prop in conexiones) {
 					     alert(prop+"->"+conexiones[prop]);
@@ -719,42 +739,41 @@ $(function(){
 			$("#"+json.efectos[i].casilla).addClass(json.efectos[i].efecto);
 		}
 	}
+	
 	function mostrarControlesIdle(){
 		$("#partidas").show();
-		$("#wrapTablero").hide();
 		$("#tiempos").hide();
-		$("#envolver").hide();
-		$("#wrapListaUsuarios").hide();
-		$("#wrapmivideo").hide();
-		$("#objetos").hide();
+		
+		//$("#wrapTablero, #envolver, #wrapListaUsuarios, #wrapmivideo ,#objetos").css("visibility","hidden");
+		$("#wrapTablero, #envolver, #wrapListaUsuarios, #wrapmivideo ,#objetos").hide();
+		
+		
+		$(".wraprival").remove();
+		for (var i in conexiones){
+			delete conexiones[i];
+			console.log(i+ "->"+ conexiones[i]);
+		}
 		
 	}
 	function mostrarControlesAdmin(){
 		$("#partidas").hide();
-		$("#wrapTablero").show();
 		$("#tiempos").show();
-		$("#envolver").show();
-		$("#wrapListaUsuarios").show();
-		$("#wrapmivideo").show();
-		$("#objetos").show();
 		
+		//$("#wrapTablero, #envolver, #wrapListaUsuarios, #wrapmivideo ,#objetos").css("visibility","visible");
+		$("#wrapTablero, #envolver, #wrapListaUsuarios, #wrapmivideo ,#objetos").show();
 	}
 	function mostrarControlesNormal(){
 		$("#partidas").hide();
-		$("#wrapTablero").show();
 		$("#tiempos").show();
-		$("#envolver").show();
-		$("#wrapListaUsuarios").show();
-		$("#wrapmivideo").show();
-		$("#objetos").show();
 		
+		//$("#wrapTablero, #envolver, #wrapListaUsuarios, #wrapmivideo ,#objetos").css("visibility","visible");
+		$("#wrapTablero, #envolver, #wrapListaUsuarios, #wrapmivideo ,#objetos").show();
 	}
 	
 	function activarModoPartida(){
-		$("#tiempos").show(1);
-		$("#partidas").hide(1);
-		$(window).height($(window).height()+1);
-		$(window).height($(window).height()-1);
+		$("#tiempos").show();
+		$("#partidas").hide();
+		alert("Modo Partida?");
 		
 	}
 	function ejecutar(accion){
@@ -771,7 +790,7 @@ $(function(){
 			break;
 			
 		}
-		
+		alert("Ejecutar Accion");
 		mostrarControlesIdle();
 		estado="idle";
 	}

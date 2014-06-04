@@ -596,7 +596,7 @@ $(function(){
 	function ejecutar(accion){
 		//alert(accion);
 		switch(accion){
-		case "Tablas":
+		case "tablas":
 			bootbox.alert("Has hecho tablas");
 			break;
 		case "ganas":

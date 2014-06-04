@@ -22,7 +22,7 @@ body {
    height: 100%;
   background-color:black;
   /* The html and body elements cannot have any padding or margin. */
-  /*overflow-x:hidden;*/
+  
 }
 
 
@@ -188,7 +188,7 @@ input{
 	color:black;
 }
 * {
-	/*color:white;*/
+	color:white;
 }
 .center-block {
 	float: none !important

@@ -22,7 +22,6 @@
 		<script src="js/jquery-ui-1.10.4.custom.js"></script>
 		<script src="js/bootstrap.js"></script>
 		<script src="js/bootbox.min.js"></script>
-		<script src="js/jquery.shapeshift.min.js"></script>
 		<script src="js/arrange.js"></script>
 		<script src="js/juego2.js"></script>
 		<script src="js/design.js"></script>
@@ -30,10 +29,7 @@
 		
 	</head>
 	 <body id="body">
-        <!--[if lt IE 7]>
-        	<p class="browsehappy">Estas usando un navegador <strong>muy cutre</strong>. Por favor instala la ultima version de Chrome o Firefox.</p>
-        <![endif]-->
-		<div class="container-fluid negroTransparente" id="wrap">
+        <div class="container-fluid negroTransparente" id="wrap">
 			<header class="row">
 				<div class="col-xs-12 col-xs-offset-0
 				            col-sm-12 col-sm-offset-0
