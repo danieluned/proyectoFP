@@ -1,4 +1,6 @@
-
+#listaUsuarios {
+	color:white;
+}
 #envolver {
 	position:absolute;
 	height: 250px;
@@ -19,6 +21,7 @@
 	width:200px;
 	height:100px;
 	margin-bottom:100px;
+	
 }
 
 #wrapmivideo video ,#wrapsuvideo video , .wraprival video{
@@ -28,7 +31,7 @@
 #wrapmivideo .ui-icon,#wrapsuvideo .ui-icon , .wraprival .ui-icon{
 	bottom: -10px;
 }
-*/
+
 button{
 color: black;	
 }
@@ -53,8 +56,8 @@ right:0px;
 #tiempos p {
 	color:yellow;
 }
-#tiempo{
-	background-color:rgba(240,100,100,0.5);
+#tiempos{
+	/*background-color:rgba(240,100,100,0.5);*/
 }
 
 #chat ul{
@@ -88,17 +91,14 @@ right:0px;
 }
 #partidas{
 	width:400px;
-	background: none repeat scroll 0% 0% rgba(0, 0, 0, 0.8);
+	background: none repeat scroll 0% 0% rgba(0, 0, 0, 0.4);
 	position:absolute;
-	
-	padding:0;
+	height: 130px;
+ 	overflow:hidden;
+	      
 }
 
-.item{
-	overflow:hidden;
-	
-	background: rgba(0,0,0,.4);
-}
+
 
 #controlesPartida , #mover, #tiempos, #moverTablero, #arrastrarmivideo,#arrastrarsuvideo ,.arrastable {
 	cursor: move;
@@ -108,17 +108,25 @@ right:0px;
 	font-weight:bolder;
 }
 #wrapTablero,#envolver,#tiempos,#partidas{
-	margin-bottom:50px;
+	margin:4px;
+	margin-bottom:20px;
 }
 #tablaPartidas{
-	overflow:scroll;
+	overflow-x:hidden;
+}
+#tablaPartidas *{
+	color:white;
+}
+#tablaPartidas button{
+	color:black;
 }
 div.gridster>ul>li{
 	background:red;
 	overflow:hidden;
 }
 .item{
-	overflow:visible;
+	
+	background: rgba(0,0,0,.4);
 }
 #tablaPartidas table{
 	background:black;
@@ -129,12 +137,12 @@ div.gridster>ul>li{
 	
 }
 #listaPartidas tr:nth-child(odd) {
-    background-color: grey;
+    background-color: rgba(100,100,100,.6);
     color:white;
     font-weight:bolder;
 }
 #listaPartidas tr:nth-child(even) {
-     background-color: black;
+     background-color: rgba(0,0,0,.6);
     color:white;
     font-weight:bolder;
 }

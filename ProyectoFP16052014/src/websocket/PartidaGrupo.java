@@ -1,6 +1,7 @@
 package websocket;
 
 import java.util.HashMap;
+import java.util.concurrent.ConcurrentHashMap;
 
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -11,8 +12,8 @@ public class PartidaGrupo {
 
 	//Las casillas seran:
 	//a1 a2 a3 .. b1 b2 b3 ... h1 h2 ..h8
-	HashMap<String,String> fichas = new HashMap<String,String>();
-	HashMap<String,String> colores = new HashMap<String,String>();
+	ConcurrentHashMap <String,String> fichas = new ConcurrentHashMap <String,String>();
+	ConcurrentHashMap <String,String> colores = new ConcurrentHashMap <String,String>();
 	boolean mediaOn = false;
 	String creador ="";
 	

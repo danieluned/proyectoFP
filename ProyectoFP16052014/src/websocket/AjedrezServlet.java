@@ -6,6 +6,7 @@ import java.nio.ByteBuffer;
 import java.nio.CharBuffer;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.concurrent.ConcurrentHashMap;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -28,7 +29,7 @@ public class AjedrezServlet extends WebSocketServlet implements Runnable{
 
   private static final long serialVersionUID = 1L;
   Thread tx = new Thread();
-  public static HashMap<String, Partida> partidas = new HashMap<String,Partida>();
+  public static ConcurrentHashMap<String, Partida> partidas = new ConcurrentHashMap <String,Partida>();
 
   public HashMap<String, WebSocketConnection> conexiones = new HashMap<String,WebSocketConnection>();
 

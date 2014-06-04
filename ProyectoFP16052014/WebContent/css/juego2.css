@@ -6,6 +6,7 @@
 .centrado{
 	text-align:center;
 }
+
 #pedirTablas , #pedirAbandonar{
 	
 }
@@ -37,9 +38,10 @@ body {
  text-align:center;
  padding-top:3px;
  overflow:hidden;
+ color:white;
 }
 #envolver{
-	margin-rigth: 10px;
+	margin-right: 10px;
 }
 header{
 	background-color: black !important;
@@ -295,6 +297,7 @@ left: 50px;
 }
 body{
 	background-image:url('../img/fondo.jpg');
+	background-repeat:no-repeat;
 	background-size:1680px 1050px;
 	-webkit-animation: animatedBackground 20s linear infinite;
 	animation: animatedBackground 20s linear infinite;

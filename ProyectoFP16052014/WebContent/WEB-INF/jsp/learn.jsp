@@ -53,10 +53,37 @@
 					<button id="cambiarControles" class="btn-xs">Controles</button>
 					-->
 					<!--<button id="click">Animacion</button>-->
-				<
+				
 			</header>
 			<div id="contenido">
-			
+			<div id="partidas" class="item ">
+						<div id="controlesPartida"><s:text name="listaPartidas"/></div>
+						<button id="crearPartida" class="btn-sm"><s:text name="nuevaPartida"/></button>
+						
+						<div id="tablaPartidas">
+							<table >
+								<thead>
+									<tr>
+										<th><s:text name="blancas"/></th>
+										<th><s:text name="negras"/></th>
+										<th><s:text name="estado"/></th>
+										<th><s:text name="turno"/></th>
+										<th><s:text name="accion"/></th>
+									</tr>
+								</thead>
+								<tbody id="listaPartidas">
+								</tbody>
+							</table>
+						</div>
+					</div>
+			<div id="wrapListaUsuarios" class="item">
+					<div class="arrastable">Lista Usuarios</div>
+					<div id="listaUsuarios">
+					</div>
+					<button id="btnActivarMedia"><s:text name="camaraOn"/></button>
+					<button id="comunicarse">Unirse VideoLLamada</button>
+					<button id="salirSala">Salir Sala</button>
+				</div>
 						<div id="wrapTablero" class="item">
 							<div id="moverTablero"><s:text name="tablero"/></div>
 							<div id="tablero">
@@ -194,36 +221,10 @@
 							</div>
 						</div>
 						
-					<div id="partidas" class="item">
-						<div id="controlesPartida"><s:text name="listaPartidas"/></div>
-						<button id="crearPartida" class="btn-sm"><s:text name="nuevaPartida"/></button>
-						
-						<div id="tablaPartidas">
-							<table >
-								<thead>
-									<tr>
-										<th><s:text name="blancas"/></th>
-										<th><s:text name="negras"/></th>
-										<th><s:text name="estado"/></th>
-										<th><s:text name="turno"/></th>
-										<th><s:text name="accion"/></th>
-									</tr>
-								</thead>
-								<tbody id="listaPartidas">
-								</tbody>
-							</table>
-						</div>
-					</div>
+					
 					
 				
-				<div id="wrapListaUsuarios" class="item">
-					<div class="arrastable">Lista Usuarios</div>
-					<div id="listaUsuarios">
-					</div>
-					<button id="btnActivarMedia"><s:text name="camaraOn"/></button>
-					<button id="comunicarse">Unirse VideoLLamada</button>
-					<button id="salirSala">Salir Sala</button>
-				</div>
+				
 				
 				
 				<div class="item" id="wrapmivideo" >

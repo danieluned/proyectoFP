@@ -586,12 +586,12 @@ $(function(){
 		}
 	}
 	function mostrarControlesIdle(){
-		$("#partidas").css("visibility","visible");
-		$("#tiempos").css("visibility","hidden");
+		$("#partidas").show();
+		$("#tiempos").hide();
 	}
 	function activarModoPartida(){
-		$("#tiempos").css("visibility","visible");
-		$("#partidas").css("visibility","hidden");
+		$("#partidas").hide();
+		$("#tiempos").show();
 	}
 	function ejecutar(accion){
 		//alert(accion);

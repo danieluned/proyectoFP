@@ -1,5 +1,5 @@
 $(function(){
-	
+	mostrarControlesIdle();
 	/**
 	 * Para los cursores
 	 * http://jsfiddle.net/wNKcU/5/
@@ -34,7 +34,7 @@ $(function(){
 	pintarCasillas(divd);
 	colocarFichas(divd);
 	conectar();
-	mostrarControlesIdle();
+	/*mostrarControlesIdle();*/
 	//cerrarBtnconex();
 	/** indicarle al chat que tiene pestañas */
 	$("#chat").tabs();
@@ -431,7 +431,7 @@ $(function(){
 				}
 				break;
 			case "ui" :
-					alert(json.modelo);
+					//alert(json.modelo);
 					switch (json.modelo){
 					case "normal":
 						mostrarControlesNormal();
@@ -467,11 +467,11 @@ $(function(){
 						if (user != json.usuarios[i].nombre){
 							if (!conexiones[json.usuarios[i].nombre]){
 								var divs = "<div class='item wraprival'><div class='arrastable'>"+json.usuarios[i].nombre+"</div><video id='video"+json.usuarios[i].nombre+"' controls autoplay></video></div>";
-								$("#listaVideos")
+								
+								$("#contenido")
 								.append(divs);
-								$(divs).resizable({
-									 handles: 'se'
-								 });
+								
+								
 								console.log("No esta "+json.usuarios[i].nombre+" en la lista.. añadiendo conexion sinpeer y video");
 								conexiones[json.usuarios[i].nombre] = "sinpeer";
 								refrescarDraggable();
@@ -721,25 +721,41 @@ $(function(){
 	}
 	function mostrarControlesIdle(){
 		$("#partidas").show();
-		
-		$("#wrapTablero , #tiempos, #envolver, #wrapListaUsuarios, #wrapmivideo, #objetos").hide();
-		
+		$("#wrapTablero").hide();
+		$("#tiempos").hide();
+		$("#envolver").hide();
+		$("#wrapListaUsuarios").hide();
+		$("#wrapmivideo").hide();
+		$("#objetos").hide();
 		
 	}
 	function mostrarControlesAdmin(){
 		$("#partidas").hide();
-		$("#wrapTablero , #tiempos, #envolver, #wrapListaUsuarios, #wrapmivideo ,#objetos").show();
-		
+		$("#wrapTablero").show();
+		$("#tiempos").show();
+		$("#envolver").show();
+		$("#wrapListaUsuarios").show();
+		$("#wrapmivideo").show();
+		$("#objetos").show();
 		
 	}
 	function mostrarControlesNormal(){
 		$("#partidas").hide();
-		$("#wrapTablero , #tiempos, #envolver, #wrapListaUsuarios, #wrapmivideo ,#objetos").show();
+		$("#wrapTablero").show();
+		$("#tiempos").show();
+		$("#envolver").show();
+		$("#wrapListaUsuarios").show();
+		$("#wrapmivideo").show();
+		$("#objetos").show();
 		
 	}
+	
 	function activarModoPartida(){
-		$("#tiempos").css("visibility","visible");
-		$("#partidas").css("visibility","hidden");
+		$("#tiempos").show(1);
+		$("#partidas").hide(1);
+		$(window).height($(window).height()+1);
+		$(window).height($(window).height()-1);
+		
 	}
 	function ejecutar(accion){
 		//alert(accion);

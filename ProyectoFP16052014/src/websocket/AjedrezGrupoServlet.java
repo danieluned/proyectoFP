@@ -6,6 +6,7 @@ import java.nio.ByteBuffer;
 import java.nio.CharBuffer;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.concurrent.ConcurrentHashMap;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -28,9 +29,9 @@ import websocket.AjedrezServlet.WebSocketConnection;
 @WebServlet(urlPatterns={"/grupo"})
 public class AjedrezGrupoServlet extends WebSocketServlet{
 
-	public static HashMap<String, PartidaGrupo> partidas = new HashMap<String,PartidaGrupo>();
+	public static ConcurrentHashMap<String, PartidaGrupo> partidas = new ConcurrentHashMap<String,PartidaGrupo>();
 
-	public HashMap<String, WebSocketConnection> conexiones = new HashMap<String,WebSocketConnection>();
+	public ConcurrentHashMap<String, WebSocketConnection> conexiones = new ConcurrentHashMap<String,WebSocketConnection>();
 
 	public StreamInbound createWebSocketInbound(String subProtocol, HttpServletRequest request){
 		 // String connectionId = request.getSession().getId();

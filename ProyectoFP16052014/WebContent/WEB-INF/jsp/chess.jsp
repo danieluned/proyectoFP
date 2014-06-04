@@ -22,6 +22,7 @@
 		<script src="js/jquery-ui-1.10.4.custom.js"></script>
 		<script src="js/bootstrap.js"></script>
 		<script src="js/bootbox.min.js"></script>
+		<script src="js/jquery.shapeshift.min.js"></script>
 		<script src="js/arrange.js"></script>
 		<script src="js/juego2.js"></script>
 		<script src="js/design.js"></script>
@@ -56,8 +57,36 @@
 				</div>
 			</header>
 			<div id="contenido">
+			
 				
-						<div id="wrapTablero">
+						<div id="tiempos" class="item">
+							<p><s:text name="tiempoBlancas"/><span id="tiempoBlancas"></span></p>
+							<p><s:text name="tiempoNegras"/><span id="tiempoNegras"></span></p>
+							<button id="rotar" class="btn-xs"><s:text name="rotarTablero"/></button>
+							<button id="pedirTablas" class="btn-sm"><s:text name="ofrecerTablas"/></button>
+							<button id="pedirAbandonar" class="btn-sm btn-danger"><s:text name="ofrecerAbandono"/></button>
+						</div>
+				<div id="partidas" class="item">
+						<div id="controlesPartida"><s:text name="listaPartidas"/></div>
+						<button id="crearPartida" class="btn-sm"><s:text name="nuevaPartida"/></button>
+						
+						<div id="tablaPartidas">
+							<table >
+								<thead>
+									<tr>
+										<th><s:text name="blancas"/></th>
+										<th><s:text name="negras"/></th>
+										<th><s:text name="estado"/></th>
+										<th><s:text name="turno"/></th>
+										<th><s:text name="accion"/></th>
+									</tr>
+								</thead>
+								<tbody id="listaPartidas">
+								</tbody>
+							</table>
+						</div>
+					</div>
+						<div id="wrapTablero" class="item">
 							<div id="moverTablero"><s:text name="tablero"/></div>
 							<div id="tablero">
 								<table>
@@ -164,33 +193,7 @@
 				        <input type="text" id="mensaje"/><button id="enviar"><s:text name="enviarMensaje"/></button>
 					</div>	
 					
-						<div id="tiempos" class="item">
-							<p><s:text name="tiempoBlancas"/><span id="tiempoBlancas"></span></p>
-							<p><s:text name="tiempoNegras"/><span id="tiempoNegras"></span></p>
-							<button id="rotar" class="btn-xs"><s:text name="rotarTablero"/></button>
-							<button id="pedirTablas" class="btn-sm"><s:text name="ofrecerTablas"/></button>
-							<button id="pedirAbandonar" class="btn-sm btn-danger"><s:text name="ofrecerAbandono"/></button>
-						</div>
-					<div id="partidas" class="item">
-						<div id="controlesPartida"><s:text name="listaPartidas"/></div>
-						<button id="crearPartida" class="btn-sm"><s:text name="nuevaPartida"/></button>
-						
-						<div id="tablaPartidas">
-							<table >
-								<thead>
-									<tr>
-										<th><s:text name="blancas"/></th>
-										<th><s:text name="negras"/></th>
-										<th><s:text name="estado"/></th>
-										<th><s:text name="turno"/></th>
-										<th><s:text name="accion"/></th>
-									</tr>
-								</thead>
-								<tbody id="listaPartidas">
-								</tbody>
-							</table>
-						</div>
-					</div>
+					
 					
 			
 				
