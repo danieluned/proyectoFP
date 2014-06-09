@@ -50,7 +50,8 @@
 			<result>WEB-INF/jsp/registro.jsp</result>
 		</action>
 		<action name="login" class="proyectoFP.actions.LoginAction">
-			<result>WEB-INF/jsp/principal.jsp</result>
+			<result name="success">WEB-INF/jsp/principal.jsp</result>
+			<result name="fail">WEB-INF/jsp/index.jsp</result>
 		</action>
 		<action name="deslogearse" class="proyectoFP.actions.DeslogearseAction">
 			<result>WEB-INF/jsp/index.jsp</result>

@@ -58,22 +58,23 @@
 							<table>
 								<tr>
 									<td>
-										<label for="nombre" ><s:text name="nombre"/></label>
+										<label for="nombre" ><s:text name="usuario.nombre"/></label>
 									</td>
 								</tr>
 								<tr>
 									<td>
-										<input type="text" id="nombre" name="nombre">
+									
+										<input type="text" id="nombre" name="usuario.nombre">
 									</td>
 								</tr>
 								<tr>
 									<td>
-										<label for="password" ><s:text name="password"/></label>
+										<label for="password" ><s:text name="usuario.password"/></label>
 									</td>
 								</tr>
 								<tr>
 									<td>
-										<input type="text" id="password" name="password">
+										<input type="text" id="password" name="usuario.password">
 									</td>
 								</tr>
 								<tr>
