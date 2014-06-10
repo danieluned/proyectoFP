@@ -19,11 +19,13 @@ public class LoginAction extends ActionSupport implements SessionAware {
 
 	public String execute() throws Exception {
 		
-		System.out.printf("Login: Nombre: %s - Password: %s %n", new Object[] {
+		System.out.printf("Login-> Nombre: %s - Password: %s ", new Object[] {
 				this.usuario.getUsuario(), this.usuario.getPassword() });
-		if (FactoriaDAO.obtenerDAOUsuario("MySql").verificarUsuario(usuario.getUsuario()) !=null){
+		Usuario user = FactoriaDAO.obtenerDAOUsuario("MySql").verificarUsuario(usuario);
+		if (user !=null){
 			addActionMessage(getText("loginCorrecto"));
-			this.session.put("usuario", this.usuario);
+			this.session.put("usuario", user.getUsuario());
+			this.session.put("json",user.getJsonConfi());
 			return "success";
 		}else{
 			addActionMessage(getText("loginIncorrecto"));

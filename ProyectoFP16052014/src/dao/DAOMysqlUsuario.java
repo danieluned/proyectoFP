@@ -5,6 +5,7 @@ import java.util.ArrayList;
 
 
 
+
 import beans.Usuario;
 import db.DBFacade;
 
@@ -21,12 +22,13 @@ public class DAOMysqlUsuario implements InterfazDAOUsuario {
 	}
 	
 	@Override
-	public Usuario verificarUsuario(String usuario) throws Exception {
+	public Usuario verificarUsuario(Usuario usuario) throws Exception {
 		Usuario user =null;
 		
 		try{
 			db.abrirConexion();
-			String sql =  "select * from usuario where usuario like '"+usuario+"';";
+			String sql =  "select * from usuario where usuario like '"+usuario.getUsuario()+"' and password like '"+usuario.getPassword()+"';";
+			System.out.println(sql);
 			ResultSet rs = db.ejecutarConsulta(sql);
 			while (rs.next()){
 				user = new Usuario();
@@ -78,6 +80,12 @@ public class DAOMysqlUsuario implements InterfazDAOUsuario {
 			}
 		}
 		return correcto;
+	}
+
+	@Override
+	public Usuario verificarUsuario(String usuario) throws Exception {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 }

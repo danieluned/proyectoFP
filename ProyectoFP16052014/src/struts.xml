@@ -48,6 +48,7 @@
 		<!-- Actions -->
 		<action name="completarRegistro" class="proyectoFP.actions.RegistroAction">
 			<result>WEB-INF/jsp/registro.jsp</result>
+			<result name="fail">WEB-INF/jsp/registro.jsp</result>
 		</action>
 		<action name="login" class="proyectoFP.actions.LoginAction">
 			<result name="success">WEB-INF/jsp/principal.jsp</result>

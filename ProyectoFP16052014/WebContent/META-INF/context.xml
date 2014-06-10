@@ -1,10 +1,23 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Context>
     <WatchedResource>WEB-INF/web.xml</WatchedResource>
+    <!-- Local Database -->
+	 <!--
 	<Resource name="proyectofp"
 	 auth="Container" type="javax.sql.DataSource" 
 	 maxActive="20" maxIdle="10" maxWait="5000" 
 	 username="root" password="root" 
 	 driverClassName="com.mysql.jdbc.Driver" 
 	 url="jdbc:mysql://localhost:3306/proyectofp"/>
+	  -->
+	  
+	  <!-- Cloudbees Database -->
+	 
+	<Resource name="proyectofp"
+	 auth="Container" type="javax.sql.DataSource" 
+	 maxActive="20" maxIdle="10" maxWait="5000" 
+	 username="b76d8d1d643614" password="e0d3cbf9" 
+	 driverClassName="com.mysql.jdbc.Driver" 
+	 url="jdbc:mysql://us-cdbr-cb-east-01.cleardb.net:3306/cb_proyectofp"/>
+	  
 </Context>

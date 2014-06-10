@@ -115,7 +115,7 @@ public class DBFacade {
 			}
 			prepS = con.prepareStatement(statement);
 			result = prepS.executeUpdate(statement);
-			
+			System.out.println(statement);
 			return result;
 		}catch (SQLException e){
 			throw new Exception(e);

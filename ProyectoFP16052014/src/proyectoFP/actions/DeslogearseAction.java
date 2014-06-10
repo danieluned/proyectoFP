@@ -17,6 +17,7 @@ public class DeslogearseAction extends ActionSupport
     System.out.println("Deslogeado");
     addActionMessage(getText("desloginCorrecto"));
     this.session.remove("usuario");
+    this.session.remove("json");
     return "success";
   }
 
