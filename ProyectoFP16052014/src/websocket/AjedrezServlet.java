@@ -403,6 +403,7 @@ public class AjedrezServlet extends WebSocketServlet implements Runnable{
         case "ping":
         	
         break;
+       
         case "actualizarPartidas":
         	 
         	break;

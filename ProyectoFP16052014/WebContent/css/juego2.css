@@ -10,6 +10,9 @@
 #pedirTablas , #pedirAbandonar{
 	
 }
+.test {
+ 	cursor:url('../img/piezas/ba.png'), auto;
+}
 
 #listaVideos video{
 	width:100%;
@@ -296,11 +299,13 @@ left: 50px;
 	100% { background-position: 0px 0; }
 }
 body{
-	background-image:url('../img/fondo.jpg');
-	background-repeat:no-repeat;
-	background-size:1680px 1050px;
+	
+	background-image:url('../img/aj4.jpg');
+	
+	
 	-webkit-animation: animatedBackground 20s linear infinite;
 	animation: animatedBackground 20s linear infinite;
+	
 }
 #tablero {
 	margin:auto;
@@ -329,8 +334,53 @@ body{
 	background-position:center; 
 	background-size:100% 100%;
 }
+.cbp{
+	cursor: url('../img/piezas/bp.png'),auto;
+}
+.cbt{
+	cursor: url('../img/piezas/bt.png'),auto;
+}
+.cbc{
+	cursor: url('../img/piezas/bc.png'),auto;
+}
+.cba{
+	cursor: url('../img/piezas/ba.png'),auto;
+}
+.cbd{
+	cursor: url('../img/piezas/bd.png'),auto;
+}
+.cbr{
+	cursor: url('../img/piezas/br.png'),auto;
+}
+.cnp{
+	cursor: url('../img/piezas/np.png'),auto;
+}
+.cnt{
+	cursor: url('../img/piezas/nt.png'),auto;
+}
+.cnc{
+	cursor: url('../img/piezas/nc.png'),auto;
+}
+.cna{
+	cursor: url('../img/piezas/na.png'),auto;
+}
+.cnr{
+	cursor: url('../img/piezas/nr.png'),auto;
+}
+.cnd{
+	cursor: url('../img/piezas/nd.png'),auto;
+}
+.cr{
+	cursor: url('../img/r.png'),auto;
+}
+.cv{
+	cursor: url('../img/v.png'),auto;
+}
+.ca{
+	cursor: url('../img/a.png'),auto;
+}
 .bp{
-	background-image: url('../img/piezas/bp.svg');
+	background-image: url('../img/piezas/bp.png');
 }
 .bt{
 	background-image: url('../img/piezas/bt.svg');
@@ -372,13 +422,23 @@ body{
 	outline: 0.3em solid red;
 }
 .r{
-	background-color:red;
+	/*background-image: url('../img/piezas/r.png');*/
+
+	/*background-color:red ;*/
+	-webkit-box-shadow: inset 0px 0px 0px 50px rgba(255, 50, 50, 0.4);
+-moz-box-shadow:    inset 0px 0px 0px 50px rgba(255, 50, 50, 0.4);
+box-shadow:         inset 0px 0px 0px 50px rgba(255, 50, 50, 0.4);
 }
 .a{
-	background-color:blue;
+	
+	-webkit-box-shadow: inset 0px 0px 0px 50px rgba(50, 50, 255, 0.4);
+-moz-box-shadow:    inset 0px 0px 0px 50px rgba(50, 50, 255, 0.4);
+box-shadow:         inset 0px 0px 0px 50px rgba(50, 50, 255, 0.4);
 }
 .v{
-	background-color:green;
+	-webkit-box-shadow: inset 0px 0px 0px 50px rgba(50, 255, 50, 0.4);
+-moz-box-shadow:    inset 0px 0px 0px 50px rgba(50, 255, 50, 0.4);
+box-shadow:         inset 0px 0px 0px 50px rgba(50, 255, 50, 0.4);
 }
 /**
 .r{

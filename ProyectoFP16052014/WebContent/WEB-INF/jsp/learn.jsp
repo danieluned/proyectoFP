@@ -71,31 +71,31 @@
 						<button id="cancelarSeleccion">Cancelar Seleccion</button>
 							<div id="fichas">
 							<h2>Fichas</h2>
-							<ul>
-								<li id="bp">Peon Blancas</li>
-								<li id="bt">Torre Blancas</li>
-								<li id="bc">Caballo Blancas</li>
-								<li id="ba">Alfil Blancas</li>
-								<li id="bd">Dama Blancas</li>
-								<li id="br">Rey Blancas</li>
-							</ul>
-							<ul>
-								<li id="np">Peon Negras</li>
-								<li id="nt">Torre Negras</li>
-								<li id="nc">Caballo Negras</li>
-								<li id="na">Alfil Negras</li>
-								<li id="nd">Dama Negras</li>
-								<li id="nr">Rey Negras</li>
-							</ul>
+							
+								<div id="bp" class="bp"></div>
+								<div id="bt" class="bt"></div>
+								<div id="bc" class="bc"></div>
+								<div id="ba" class="ba"></div>
+								<div id="bd" class="bd"></div>
+								<div id="br" class="br"></div>
+							
+							
+								<div id="np" class="np"></div>
+								<div id="nt" class="nt"></div>
+								<div id="nc" class="nc"></div>
+								<div id="na" class="na"></div>
+								<div id="nd" class="nd"></div>
+								<div id="nr" class="nr"></div>
+							
 							</div>
 							<div id="colores">
 							
 							<h2>Colores</h2>
-							<ul>
-								<li id="r">Rojo</li>
-								<li id="a">Azul</li>
-								<li id="v">Verde</li>
-							</ul>
+							
+								<div id="r" class="r"></div>
+								<div id="a" class="a"></div>
+								<div id="v" class="v"></div>
+							
 							</div>
 						</div>
 						

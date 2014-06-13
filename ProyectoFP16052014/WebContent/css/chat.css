@@ -15,6 +15,14 @@
 #wrapListaUsuarios ,#objetos{
 	position:absolute;
 }
+#colores div, #fichas div{
+	display:inline-block;
+	width:30px;
+	height:30px;
+}
+#colores div:hover, #fichas div:hover,#tablero td:hover{
+	outline:2px solid orange;
+}
 
 #wrapmivideo,#wrapsuvideo , .wraprival{
 	position:absolute;
@@ -125,7 +133,10 @@ div.gridster>ul>li{
 	overflow:hidden;
 }
 .item{
-	
+	border:2px solid black;
+	-webkit-box-shadow: 12px 5px 18px 4px rgba(50, 50, 50, 1);
+-moz-box-shadow:    12px 5px 18px 4px rgba(50, 50, 50, 1);
+box-shadow:         12px 5px 18px 4px rgba(50, 50, 50, 1);
 	background: rgba(0,0,0,.4);
 }
 #tablaPartidas table{

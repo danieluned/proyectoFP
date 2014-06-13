@@ -186,6 +186,22 @@ public class AjedrezGrupoServlet extends WebSocketServlet{
 			}
 		}
 	}
+	public void quitarTodo(String sala){
+		
+		if (sala != ""){
+			partidas.get(sala).vaciarTodo();
+		}
+		for (String usuario : partidas.get(sala).usuarios.keySet()){
+			try {
+				
+				
+				conexiones.get(usuario).getWsOutbound().writeTextMessage(CharBuffer.wrap("{\"tipo\":\"quitarTodo\"}"));
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+	}
 	public void colocarEfecto(String efecto,String casilla,String sala){
 		partidas.get(sala).ponerEfecto(casilla, efecto);
 		for (String usuario : partidas.get(sala).usuarios.keySet()){
@@ -478,6 +494,10 @@ public void enviarRespuesta(String destino, String procedencia, JSONObject descr
         	
         	break;
         case "pedirTablas":
+        	
+        	break;
+        case "pedirQuitarTodo":
+        	quitarTodo(obtenerSalaUsuario(this.nombre));
         	
         	break;
         case "crearPartida":

@@ -44,11 +44,11 @@ $(function(){
 	$(window).resize(ajuste);
 	//Evento para recoger coordenadas 
 	//$("#tablero td").click(recogerCoordenada);
-	$("#objetos li").click(activarFigura);
+	$("#fichas div, #colores div").click(activarFigura);
 	
 	$("#tablero td").click(accionTablero);
 	$("#cancelarSeleccion").click(cancelarSeleccion);
-	$("#borrarTodo").click(quitarTodasLasFichas);
+	$("#borrarTodo").click(pedirQuitarTodo);
 	/** Cuando presionamos el boton de conectar
 		ejecutamos la conexion */
 	
@@ -399,6 +399,10 @@ $(function(){
 		var str = '{ "tipo":"pedirAbandono"}';
 		ws.send(str);
 	}
+	function pedirQuitarTodo(){
+		var str = '{ "tipo":"pedirQuitarTodo"}';
+		ws.send(str);
+	}
 	function enviarTablas(){
 		var str = '{ "tipo":"pedirTablas"}';
 		ws.send(str);
@@ -706,6 +710,9 @@ $(function(){
 						}
 						});
 					break;
+				case "quitarTodo":
+					borrarTodo();
+					break;
 				default:
 					
 					break;
@@ -730,13 +737,16 @@ $(function(){
 	function reproducirTablero(json){
 		quitarTodasLasFichas();
 		for (var i =0; i<json.fichas.length;i++){
-			$("#"+json.fichas[i].casilla).addClass(json.fichas[i].pieza);
+			/*$("#"+json.fichas[i].casilla).addClass(json.fichas[i].pieza);*/
+			var clases = $("#"+json.fichas[i].casilla).attr("class");
+			$("#"+json.fichas[i].casilla).attr("class",json.fichas[i].pieza+" "+clases);
 		}
 	}
 	function reproducirEfectos(json){
 		quitarTodasLosEfectos();
 		for (var i=0; i<json.efectos.length;i++){
-			$("#"+json.efectos[i].casilla).addClass(json.efectos[i].efecto);
+			var clases = $("#"+json.efectos[i].casilla).attr("class");
+			$("#"+json.efectos[i].casilla).attr("class",json.efectos[i].efecto+" "+clases);
 		}
 	}
 	
@@ -975,13 +985,21 @@ $(function(){
 	}
 	function cancelarSeleccion(){
 		seleccionadoObjecto = false;
+		
+		$("#contenido").removeClass(claseActual);
 		ficha = null;
+		
 	}
-	
+	var claseActual ="";
 	function activarFigura(){
 		seleccionadoObjecto = true;
-		ficha = $(this).attr("id");
 		
+		ficha = $(this).attr("id");
+		/**Para el cursor*/
+		$("#contenido").removeClass(claseActual);
+		var clase = "c"+ficha;
+		$("#contenido").addClass(clase);
+		claseActual = clase;
 	}
 	var ficha =null;
 	function quitarEfecto(ficha,casilla){
@@ -1077,6 +1095,10 @@ $(function(){
 	function enviarCoordenadas(){
 		ws.send(movimientoJSON(coordenadaInicial,coordenadaFinal));
 		//moverFicha(coordenadaInicial,coordenadaFinal);
+	}
+	function borrarTodo(){
+		quitarTodasLasFichas();
+		quitarTodasLosEfectos();
 	}
 	function quitarTodasLasFichas(){
 		$("#tablero td").each(function(){

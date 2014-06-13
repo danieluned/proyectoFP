@@ -22,6 +22,10 @@ public class PartidaGrupo {
 	public PartidaGrupo(String creador){
 		this.creador = creador;
 	}
+	public void vaciarTodo(){
+		fichas = new ConcurrentHashMap <String,String>();
+		colores = new ConcurrentHashMap <String,String>();
+	}
 	public void addUsuario(String usuario){
 		usuarios.put(usuario, "");
 	}
