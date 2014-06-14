@@ -436,7 +436,7 @@ $(function(){
 				}
 				break;
 			case "ui" :
-				
+				cancelarSeleccion();
 					switch (json.modelo){
 					case "normal":
 						mostrarControlesNormal();
@@ -679,7 +679,7 @@ $(function(){
 					crearFicha(ficha,color,posicion);
 				break;
 				case "finPartida":
-						
+					cancelarSeleccion();
 						if (estado =="jugando"){
 							
 							ejecutar(json.accion);

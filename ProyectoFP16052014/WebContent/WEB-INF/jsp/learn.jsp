@@ -67,10 +67,10 @@
 				
 				
 						<div id="objetos" class="item">
-						<div class="arrastable">Insertar Objeto</div>
-						<button id="cancelarSeleccion">Cancelar Seleccion</button>
+						<div class="arrastable"><s:text name="insertarFichaColor"/></div>
+						<button id="cancelarSeleccion"><s:text name="cancelarSeleccion"/></button>
 							<div id="fichas">
-							<h2>Fichas</h2>
+							
 							
 								<div id="bp" class="bp"></div>
 								<div id="bt" class="bt"></div>
@@ -90,7 +90,7 @@
 							</div>
 							<div id="colores">
 							
-							<h2>Colores</h2>
+							
 							
 								<div id="r" class="r"></div>
 								<div id="a" class="a"></div>
@@ -184,7 +184,7 @@
 										<td id="h1"></td>
 									</tr>
 								</table>
-								<button id="borrarTodo">Borrar Todo</button><button id="rotar" class="btn-xs"><s:text name="rotarTablero"/></button>
+								<button id="borrarTodo"><s:text name="borrarTodo"/></button><button id="rotar" class="btn-xs"><s:text name="rotarTablero"/></button>
 							</div>
 						</div>
 						
@@ -206,12 +206,12 @@
 					
 					
 				<div id="wrapListaUsuarios" class="item">
-					<div class="arrastable">Lista Usuarios</div>
+					<div class="arrastable"><s:text name="listaUsuarios"/></div>
 					<div id="listaUsuarios">
 					</div>
 					<button id="btnActivarMedia"><s:text name="camaraOn"/></button>
-					<button id="comunicarse">Unirse VideoLLamada</button>
-					<button id="salirSala">Salir Sala</button>
+					<button id="comunicarse"><s:text name="unirseVideoLLamada"/></button>
+					<button id="salirSala"><s:text name="salirSala"/></button>
 				</div>
 				
 						
