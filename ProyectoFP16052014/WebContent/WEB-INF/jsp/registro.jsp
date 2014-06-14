@@ -61,7 +61,7 @@
 								</tr>
 								<tr>
 									<td>
-										<input type="text" id="nombre" name="usuario.usuario" required>
+										<input type="text" id="nombre" name="usuario.usuario" required pattern="[a-zA-Z0-9]*">
 									</td>
 								</tr>
 								<tr>
@@ -71,19 +71,22 @@
 								</tr>
 							     <tr>
 									<td>
-										<input type="text" name="usuario.password" id="password" required/>
+										<input type="text" name="usuario.password" id="password" required pattern="[a-zA-Z0-9]*"/>
 									</td>
 								</tr>
 								<tr>
 									<td>
 										<button class="btn-lg btn-success"><s:text name="crearCuenta"/></button>
 									</td>
+									
 								</tr>
+								<tr><td>
+								<a href="inicio" class="btn-lg btn-danger"><s:text name="volver"/></a>
+								</td></tr>
 							</table>
 						</s:form>
 					</div>
 						<s:actionmessage/>
-						<a href="inicio" ><s:text name="volver"/></a>
 					</div>
 				</div>
 			
