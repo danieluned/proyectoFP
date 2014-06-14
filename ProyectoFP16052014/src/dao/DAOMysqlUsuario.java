@@ -17,7 +17,7 @@ public class DAOMysqlUsuario implements InterfazDAOUsuario {
 			db = new DBFacade();
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
-			throw new Exception(e);
+			System.out.println("Error creando DBDacade");
 		}
 	}
 	
@@ -37,14 +37,14 @@ public class DAOMysqlUsuario implements InterfazDAOUsuario {
 				user.setJsonConfi(rs.getString("jsonConfi"));
 			}
 		}catch (Exception e){
-			throw new Exception(e);
+			System.out.println("Error verificando el usuario");
 		}
 		finally {
 			try{
 				
 				db.cerrarConexion();
 			}catch (Exception e1){
-				throw new Exception (e1);
+				System.out.println("Error cerrando la conexión");
 			}
 		}
 		return user;

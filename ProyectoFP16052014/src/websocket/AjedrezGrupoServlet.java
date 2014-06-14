@@ -342,6 +342,9 @@ public void enviarRespuesta(String destino, String procedencia, JSONObject descr
    
     public void onClose(int status)
     {
+    	try{
+    		
+    	
     	quitarConexion(this.nombre);
     	String sala = obtenerSalaUsuario(this.nombre);
     	if (sala != ""){
@@ -351,7 +354,9 @@ public void enviarRespuesta(String destino, String procedencia, JSONObject descr
     		
     		
     	}
-    	
+    	}catch(Exception e){
+    		System.out.println("Error al intentar cerrar todo con un usuario");
+    	}
     }
 
     public void onTextMessage(CharBuffer charBuffer) throws IOException {

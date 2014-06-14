@@ -19,6 +19,9 @@ import java.io.PrintStream;
 public class RegistroAction extends ActionSupport {
 	private Usuario usuario;
 	public String execute() throws Exception {
+		try{
+			
+		
 		InterfazDAOUsuario daoUsuario = FactoriaDAO.obtenerDAOUsuario("MySql");
 		if (daoUsuario.verificarUsuario(usuario)==null){
 			if (daoUsuario.insertarUsuario(usuario)){
@@ -33,7 +36,10 @@ public class RegistroAction extends ActionSupport {
 			addActionMessage(getText("usuarioYaExiste"));
 			return "fail";
 		}
-		
+		}catch(Exception e){
+			addActionMessage(getText("errorRegistro"));
+			return "fail";
+		}
 		
 	}
 	public Usuario getUsuario() {

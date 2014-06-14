@@ -25,6 +25,8 @@ public class LoginAction extends ActionSupport implements SessionAware {
 	private Map<String, Object> session;
 
 	public String execute() throws Exception {
+		try{
+			
 		
 		System.out.printf("Login-> Nombre: %s - Password: %s ", new Object[] {
 				this.usuario.getUsuario(), this.usuario.getPassword() });
@@ -38,7 +40,11 @@ public class LoginAction extends ActionSupport implements SessionAware {
 			addActionMessage(getText("loginIncorrecto"));
 			return "fail";
 		}
-		
+		}catch(Exception e){
+			addActionMessage(getText("errorProcesando"));
+			return "fail";
+
+		}
 		
 	}
 	

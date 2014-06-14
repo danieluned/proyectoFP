@@ -21,11 +21,18 @@ public class DeslogearseAction extends ActionSupport
   public String execute()
     throws Exception
   {
+	  try {
+		  
+	 
     System.out.println("Deslogeado");
     addActionMessage(getText("desloginCorrecto"));
     this.session.remove("usuario");
     this.session.remove("json");
     return "success";
+	  }catch(Exception e){
+		  addActionMessage(getText("desloginIncorrecto"));
+		  return "fail";
+	  }
   }
 
   public void setSession(Map<String, Object> arg0)
