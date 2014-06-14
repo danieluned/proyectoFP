@@ -24,7 +24,14 @@ import org.json.simple.parser.ParseException;
 
 import websocket.AjedrezServlet.WebSocketConnection;
 
-
+/**
+ * Clase AjedrezGrupoServlet
+ * Esta clase escuchara las peticiones websocket que se transmitan a la dirección /grupo
+ * .Cada vez que un usuario se conecte, se guardara la conexión websocket de este usuario en un array
+ * para poder ser usada despues tanto para el chat, el ajedrez, las videollamadas...
+ * @author alumno
+ *
+ */
 
 @WebServlet(urlPatterns={"/grupo"})
 public class AjedrezGrupoServlet extends WebSocketServlet{

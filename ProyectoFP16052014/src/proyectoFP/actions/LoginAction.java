@@ -11,7 +11,14 @@ import java.io.PrintStream;
 import java.util.Map;
 
 import org.apache.struts2.interceptor.SessionAware;
-
+/**
+ * Clase LoginAction
+ * Esta clase es llamada cuando se logea un usuario,
+ * comprueba con la base de datos si el usuario esta autentificado
+ * y entonces lo autoriza en el sistema mediante una inserción de sus datos en la session
+ * @author alumno
+ *
+ */
 public class LoginAction extends ActionSupport implements SessionAware {
 	private Usuario usuario;
 	

@@ -1,4 +1,12 @@
+/**
+ * Este documento javascript contiene 2 módulos
+ * y código para el funcionamiento de arrastre y redimensiando de los objetos
+ * 
+ */
 
+/**
+ * Módulo para simular el evento de arrastre en los móviles
+ */
 (function ($) {
     // Detect touch support
     $.support.touch = 'ontouchend' in document;
@@ -98,6 +106,10 @@
     _mouseInit.call(self);
     };
 })(jQuery);
+
+/**
+ * Módulo para activar la pantalla completa en cualquier dispositivo
+ */
 (function() {
     var
         fullScreenApi = {
@@ -164,20 +176,29 @@
     window.fullScreenApi = fullScreenApi;
 })();
 
+/**
+ * Evento on page ready
+ * 
+ */
 $(function(){
-	
+	//Cuando se carge la página actualizo aquellos objetos que necesitan ser alineados verticalmente
 	ajusteVertical();
+	
+	//Al cargar la página, se colocara un rótulo de cabecera diferente en función de las dimensiones de la 
+	// página
 	cambiarCabecera();
 	
+	//Coloco un escuchador al redimensionado de la página para actualizar los objetos de esta
 	$(window).resize(ajusteVertical);
 	
 	
-	
+	//Cuando se presione el boton de fullscreen, pedira al navegador que ponga la página en pantalla completa
 	if (fullScreenApi.supportsFullScreen) {
 	    document.getElementById("fullscreen").addEventListener('click', function() {
 	        fullScreenApi.requestFullScreen(document.getElementsByTagName("html")[0]);
 	    }, true);
 	}
+	
 	var mostrado = false;
 	/*
 	$("#cambiarChat").click(function(){
@@ -190,12 +211,15 @@ $(function(){
 			}
 	});
 	*/
+	//Controles para ocultar/mostrar diferentes partes de la página web
 	$("#cambiarChat").click(arreglar);
 	$("#cambiarTablero").click(mostrarOcultarTablero);
 	$("#cambiarChat2").click(mostrarOcultarChat);
 	$("#cambiarControles").click(mostrarOcultarControles);
 	$("#cambiarPartidas").click(mostrarOcultarPartidas);
 	
+	
+	//añado los escuchadores de redimensionado y arrastrable en los diferentes objetos
 	$("#tiempos").draggable({
 		containment: $("#wrap")
 		});
@@ -256,6 +280,8 @@ $(function(){
       minWidth: 250,
       handles: 'se'
     });
+	
+	//Cuando se produzca el evento de redimension en estos objetos llamara a ciertas funciones
 	$("#envolver").resize(ajustarChat);
 	$("#partidas").resize(ajustarPartidas);
 	/*$("#click").click(animacion1);*/
@@ -264,7 +290,7 @@ $(function(){
 	
 
 	 
-	    
+	    //Activo la orgazanización dinamica de los elementos de la pantalla
 	 $('#contenido').masonry({
 	      itemSelector: '.item',
 	      columnWidth: 50,
@@ -291,11 +317,15 @@ $(function(){
          }
        }).data('gridster');*/
 });
+
+//Esta función redimensiona los videos que tiene la etiqueta en funcion de las nuevas dimensiones
 function ajustarvideo(){
 	//console.log($(this).width()+" - "+$(this).height());
 	$(this).find("video").width($(this).width());
 	$(this).find("video").height($(this).height()-20);
 }
+
+//Esta función ajusta el tamaño visual de unos videos en funcion del tamaño de otra ventana
 function ajustarvideoinicio(){
 	$("#wrapsuvideo").find("video").width($("#wrapsuvideo").width());
 	$("#wrapsuvideo").find("video").height($("#wrapsuvideo").height()-20);
@@ -404,7 +434,7 @@ function cambiarCabecera(){
 			$("header h1").show();
 			$("header .im").hide();
 		}
-		$("input").val(w);
+		/*$("input").val(w);*/
 }
 
 function centradoVertical(div){

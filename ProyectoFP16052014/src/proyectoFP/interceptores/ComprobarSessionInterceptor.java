@@ -5,7 +5,15 @@ import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.ActionInvocation;
 import com.opensymphony.xwork2.interceptor.Interceptor;
 import java.util.Map;
-
+/**
+ * Clase ComprobarSessionInterceptor
+ * Esta clase sera usada para comprobar si el usuario ya
+ * esta en la session antes de acceder al recurso, de no 
+ * estarlo, se le impediria el acceso.
+ * 
+ * @author alumno
+ *
+ */
 public class ComprobarSessionInterceptor implements Interceptor {
 	public void destroy() {
 	}

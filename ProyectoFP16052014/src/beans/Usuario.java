@@ -1,7 +1,13 @@
 package beans;
 
 import java.util.ArrayList;
-
+/**
+ * Clase Usuario
+ * Esta clase sera usada para contener la información de los usuarios
+ * que accedan al sistema.
+ * @author alumno
+ *
+ */
 public class Usuario {
 	String usuario;
 	String password;

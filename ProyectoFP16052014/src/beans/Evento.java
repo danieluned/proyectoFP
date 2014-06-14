@@ -1,7 +1,13 @@
 package beans;
 
 import java.util.Date;
-
+/**
+ * Clase Evento
+ * Esta clase es usada para registrar en el calendario las fechas 
+ * que los usuarios marquen. 
+ * @author alumno
+ *
+ */
 public class Evento {
 	Date fecha;
 	String contenido;

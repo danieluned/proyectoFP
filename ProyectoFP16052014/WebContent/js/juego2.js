@@ -1,3 +1,8 @@
+/*
+ * Este fichero es el encargado de conectar websockets en las partidas 1contra1,
+ * de proporcionar los metodos y eventos que puede gestionar el cliente respecto a la partida y
+ * de manejar las funciones y eventos que se produciran por webrtc.
+ */
 $(function(){
 	
 	/*** Atributos ***/
@@ -42,9 +47,6 @@ $(function(){
 	
 	/** Cuando presionamos el boton de conectar
 		ejecutamos la conexion */
-	
-	
-	
 	$(idBotonEnviar).click(function(){
 		var str = $("div[aria-expanded='true']").eq(0).attr("id").substr(2);
 		if (str == "00")
@@ -70,19 +72,32 @@ $(function(){
 	});
 	
 
-	
+	//Cuando se pulse sobre el boton de resetear partida, se enviara un json al servidor
+	//pidiendo resetearla
 	$("#resetearPartida").click(function(){
 		console.log("resetearPartida");
 		ws.send(resetearPartidaJSON());
 	});
-		
+	
+	/**
+	 * cuando se pulse sobre nueva partida, se enviara un json al servidor para pedir crear partida
+	 */
 	$("#crearPartida").click(function(){
 		console.log("crearPartida");
 		ws.send(crearPartidaJSON());
 	});
 	
+	/**
+	 * cuando se pulsa sobre el boton de rotar tablero, se ejecutara la funcion para que se rote el tablero
+	 */
 	$("#rotar").click(rotarTablero);
+	/**
+	 * cuando se pulse sobre abandonar partida, se llamara a la funcion enviarAbandono
+	 */
 	$("#pedirAbandonar").click(enviarAbandono);
+	/**
+	 * asignamos el evento click en pedir tablar para llamar a la funcion de enviar tablas
+	 */
 	$("#pedirTablas").click(enviarTablas);
 	$("#pedirTablas").prop( "disabled", true );
 	//
@@ -389,6 +404,10 @@ $(function(){
 		ws.send(str);
 		$("#pedirTablas").prop( "disabled", true );
 	}
+	
+	/**
+	 * función que procesara los mensajes que se reciban por parte del servidor atraves de websockets
+	 */
 	function procesarMensaje(mensaje){
 		try{
 			var json =  JSON.parse(mensaje);

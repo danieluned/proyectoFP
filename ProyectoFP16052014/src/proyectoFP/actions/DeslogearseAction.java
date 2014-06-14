@@ -6,6 +6,13 @@ import java.io.PrintStream;
 import java.util.Map;
 import org.apache.struts2.interceptor.SessionAware;
 
+/**
+ * Clase DeslogearseAction
+ * Esta clase sera llamada para vaciar la sessión de un usuario
+ * elimina las variables de session que se tienen sobre este usuario.
+ * @author alumno
+ *
+ */
 public class DeslogearseAction extends ActionSupport
   implements SessionAware
 {

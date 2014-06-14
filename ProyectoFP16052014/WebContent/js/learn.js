@@ -1,3 +1,8 @@
+/*
+ * Este fichero es el encargado de conectar websockets en la página de aprendizaje, de enseñanza,
+ * de proporcionar los metodos y eventos que puede gestionar el cliente respecto a la partida y
+ * de manejar las funciones y eventos que se produciran por webrtc.
+ */
 $(function(){
 	mostrarControlesIdle();
 	/**

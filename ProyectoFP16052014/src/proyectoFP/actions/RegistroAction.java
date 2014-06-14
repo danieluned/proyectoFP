@@ -6,21 +6,34 @@ import beans.Usuario;
 import com.opensymphony.xwork2.ActionSupport;
 
 import dao.FactoriaDAO;
+import dao.InterfazDAOUsuario;
 
 import java.io.PrintStream;
-
+/**
+ * Clase RegistroAction
+ * Esta clase es llamada cuando se quiere crear un nuevo usuario.
+ * La clase recoge los datos de la base de datos y comprueba
+ * @author alumno
+ *
+ */
 public class RegistroAction extends ActionSupport {
 	private Usuario usuario;
 	public String execute() throws Exception {
-		
-		if (FactoriaDAO.obtenerDAOUsuario("MySql").insertarUsuario(usuario)){
-			addActionMessage(getText("creacionCorrecta"));
-			
-			return "success";
+		InterfazDAOUsuario daoUsuario = FactoriaDAO.obtenerDAOUsuario("MySql");
+		if (daoUsuario.verificarUsuario(usuario)==null){
+			if (daoUsuario.insertarUsuario(usuario)){
+				addActionMessage(getText("creacionCorrecta"));
+				
+				return "success";
+			}else{
+				addActionMessage(getText("creadoFail"));
+				return "fail";
+			}
 		}else{
-			addActionMessage(getText("creadoFail"));
+			addActionMessage(getText("usuarioYaExiste"));
 			return "fail";
 		}
+		
 		
 	}
 	public Usuario getUsuario() {
