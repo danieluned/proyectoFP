@@ -299,7 +299,7 @@ $(function(){
 		     
 		    };
 		    ws.onclose = function (event) {
-		       alert("No se ha podido conectar a Websockets.");
+		       alert("Conexion Websockets cerrada.");
 		       // $(idChat).append("Cerrado");
 		       var parth = location.pathname.split("/");
 				if (parth.length >2){

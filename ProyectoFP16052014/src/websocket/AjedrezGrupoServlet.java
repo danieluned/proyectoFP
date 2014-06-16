@@ -38,7 +38,7 @@ public class AjedrezGrupoServlet extends WebSocketServlet{
 
 	public static ConcurrentHashMap<String, PartidaGrupo> partidas = new ConcurrentHashMap<String,PartidaGrupo>();
 
-	public ConcurrentHashMap<String, WebSocketConnection> conexiones = new ConcurrentHashMap<String,WebSocketConnection>();
+	public HashMap<String, WebSocketConnection> conexiones = new HashMap<String,WebSocketConnection>();
 
 	public StreamInbound createWebSocketInbound(String subProtocol, HttpServletRequest request){
 		 // String connectionId = request.getSession().getId();
