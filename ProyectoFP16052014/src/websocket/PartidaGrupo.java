@@ -12,8 +12,8 @@ public class PartidaGrupo {
 
 	//Las casillas seran:
 	//a1 a2 a3 .. b1 b2 b3 ... h1 h2 ..h8
-	ConcurrentHashMap <String,String> fichas = new ConcurrentHashMap <String,String>();
-	ConcurrentHashMap <String,String> colores = new ConcurrentHashMap <String,String>();
+	HashMap <String,String> fichas = new HashMap <String,String>();
+	HashMap <String,String> colores = new HashMap <String,String>();
 	boolean mediaOn = false;
 	String creador ="";
 	
@@ -23,8 +23,8 @@ public class PartidaGrupo {
 		this.creador = creador;
 	}
 	public void vaciarTodo(){
-		fichas = new ConcurrentHashMap <String,String>();
-		colores = new ConcurrentHashMap <String,String>();
+		fichas = new HashMap <String,String>();
+		colores = new HashMap <String,String>();
 	}
 	public void addUsuario(String usuario){
 		usuarios.put(usuario, "");
