@@ -11,7 +11,7 @@
 		<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
 		<meta name="viewport" content="width=device-width, initial-scale=1"/>
 		<meta name="description" content="Pantalla de juego"/>
-		<title><s:text name="error"/></title>
+		<title><s:text name="aprender"/></title>
 		<link rel="stylesheet" href="css/normalize.min.css"/>
         <link rel="stylesheet" href="css/black-tie/jquery-ui-1.10.4.custom.css"/>
 		<link rel="stylesheet" href="css/bootstrap.css"/>

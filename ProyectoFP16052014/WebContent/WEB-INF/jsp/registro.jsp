@@ -71,7 +71,7 @@
 								</tr>
 							     <tr>
 									<td>
-										<input type="text" name="usuario.password" id="password" required pattern="[a-zA-Z0-9]*"/>
+										<input type="password" name="usuario.password" id="password" required pattern="[a-zA-Z0-9]*"/>
 									</td>
 								</tr>
 								<tr>

@@ -483,7 +483,7 @@ $(function(){
 					}
 					var str4 = "<ul>";
 					for (var i=0; i<json.usuarios.length ; i++){
-						str4+= "<li>"+json.usuarios[i].nombre+"</li>";
+						str4+= "<li><button title='"+json.usuarios[i].nombre+"'>"+json.usuarios[i].nombre+"</button></li>";
 						//Webrtc
 						/*
 						if (!conexiones[json.usuarios[i].nombre]){
@@ -507,7 +507,7 @@ $(function(){
 								//mostrar videos
 								
 							}else{
-								console.log("YA esta "+json.usuarios[i].nombre+" en la lista!!");
+								console.log("Ya esta "+json.usuarios[i].nombre+" en la lista.");
 							}
 						}
 						 
@@ -521,6 +521,7 @@ $(function(){
 					*/
 					str4+="</ul>";
 					$("#listaUsuarios").html(str4);
+					$("button[title]").click(asignarEscuchadorBoton);
 				break;
 				case "listaSalas":
 					console.log(json);
